@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
+using SimpleAI.Utils;
 
 namespace SimpleAI.Utils
 {
-    public sealed class IDAllocator
+    public sealed class IDAllocator : SingletonAsComponent<IDAllocator>
     {
-        private static readonly IDAllocator TheInstance = new IDAllocator();
-
         static IDAllocator() { }
 
         private IDAllocator() { }
@@ -19,7 +18,7 @@ namespace SimpleAI.Utils
         {
             get
             {
-                return TheInstance;
+                return (IDAllocator)InsideInstance;
             }
         }
 
@@ -30,7 +29,7 @@ namespace SimpleAI.Utils
 
         private int RecycledIDCount = 0;
 
-        private static int NextNewValidID = 0;
+        private int NextNewValidID = 0;
 
         private int TheInvalidID = -1;
 

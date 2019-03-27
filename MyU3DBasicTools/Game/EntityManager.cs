@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
+using SimpleAI.Utils;
 
 namespace SimpleAI.Game
 {
     /// <summary>
     /// Just recorder at present.
     /// </summary>
-    public sealed class EntityManager
+    public sealed class EntityManager : SingletonAsComponent<EntityManager>
     {
-        private static readonly EntityManager TheInstance = new EntityManager();
-
         private Dictionary<int, BaseGameEntity> EntityDic =
             new Dictionary<int, BaseGameEntity>();
 
@@ -25,7 +24,7 @@ namespace SimpleAI.Game
         {
             get
             {
-                return TheInstance;
+                return (EntityManager)InsideInstance;
             }
         }
 
@@ -33,7 +32,7 @@ namespace SimpleAI.Game
         /// Add a entity into the entities container by reference.
         /// </summary>
         /// <param name="newEntity"></param>
-        public void RegisterEntity(ref BaseGameEntity newEntity)
+        public void RegisterEntity(BaseGameEntity newEntity)
         {
             if (!EntityDic.ContainsKey(newEntity.ID))
             {
@@ -60,9 +59,9 @@ namespace SimpleAI.Game
         /// Remove the entity from entities container by it's reference.
         /// </summary>
         /// <param name="entity"></param>
-        public void RemoveEntity(ref BaseGameEntity entity)
+        public void RemoveEntity(BaseGameEntity entity)
         {
-            if (entity != null)
+            if (!System.Object.ReferenceEquals(entity, null))
             {
                 if (EntityDic.ContainsKey(entity.ID))
                 {

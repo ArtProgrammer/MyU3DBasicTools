@@ -5,7 +5,8 @@ using SimpleAI.Logger;
 
 namespace SimpleAI.Utils
 {
-    public class SingletonAsComponent<T> : MonoBehaviour where T : SingletonAsComponent<T>
+    public class SingletonAsComponent<T> : MonoBehaviour where 
+        T : SingletonAsComponent<T>
     {
         private static T TheInstance;
 
@@ -15,7 +16,7 @@ namespace SimpleAI.Utils
         {
             get
             {
-                if (TheInstance == null)
+                if (System.Object.ReferenceEquals(TheInstance, null))
                     return false;
 
                 return TheInstance.Alive;

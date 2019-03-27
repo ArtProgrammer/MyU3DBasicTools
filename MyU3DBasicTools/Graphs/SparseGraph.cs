@@ -139,7 +139,7 @@ namespace SimpleAI.Graphs
 
         public void AddEdge(TEdge edge)
         {
-            if (edge != null)
+            if (!System.Object.ReferenceEquals(edge, null))
             {
                 if (Nodes[edge.Src].ID != Invalid_idx &&
                     Nodes[edge.Dst].ID != Invalid_idx)

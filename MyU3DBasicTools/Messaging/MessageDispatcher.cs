@@ -36,7 +36,8 @@ namespace SimpleAI.Messaging
         /// <param name="msg">The message reference to be sent.</param>
         private void Discharge(BaseGameEntity receiver, ref Telegram msg)
         {
-            if (receiver != null && !receiver.HandleMessage(ref msg)) {
+            if (System.Object.ReferenceEquals(receiver, null) && 
+                !receiver.HandleMessage(ref msg)) {
                 // receiver can not handle this message.
             }
         }
@@ -55,7 +56,7 @@ namespace SimpleAI.Messaging
         {
             BaseGameEntity receiver = EntityManager.Instance.GetEntityByID(receiverID);
 
-            if (receiver == null) {
+            if (System.Object.ReferenceEquals(receiver, null)) {
                 // no receiver with id == receiverID
                 return;
             }

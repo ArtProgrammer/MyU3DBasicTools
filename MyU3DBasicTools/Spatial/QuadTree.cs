@@ -85,7 +85,7 @@ namespace SimpleAI.Spatial
 
         public void RemoveNode(ref SpatialFruitNode node)
         {
-            if (node != null)
+            if (!System.Object.ReferenceEquals(node, null))
             {
                 QuadTree tree = GetTreeByID(node.SpatialNodeID);
                 if (tree != null) tree.RemoveNode(node);
@@ -104,7 +104,7 @@ namespace SimpleAI.Spatial
 
         public bool AddNode(SpatialFruitNode node)
         {
-            if (node != null)
+            if (!System.Object.ReferenceEquals(node, null))
                 return QTree.AddNode(node);
 
             return false;
@@ -119,7 +119,7 @@ namespace SimpleAI.Spatial
         public void HandleNodePosChanged(SpatialFruitNode node)
         {
             QuadTree tree = GetTreeByID(node.SpatialNodeID);
-            if (tree != null)
+            if (!System.Object.ReferenceEquals(tree, null))
             {
                 if (!tree.IsNodeInrange(ref node))
                 {
@@ -269,7 +269,7 @@ namespace SimpleAI.Spatial
         /// <param name="node">Node.</param>
         public bool AddNode(SpatialFruitNode node)
         {
-            if (node != null && IsNodeInrange(ref node))
+            if (!System.Object.ReferenceEquals(node, null) && IsNodeInrange(ref node))
             {
                 if (NotShouldDivide() && !IsSubOpened)
                 {
@@ -348,7 +348,7 @@ namespace SimpleAI.Spatial
         /// <param name="node">Node.</param>
         public void RemoveNode(SpatialFruitNode node)
         {
-            if (node != null)
+            if (!System.Object.ReferenceEquals(node, null))
             {
                 Nodes.Remove(node);
             }

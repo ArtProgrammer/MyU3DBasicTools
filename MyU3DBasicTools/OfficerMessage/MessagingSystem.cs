@@ -12,7 +12,6 @@ namespace SimpleAI.OfficerMessage
         public static MessagingSystem Instance
         {
             get { return ((MessagingSystem)InsideInstance); }
-            set { InsideInstance = value; }
         }
 
         private Dictionary<string, List<MessageHandlerDelegate>> ListenerDict =
@@ -21,7 +20,7 @@ namespace SimpleAI.OfficerMessage
         public bool AttachListener(System.Type type, 
             MessageHandlerDelegate handler)
         {
-            if (type == null)
+            if (System.Object.ReferenceEquals(type, null))
             {
                 TinyLogger.Instance.DebugLog("$ MessagingSystem: " + 
                     "AttachListener failed due to no message type specified");
@@ -49,7 +48,7 @@ namespace SimpleAI.OfficerMessage
         public bool DetachListener(System.Type type, 
             MessageHandlerDelegate handler)
         {
-            if (type == null)
+            if (System.Object.ReferenceEquals(type, null))
             {
                 TinyLogger.Instance.DebugLog("$MessagingSystem: " + 
                     "DetachListener failed due to no message type specified");
