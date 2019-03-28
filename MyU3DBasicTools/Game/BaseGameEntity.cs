@@ -9,7 +9,7 @@ namespace SimpleAI.Game
 {
     public class BaseGameEntity : MonoBehaviour, ITelegramReceiver, IUpdateable
     {
-        private int TheID = IDAllocator.Instance.InvalidID;
+        private int TheID = 0;
 
         public int ID
         {
@@ -18,12 +18,12 @@ namespace SimpleAI.Game
 
         public BaseGameEntity()
         {
-            TheID = IDAllocator.Instance.GetID();
+            //TheID = IDAllocator.Instance.GetID();
         }
 
         ~BaseGameEntity()
         {
-            IDAllocator.Instance.RecycleID(TheID);
+
         }
 
         /// <summary>
@@ -42,17 +42,26 @@ namespace SimpleAI.Game
 
         }
 
-        public virtual void Process() { }
+        public virtual void Process(float dt) { }
+
+        void Awake()
+        { 
+            TheID = IDAllocator.Instance.InvalidID;
+        }
 
         void Start()
         {
             GameLogicSupvisor.Instance.Register(this);
             EntityManager.Instance.RegisterEntity(this);
+
+
             Initialize();
         }
 
         void OnDestroy()
         {
+            IDAllocator.Instance.RecycleID(TheID);
+
             Finish();
 
             if (GameLogicSupvisor.IsAlive)
@@ -68,7 +77,7 @@ namespace SimpleAI.Game
 
         public virtual void OnUpdate(float dt)
         {
-            Process();
+            Process(dt);
         }
 
         public virtual bool HandleMessage(ref Telegram msg) 
