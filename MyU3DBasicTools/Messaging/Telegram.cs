@@ -22,6 +22,11 @@ namespace SimpleAI.Messaging
             ReceiverID = receiverid;
             MsgType = msgtype;
         }
+
+        public Telegram()
+        { 
+
+        }
     }
 
     /// <summary>

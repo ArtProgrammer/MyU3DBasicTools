@@ -4,6 +4,7 @@ using UnityEngine;
 
 using SimpleAI.Messaging;
 using SimpleAI.Utils;
+using SimpleAI.Logger;
 
 namespace SimpleAI.Game
 {
@@ -13,7 +14,7 @@ namespace SimpleAI.Game
 
         public int ID
         {
-            get;
+            get { return TheID; }
         }
 
         public BaseGameEntity()
@@ -45,8 +46,9 @@ namespace SimpleAI.Game
         public virtual void Process(float dt) { }
 
         void Awake()
-        { 
-            TheID = IDAllocator.Instance.InvalidID;
+        {
+            TheID = IDAllocator.Instance.GetID();
+            TinyLogger.Instance.DebugLog(string.Format("$ BaseGameEnity got id: {0}", TheID));
         }
 
         void Start()
@@ -60,7 +62,10 @@ namespace SimpleAI.Game
 
         void OnDestroy()
         {
-            IDAllocator.Instance.RecycleID(TheID);
+            if (IDAllocator.IsAlive)
+            {
+                IDAllocator.Instance.RecycleID(TheID);
+            }
 
             Finish();
 
@@ -80,8 +85,9 @@ namespace SimpleAI.Game
             Process(dt);
         }
 
-        public virtual bool HandleMessage(ref Telegram msg) 
+        public virtual bool HandleMessage(Telegram msg) 
         {
+            TinyLogger.Instance.DebugLog(string.Format("$ BaseGameEntity handle message {0}", ID));
             return false;
         }
     }

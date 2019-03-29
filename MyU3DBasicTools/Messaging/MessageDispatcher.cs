@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 
 using SimpleAI.Game;
+using SimpleAI.Utils;
+using SimpleAI.Logger;
 
 namespace SimpleAI.Messaging
 {
-    public sealed class MessageDispatcher
+    public sealed class MessageDispatcher : SingletonAsComponent<MessageDispatcher>
     {
-        private static readonly MessageDispatcher TheInstance = new MessageDispatcher();
-
         private float ImmediatelyMsgTime = float.Epsilon;
 
         private SortedSet<Telegram> PriorityQ = new SortedSet<Telegram>(new TelegramCompare());
@@ -25,7 +25,7 @@ namespace SimpleAI.Messaging
         public static MessageDispatcher Instance
         {
             get {
-                return TheInstance;
+                return (MessageDispatcher)InsideInstance;
             }
         }
 
@@ -34,12 +34,19 @@ namespace SimpleAI.Messaging
         /// </summary>
         /// <param name="receiver">The reference of the entity receiving the message.</param>
         /// <param name="msg">The message reference to be sent.</param>
-        private void Discharge(BaseGameEntity receiver, ref Telegram msg)
+        private void Discharge(BaseGameEntity receiver, Telegram msg)
         {
-            if (System.Object.ReferenceEquals(receiver, null) && 
-                !receiver.HandleMessage(ref msg)) {
-                // receiver can not handle this message.
-            }
+            TinyLogger.Instance.DebugLog("$ discharge msg start!");
+            if (!System.Object.ReferenceEquals(receiver, null))
+            { 
+                if (!receiver.HandleMessage(msg))
+                {
+                    // receiver can not handle this message.
+                    TinyLogger.Instance.DebugLog(string.Format("$ failed to handle the msg!"));
+                } else {
+                    TinyLogger.Instance.DebugLog(string.Format("$ handle the msg!"));
+                }
+        }
         }
 
         /// <summary>
@@ -64,7 +71,7 @@ namespace SimpleAI.Messaging
             Telegram telegram = new Telegram(0, senderID, receiverID, msgType);
 
             if (delay < ImmediatelyMsgTime) {
-                Discharge(receiver, ref telegram);
+                Discharge(receiver, telegram);
             }
             else {
                 float currentTime = 0.0f;
@@ -72,6 +79,42 @@ namespace SimpleAI.Messaging
 
                 // insert in the queue.
                 PriorityQ.Add(telegram);
+            }
+        }
+
+        /// <summary>
+        /// Dispatchs the message.
+        /// </summary>
+        /// <param name="delay">Delay.</param>
+        /// <param name="senderID">Sender identifier.</param>
+        /// <param name="receiverID">Receiver identifier.</param>
+        /// <param name="msg">Message.</param>
+        public void DispatchMsg(float delay, int senderID, int receiverID, int msgType, Telegram msg)
+        {
+            BaseGameEntity receiver = EntityManager.Instance.GetEntityByID(receiverID);
+
+            if (System.Object.ReferenceEquals(receiver, null))
+            {
+                // no receiver with id == receiverID
+                return;
+            }
+
+            msg.DispatchTime = delay;
+            msg.SenderID = senderID;
+            msg.ReceiverID = receiverID;
+            msg.MsgType = msgType;
+
+            if (delay < ImmediatelyMsgTime)
+            {
+                Discharge(receiver, msg);
+            }
+            else
+            {
+                float currentTime = 0.0f;
+                msg.DispatchTime = currentTime + delay;
+
+                // insert in the queue.
+                PriorityQ.Add(msg);
             }
         }
 
@@ -90,7 +133,7 @@ namespace SimpleAI.Messaging
                 Telegram telegram = PriorityQ.Min;
 
                 BaseGameEntity receiver = EntityManager.Instance.GetEntityByID(telegram.ReceiverID);
-                Discharge(receiver, ref telegram);
+                Discharge(receiver, telegram);
 
                 PriorityQ.Remove(PriorityQ.Min);
             }
