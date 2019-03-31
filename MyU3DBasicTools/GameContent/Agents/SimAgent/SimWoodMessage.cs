@@ -3,34 +3,37 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using SimpleAI.OfficerMessage;
+using SimpleAI.Messaging;
 
 namespace GameContent.SimAgent
 {
 
     // factory DP?
-    public class SimWoodMessage : OfficerBaseMessage
+    public class SimWoodMessage : Telegram
     {
-        public enum MsgType
-        {
-            Back,
-            None
-        }
-
-        public MsgType TheType = MsgType.None;
-
-        public SimWoodMessage()
+        public SimWoodMessage(float dispatchtime, int senderid, int receiverid, int msgtype) :
+            base(dispatchtime, senderid, receiverid, msgtype)
         {
 
         }
+
+        public SimWoodMessage() : base()
+        { }
     }
 
     public class SimWoodBackMsg : SimWoodMessage
     {
-        public readonly Vector3 Pos = Vector3.zero;
+        public Vector3 Pos = Vector3.zero;
 
-        public SimWoodBackMsg(Vector3 pos)
+        public SimWoodBackMsg(float dispatchtime, int senderid, int receiverid, int msgtype) :
+            base(dispatchtime, senderid, receiverid, msgtype)
         {
-            Pos = pos;
+
+        }
+
+        public SimWoodBackMsg() : base()
+        { 
+
         }
     }
 }

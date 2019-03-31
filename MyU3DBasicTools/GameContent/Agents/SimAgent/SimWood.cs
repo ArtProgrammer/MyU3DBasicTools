@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.AI;
 
 using SimpleAI.Logger;
-using SimpleAI.OfficerMessage;
 using SimpleAI.Messaging;
 using SimpleAI.Game;
 
@@ -14,13 +13,29 @@ namespace GameContent.SimAgent
     {
         private NavMeshAgent NMAgent = null;
 
+        public Transform Home = null;
+
+        public Transform Food = null;
+
+        public SimWoodBrain Brain = null;
+
+        public int FoodNeed = 5;
+
+        public int FoodCount = 0;
+
+        public void SetDestination(Vector3 pos)
+        {
+            if (NMAgent)
+                NMAgent.destination = pos;
+        }
+
         public override void Initialize()
         {
             TinyLogger.Instance.DebugLog("$$$ SimWood register to MessagingSystem");
-            MessagingSystem.Instance.AttachListener(typeof(SimWoodBackMsg),
-                this.HandleOfficerMessage);
 
             NMAgent = GetComponent<NavMeshAgent>();
+
+            Brain = new SimWoodBrain(this, 0);
         }
 
         /// <summary>
@@ -28,35 +43,21 @@ namespace GameContent.SimAgent
         /// </summary>
         public override void Finish()
         {
-            if (MessagingSystem.IsAlive)
-            {
-                MessagingSystem.Instance.DetachListener(typeof(SimWoodBackMsg),
-                    this.HandleOfficerMessage);
-            }
         }
 
         public override void Process(float dt)
         {
-            ;
+            if (!System.Object.ReferenceEquals(Brain, null)) 
+                Brain.Process();
         }
 
-        public override bool HandleMessage(ref Telegram msg)
-        {
-            return false;
-        }
-
-        public bool HandleOfficerMessage(OfficerBaseMessage msg)
+        public override bool HandleMessage(Telegram msg)
         {
             TinyLogger.Instance.DebugLog("$$$ sin wood back msg got!");
 
-            {
-                SimWoodBackMsg bmsg = (SimWoodBackMsg)msg;
-                NMAgent.destination = bmsg.Pos;
+            SimWoodBackMsg swbmsg = (SimWoodBackMsg)msg;
 
-                TinyLogger.Instance.DebugLog(
-                    string.Format("$$$ des pos: {0}, {1}", bmsg.Pos.x, bmsg.Pos.z)
-                    );
-            }
+            NMAgent.destination = swbmsg.Pos;
 
             return true;
         }
