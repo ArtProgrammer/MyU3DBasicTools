@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface ISpatialMember
+namespace SimpleAI.Spatial
 {
-    int SpatialNodeID
+    public interface ISpatialMember
     {
-        set; get;
+        int SpatialNodeID
+        {
+            set; get;
+        }
+
+        void MemberIsDirty();
+
+        void HandleDestory();
     }
-
-    void MemberIsDirty();
-
-    void HandleDestory();
 }

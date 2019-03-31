@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using SimpleAI.Logger;
+using SimpleAI.Utils;
 
 namespace SimpleAI.Spatial
 {
@@ -48,22 +49,19 @@ namespace SimpleAI.Spatial
     /// <summary>
     /// Single spatial structure at one time.
     /// </summary>
-    public sealed class SpatialManager
+    public sealed class SpatialManager : SingletonAsComponent<SpatialManager>
     {
-        private static readonly SpatialManager TheInstance = 
-            new SpatialManager();
-
         public static SpatialManager Instance
         {
             get
             {
-                return TheInstance;
+                return (SpatialManager)InsideInstance;
             }
         }
 
         private SpatialManager() 
         {
-            Init(0, 0, 100, 100); // test
+            //Init(0, 0, 0, 100, 100, 100); // test
         }
 
         static SpatialManager() { }
@@ -72,9 +70,10 @@ namespace SimpleAI.Spatial
 
         Dictionary<int, QuadTree> SubNodes = new Dictionary<int, QuadTree>();
 
-        public void Init(float x, float y, float width, float height)
+        public void Init(float x, float y, float z, 
+            float width, float height, float depth)
         {
-            QTree = new QuadTree(x, y, width, height);
+            QTree = new QuadTree(x, y, z, width, height, depth);
             AddTree(QTree);
         }
 
@@ -83,12 +82,13 @@ namespace SimpleAI.Spatial
             SubNodes.Add(tree.ID, tree);
         }
 
-        public void RemoveNode(ref SpatialFruitNode node)
+        public void RemoveNode(SpatialFruitNode node)
         {
             if (!System.Object.ReferenceEquals(node, null))
             {
                 QuadTree tree = GetTreeByID(node.SpatialNodeID);
-                if (tree != null) tree.RemoveNode(node);
+                if (!System.Object.ReferenceEquals(tree, null)) 
+                    tree.RemoveNode(node);
             }
         }
 
@@ -110,7 +110,7 @@ namespace SimpleAI.Spatial
             return false;
         }
 
-        public void QueryRange(ref SPAABB range, 
+        public void QueryRange(ref Bounds range, 
                                ref List<SpatialFruitNode> nodes)
         {
             QTree.QueryRange(ref range, ref nodes);
@@ -128,6 +128,26 @@ namespace SimpleAI.Spatial
                 }
             }
         }
+
+        public void OnDrawGizmos()
+        {
+            //if (!System.Object.ReferenceEquals(QTree, null))
+            //{
+            //    Gizmos.color = Color.yellow;
+            //    Gizmos.DrawWireCube(QTree.Boundbox.center, QTree.Boundbox.size);
+
+            //    Gizmos.color = Color.red;
+            //    Gizmos.DrawWireCube(QTree.Boundbox.center, QTree.Boundbox.extents);
+            //}
+
+            foreach (var item in SubNodes)
+            {
+                ;
+                Gizmos.color = Color.red;
+                Gizmos.DrawWireCube(item.Value.Boundbox.center, 
+                    item.Value.Boundbox.size);
+            }
+        }
     }
 
     public class QuadTree
@@ -139,13 +159,15 @@ namespace SimpleAI.Spatial
             set;get;
         }
 
-        SPAABB Boundary = null;
+        //public SPAABB Boundary = null;
+
+        public Bounds Boundbox;
 
         /// <summary>
         /// The max capacity of the spatial nodes this tree node can hold if
         /// it's not arrive the minimum bound size.
         /// </summary>
-        private int MaxCapacity = 1;
+        private int MaxCapacity = 2;
 
         public int Capacity
         {
@@ -159,7 +181,7 @@ namespace SimpleAI.Spatial
             }
         }
 
-        public float MinRadius = 10.0f;
+        public float MinRadius = 2.0f;
 
         private int CurNodeCount = 0;
 
@@ -169,11 +191,17 @@ namespace SimpleAI.Spatial
 
         private List<QuadTree> SubTrees = new List<QuadTree>();
 
-        private readonly int SubTreeCount = 4;
+        private readonly int SubTreeCount = 8;
 
-        public QuadTree(float x, float y, float width, float height)
+        public QuadTree(float x, float y, float z, 
+            float width, float height, float depth)
         {
-            Boundary = new SPAABB(x, y , width, height);
+            //Boundary = new SPAABB(x, y , width, height);
+            //Boundbox.center.x = x;
+            Boundbox = new Bounds();
+            Boundbox.center = new Vector3(x, y, z);
+            Boundbox.size = new Vector3(width, height, depth);
+
             ID = NextID;
             NextID++;
         }
@@ -191,41 +219,114 @@ namespace SimpleAI.Spatial
         /// </summary>
         private void SubDivide()
         {
-            float subwidth = Boundary.Width * 0.5f;
-            float subheight = Boundary.Height * 0.5f;
-            float subwoffset = subwidth * 0.5f;
-            float subhoffset = subheight * 0.5f;
-            var sub1 = new QuadTree(Boundary.X - subwoffset, 
-                Boundary.Y - subhoffset, subwidth, subheight);
+            //float subwidth = Boundary.Width * 0.5f;
+            //float subheight = Boundary.Height * 0.5f;
+            //float subwoffset = subwidth * 0.5f;
+            //float subhoffset = subheight * 0.5f;
+            //var sub1 = new QuadTree(Boundary.X - subwoffset, 
+            //    Boundary.Y - subhoffset, subwidth, subheight);
+            //c
+
+            //var sub2 = new QuadTree(Boundary.X - subwoffset, 
+            //    Boundary.Y + subhoffset, subwidth, subheight);
+            //SubTrees.Add(sub2);
+
+            //var sub3 = new QuadTree(Boundary.X + subwoffset, 
+            //    Boundary.Y - subhoffset, subwidth, subheight);
+            //SubTrees.Add(sub3);
+
+            //var sub4 = new QuadTree(Boundary.X + subwoffset, 
+            //    Boundary.Y + subhoffset, subwidth, subheight);
+            //SubTrees.Add(sub4);
+
+            var extent = Boundbox.extents;
+
+            float scale = 0.5f;
+            var sub1 = new QuadTree(Boundbox.center.x - extent.x * scale,
+                Boundbox.center.y - extent.y * scale,
+                Boundbox.center.z - extent.z * scale,
+                extent.x,
+                extent.y,
+                extent.z);
+
+            var sub2 = new QuadTree(Boundbox.center.x - extent.x * scale,
+                Boundbox.center.y - extent.y * scale,
+                Boundbox.center.z + extent.z * scale,
+                extent.x,
+                extent.y,
+                extent.z);
+
+            var sub3 = new QuadTree(Boundbox.center.x + extent.x * scale,
+                Boundbox.center.y - extent.y * scale,
+                Boundbox.center.z - extent.z * scale,
+                extent.x,
+                extent.y,
+                extent.z);
+
+            var sub4 = new QuadTree(Boundbox.center.x + extent.x * scale,
+                Boundbox.center.y - extent.y * scale,
+                Boundbox.center.z + extent.z * scale,
+                extent.x,
+                extent.y,
+                extent.z);
+
+            var sub5 = new QuadTree(Boundbox.center.x - extent.x * scale,
+                Boundbox.center.y + extent.y * scale,
+                Boundbox.center.z - extent.z * scale,
+                extent.x,
+                extent.y,
+                extent.z);
+
+            var sub6 = new QuadTree(Boundbox.center.x - extent.x * scale,
+                Boundbox.center.y + extent.y * scale,
+                Boundbox.center.z + extent.z * scale,
+                extent.x,
+                extent.y,
+                extent.z);
+
+            var sub7 = new QuadTree(Boundbox.center.x + extent.x * scale,
+                Boundbox.center.y + extent.y * scale,
+                Boundbox.center.z - extent.z * scale,
+                extent.x,
+                extent.y,
+                extent.z);
+
+            var sub8 = new QuadTree(Boundbox.center.x + extent.x * scale,
+                Boundbox.center.y + extent.y * scale,
+                Boundbox.center.z + extent.z * scale,
+                extent.x,
+                extent.y,
+                extent.z);
+
             SubTrees.Add(sub1);
-
-            var sub2 = new QuadTree(Boundary.X - subwoffset, 
-                Boundary.Y + subhoffset, subwidth, subheight);
             SubTrees.Add(sub2);
-
-            var sub3 = new QuadTree(Boundary.X + subwoffset, 
-                Boundary.Y - subhoffset, subwidth, subheight);
             SubTrees.Add(sub3);
-
-            var sub4 = new QuadTree(Boundary.X + subwoffset, 
-                Boundary.Y + subhoffset, subwidth, subheight);
             SubTrees.Add(sub4);
+            SubTrees.Add(sub5);
+            SubTrees.Add(sub6);
+            SubTrees.Add(sub6);
+            SubTrees.Add(sub7);
+            SubTrees.Add(sub8);
 
             sub1.Attach();
             sub2.Attach();
             sub3.Attach();
             sub4.Attach();
+            sub5.Attach();
+            sub6.Attach();
+            sub7.Attach();
+            sub8.Attach();
 
             TinyLogger.Instance.DebugLog("$$$ SubDivide ->");
-            for (var i = 0; i < SubTreeCount; i++)
-            {
-                TinyLogger.Instance.DebugLog(
-                    String.Format("$$$ {0}, {1}, {2}, {3}", 
-                    SubTrees[i].Boundary.X,
-                    SubTrees[i].Boundary.Y,
-                    SubTrees[i].Boundary.Width,
-                    SubTrees[i].Boundary.Height));
-            }
+            //for (var i = 0; i < SubTreeCount; i++)
+            //{
+            //    TinyLogger.Instance.DebugLog(
+            //        String.Format("$$$ {0}, {1}, {2}, {3}", 
+            //        SubTrees[i].Boundary.X,
+            //        SubTrees[i].Boundary.Y,
+            //        SubTrees[i].Boundary.Width,
+            //        SubTrees[i].Boundary.Height));
+            //}
 
             IsSubOpened = true;
         }
@@ -246,7 +347,8 @@ namespace SimpleAI.Spatial
         /// <param name="node">Node.</param>
         public bool IsNodeInrange(ref SpatialFruitNode node)
         {
-            return Boundary.ContainPoint(ref node.Position);
+            return Boundbox.Contains(node.Position);
+            //return Boundary.ContainPoint(ref node.Position);
         }
 
         /// <summary>
@@ -256,9 +358,16 @@ namespace SimpleAI.Spatial
         /// <c>false</c> otherwise.</returns>
         private bool NotShouldDivide()
         {
-            return (Boundary.Width <= MinRadius && 
-                    Boundary.Height <= MinRadius) ||
-                    CurNodeCount < MaxCapacity;
+            return (Boundbox.size.x <= MinRadius && 
+                Boundbox.size.y <= MinRadius && 
+                Boundbox.size.z <= MinRadius) ||
+                CurNodeCount < MaxCapacity;
+
+            //return CurNodeCount < MaxCapacity;
+
+            //return (Boundary.Width <= MinRadius && 
+            //Boundary.Height <= MinRadius) ||
+            //CurNodeCount < MaxCapacity;
         }
 
         /// <summary>
@@ -269,12 +378,13 @@ namespace SimpleAI.Spatial
         /// <param name="node">Node.</param>
         public bool AddNode(SpatialFruitNode node)
         {
-            if (!System.Object.ReferenceEquals(node, null) && IsNodeInrange(ref node))
+            if (!System.Object.ReferenceEquals(node, null) && 
+                IsNodeInrange(ref node))
             {
                 if (NotShouldDivide() && !IsSubOpened)
                 {
                     Nodes.Add(node);
-                    node.SpatialNodeID = ID;
+                    //node.SpatialNodeID = ID;
                     CurNodeCount++;
 
                     TinyLogger.Instance.DebugLog(
@@ -283,14 +393,14 @@ namespace SimpleAI.Spatial
                         node.Position.x, node.Position.y, 
                         CurNodeCount, MaxCapacity));
 
-                    TinyLogger.Instance.DebugLog(
-                        String.Format("$ in leaf range {0}" + 
-                        ", {1}, {2}, {3}, {4}",
-                        Boundary.X,
-                        Boundary.Y,
-                        Boundary.Width,
-                        Boundary.Height,
-                        Nodes.Count));
+                    //TinyLogger.Instance.DebugLog(
+                        //String.Format("$ in leaf range {0}" + 
+                        //", {1}, {2}, {3}, {4}",
+                        //Boundary.X,
+                        //Boundary.Y,
+                        //Boundary.Width,
+                        //Boundary.Height,
+                        //Nodes.Count));
 
                     return true;
                 }
@@ -312,14 +422,14 @@ namespace SimpleAI.Spatial
                                     String.Format("$$$ add leaf node pos {0}, {1}", 
                                     qtnode.Position.x, qtnode.Position.y));
 
-                                TinyLogger.Instance.DebugLog(
-                                    String.Format("$$$ add leaf range {0}, " + 
-                                    "{1}, {2}, {3}, {4}",
-                                    SubTrees[i].Boundary.X,
-                                    SubTrees[i].Boundary.Y,
-                                    SubTrees[i].Boundary.Width,
-                                    SubTrees[i].Boundary.Height,
-                                    SubTrees[i].Nodes.Count));
+                                //TinyLogger.Instance.DebugLog(
+                                    //String.Format("$$$ add leaf range {0}, " + 
+                                    //"{1}, {2}, {3}, {4}",
+                                    //SubTrees[i].Boundary.X,
+                                    //SubTrees[i].Boundary.Y,
+                                    //SubTrees[i].Boundary.Width,
+                                    //SubTrees[i].Boundary.Height,
+                                    //SubTrees[i].Nodes.Count));
 
                                 break;
                             }
@@ -359,9 +469,10 @@ namespace SimpleAI.Spatial
         /// </summary>
         /// <param name="range">Range.</param>
         /// <param name="nodes">Nodes.</param>
-        public void QueryRange(ref SPAABB range, ref List<SpatialFruitNode> nodes)
+        public void QueryRange(ref Bounds range, ref List<SpatialFruitNode> nodes)
         {
-            if (nodes != null && !Boundary.IsIntersect(ref range))
+            if (!System.Object.ReferenceEquals(nodes, null) && 
+                !Boundbox.Intersects(range))
             {
                 return;
             }
@@ -376,11 +487,11 @@ namespace SimpleAI.Spatial
                             Nodes[i].Position.x, Nodes[i].Position.y));
                 }
 
-                TinyLogger.Instance.DebugLog(
-                        string.Format("$$$$$$$$$$$$$$$$ leaf range {0}, {1}, " + 
-                        "{2}, {3}, {4} , {5} $$$$$$$$$$$$$$$$", 
-                        ID, Boundary.X, Boundary.Y, 
-                        Boundary.Width, Boundary.Height, Nodes.Count));
+                //TinyLogger.Instance.DebugLog(
+                        //string.Format("$$$$$$$$$$$$$$$$ leaf range {0}, {1}, " + 
+                        //"{2}, {3}, {4} , {5} $$$$$$$$$$$$$$$$", 
+                        //ID, Boundary.X, Boundary.Y, 
+                        //Boundary.Width, Boundary.Height, Nodes.Count));
                                      
                 return;
             }

@@ -1,91 +1,103 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 using SimpleAI.Spatial;
 using SimpleAI.Logger;
+using SimpleAI.Utils;
 
-public class SpatialFruitNode : MonoBehaviour, ISpatialMember
+namespace SimpleAI.Spatial
 {
-    public int SpatialNodeID
+    public class SpatialFruitNode : MonoBehaviour, ISpatialMember
     {
-        set; get;
-    }
-
-    public Vector3 Position = Vector3.zero;
-
-    private bool IsPosChanged = false;
-
-    public bool IsPosDirty
-    {
-        set
+        public int SpatialNodeID
         {
-            IsPosChanged = value;
+            set; get;
+        }
 
-            if (IsPosChanged)
+        public Vector3 Position = Vector3.zero;
+
+        private bool IsPosChanged = false;
+
+        public bool IsPosDirty
+        {
+            set
             {
-                MemberIsDirty();
+                IsPosChanged = value;
+
+                if (IsPosChanged)
+                {
+                    MemberIsDirty();
+                }
+            }
+            get
+            {
+                return IsPosChanged;
             }
         }
-        get
+
+        void Start()
         {
-            return IsPosChanged;
+            SpatialNodeID = IDAllocator.Instance.GetID();
+
+            TinyLogger.Instance.DebugLog(string.Format("$ spatial node Start {0}", 
+                SpatialNodeID));
+            SetPosition(transform.position.x, transform.position.y, transform.position.z);
+
+            RegistSpatial();
         }
-    }
 
-    void Start()
-    {
-        //TinyLogger.Instance.DebugLog("$ spatial node Start");
-        SetPosition(transform.position.x, transform.position.z);
-
-        RegistSpatial();
-    }
-
-    void Update()
-    {
-        if (transform.hasChanged)
+        void Update()
         {
-            SetPosition(transform.position.x, transform.position.z);
+            if (transform.hasChanged)
+            {
+                //TinyLogger.Instance.DebugLog("$ fruit node changed pos!");
+                SetPosition(transform.position.x, transform.position.y, transform.position.z);
+            }
         }
-    }
 
-    public SpatialFruitNode(float x, float y, float z)
-    {
-        Position.x = x;
-        Position.y = y;
-        Position.z = z;
+        //public SpatialFruitNode(float x, float y, float z)
+        //{
+        //    Position.x = x;
+        //    Position.y = y;
+        //    Position.z = z;
 
-        //TinyLogger.Instance.DebugLog("$ SpatialFruitNode ctor 1");
-    }
+        //    //TinyLogger.Instance.DebugLog("$ SpatialFruitNode ctor 1");
+        //}
 
-    public SpatialFruitNode()
-    {
-        //TinyLogger.Instance.DebugLog("$ SpatialFruitNode ctor 2");
-    }
+        //public SpatialFruitNode()
+        //{
+        //    //TinyLogger.Instance.DebugLog("$ SpatialFruitNode ctor 2");
+        //}
 
-    public void RegistSpatial()
-    {
-        SpatialManager.Instance.AddNode(this);
-    }
+        public void RegistSpatial()
+        {
+            SpatialManager.Instance.AddNode(this);
+        }
 
-    public void SetPosition(float x, float y, float z = 0.0f)
-    {
-        bool isMoved = !x.Equals(Position.x) || !y.Equals(Position.y);
+        public void SetPosition(float x, float y, float z = 0.0f)
+        {
+            bool isMoved = !x.Equals(Position.x) || !y.Equals(Position.y);
 
-        Position.x = x;
-        Position.y = y;
-        Position.z = z;
+            Position.x = x;
+            Position.y = y;
+            Position.z = z;
 
-        IsPosDirty = isMoved;
-    }
+            IsPosDirty = isMoved;
+        }
 
-    public void MemberIsDirty()
-    {
-        SpatialManager.Instance.HandleNodePosChanged(this);
-        IsPosDirty = false;
-    }
+        public void MemberIsDirty()
+        {
+            SpatialManager.Instance.HandleNodePosChanged(this);
+            IsPosDirty = false;
+        }
 
-    public void HandleDestory()
-    {
-
+        public void HandleDestory()
+        {
+            if (SpatialManager.IsAlive)
+            {
+                SpatialManager.Instance.RemoveNode(this);
+            }
+        }
     }
 }
