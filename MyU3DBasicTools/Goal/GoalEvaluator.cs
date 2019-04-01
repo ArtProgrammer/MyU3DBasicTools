@@ -2,7 +2,7 @@
 
 namespace SimpleAI
 {
-    class GoalEvaluator<T> where T : BaseGameEntity
+    public class GoalEvaluator<T> where T : BaseGameEntity
     {
         private float CharactorBias;
 

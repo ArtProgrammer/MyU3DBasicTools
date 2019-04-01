@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using SimpleAI.Utils;
+using SimpleAI.Timer;
 
 public interface IUpdateable
 {
@@ -46,7 +47,8 @@ public class GameLogicSupvisor : SingletonAsComponent<GameLogicSupvisor>
     // Update is called once per frame
     void Update()
     {
-        float dt = Time.deltaTime;
+        float dt = TimeWrapper.Instance.deltaTime;
+
         for (int i = 0; i < Instance.UpdateableObjects.Count; i++)
         {
             Instance.UpdateableObjects[i].OnUpdate(dt);

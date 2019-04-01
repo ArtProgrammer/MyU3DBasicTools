@@ -36,7 +36,7 @@ namespace SimpleAI.Spatial
             }
         }
 
-        void Start()
+        public void TheStart()
         {
             SpatialNodeID = IDAllocator.Instance.GetID();
 
@@ -47,7 +47,7 @@ namespace SimpleAI.Spatial
             RegistSpatial();
         }
 
-        void Update()
+        public void TheUpdate()
         {
             if (transform.hasChanged)
             {
@@ -55,20 +55,6 @@ namespace SimpleAI.Spatial
                 SetPosition(transform.position.x, transform.position.y, transform.position.z);
             }
         }
-
-        //public SpatialFruitNode(float x, float y, float z)
-        //{
-        //    Position.x = x;
-        //    Position.y = y;
-        //    Position.z = z;
-
-        //    //TinyLogger.Instance.DebugLog("$ SpatialFruitNode ctor 1");
-        //}
-
-        //public SpatialFruitNode()
-        //{
-        //    //TinyLogger.Instance.DebugLog("$ SpatialFruitNode ctor 2");
-        //}
 
         public void RegistSpatial()
         {

@@ -111,9 +111,9 @@ namespace SimpleAI.Spatial
         }
 
         public void QueryRange(ref Bounds range, 
-                               ref List<SpatialFruitNode> nodes)
+                               List<SpatialFruitNode> nodes)
         {
-            QTree.QueryRange(ref range, ref nodes);
+            QTree.QueryRange(ref range, nodes);
         }
 
         public void HandleNodePosChanged(SpatialFruitNode node)
@@ -181,7 +181,7 @@ namespace SimpleAI.Spatial
             }
         }
 
-        public float MinRadius = 2.0f;
+        public float MinRadius = 8.0f;
 
         private int CurNodeCount = 0;
 
@@ -304,7 +304,6 @@ namespace SimpleAI.Spatial
             SubTrees.Add(sub4);
             SubTrees.Add(sub5);
             SubTrees.Add(sub6);
-            SubTrees.Add(sub6);
             SubTrees.Add(sub7);
             SubTrees.Add(sub8);
 
@@ -384,14 +383,14 @@ namespace SimpleAI.Spatial
                 if (NotShouldDivide() && !IsSubOpened)
                 {
                     Nodes.Add(node);
-                    //node.SpatialNodeID = ID;
+                    node.SpatialNodeID = ID;
                     CurNodeCount++;
 
-                    TinyLogger.Instance.DebugLog(
-                        String.Format("$ add leaf node {0}, {1}, " +
-                        "count: {2}, MaxCapacity {3}",
-                        node.Position.x, node.Position.y, 
-                        CurNodeCount, MaxCapacity));
+                    //TinyLogger.Instance.DebugLog(
+                        //String.Format("$ add leaf node {0}, {1}, " +
+                        //"count: {2}, MaxCapacity {3}",
+                        //node.Position.x, node.Position.y, 
+                        //CurNodeCount, MaxCapacity));
 
                     //TinyLogger.Instance.DebugLog(
                         //String.Format("$ in leaf range {0}" + 
@@ -418,9 +417,9 @@ namespace SimpleAI.Spatial
 
                             if (result)
                             {
-                                TinyLogger.Instance.DebugLog(
-                                    String.Format("$$$ add leaf node pos {0}, {1}", 
-                                    qtnode.Position.x, qtnode.Position.y));
+                                //TinyLogger.Instance.DebugLog(
+                                    //String.Format("$$$ add leaf node pos {0}, {1}", 
+                                    //qtnode.Position.x, qtnode.Position.y));
 
                                 //TinyLogger.Instance.DebugLog(
                                     //String.Format("$$$ add leaf range {0}, " + 
@@ -469,7 +468,7 @@ namespace SimpleAI.Spatial
         /// </summary>
         /// <param name="range">Range.</param>
         /// <param name="nodes">Nodes.</param>
-        public void QueryRange(ref Bounds range, ref List<SpatialFruitNode> nodes)
+        public void QueryRange(ref Bounds range, List<SpatialFruitNode> nodes)
         {
             if (!System.Object.ReferenceEquals(nodes, null) && 
                 !Boundbox.Intersects(range))
@@ -482,9 +481,10 @@ namespace SimpleAI.Spatial
                 for (int i = 0; i < Nodes.Count; i ++)
                 {
                     nodes.Add(Nodes[i]);
-                    TinyLogger.Instance.DebugLog(
-                        string.Format("$$$ leaf node pos {0}, {1}", 
-                            Nodes[i].Position.x, Nodes[i].Position.y));
+
+                    //TinyLogger.Instance.DebugLog(
+                        //string.Format("$$$ leaf node pos {0}, {1}", 
+                            //Nodes[i].Position.x, Nodes[i].Position.y));
                 }
 
                 //TinyLogger.Instance.DebugLog(
@@ -498,7 +498,7 @@ namespace SimpleAI.Spatial
 
             for (int i = 0; i < SubTreeCount; i++)
             {
-                SubTrees[i].QueryRange(ref range, ref nodes);
+                SubTrees[i].QueryRange(ref range, nodes);
             }
         }
     }

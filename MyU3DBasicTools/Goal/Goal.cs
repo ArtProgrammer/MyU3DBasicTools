@@ -51,7 +51,7 @@ namespace SimpleAI
 
         public virtual void Terminate() { }
 
-        public virtual bool HandleMessage(ref Telegram msg) { return false; }
+        public virtual bool HandleMessage(Telegram msg) { return false; }
 
         public virtual void AddSubGoal(Goal<T> g) { }
 

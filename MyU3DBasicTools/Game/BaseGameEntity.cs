@@ -5,10 +5,11 @@ using UnityEngine;
 using SimpleAI.Messaging;
 using SimpleAI.Utils;
 using SimpleAI.Logger;
+using SimpleAI.Spatial;
 
 namespace SimpleAI.Game
 {
-    public class BaseGameEntity : MonoBehaviour, ITelegramReceiver, IUpdateable
+    public class BaseGameEntity : SpatialFruitNode, ITelegramReceiver, IUpdateable
     {
         private int TheID = 0;
 
@@ -16,6 +17,8 @@ namespace SimpleAI.Game
         {
             get { return TheID; }
         }
+
+        public int TheSpatialNodeID = 0;
 
         public BaseGameEntity()
         {
@@ -27,12 +30,17 @@ namespace SimpleAI.Game
 
         }
 
+        public void GetPosition(ref Vector3 val)
+        {
+            val = transform.position;
+        }
+
         /// <summary>
         /// Initialize this instance.
         /// </summary>
         public virtual void Initialize()
         {
-
+            TheSpatialNodeID = SpatialNodeID;
         }
 
         /// <summary>
@@ -53,6 +61,7 @@ namespace SimpleAI.Game
 
         void Start()
         {
+            TheStart();
             GameLogicSupvisor.Instance.Register(this);
             EntityManager.Instance.RegisterEntity(this);
 
@@ -78,10 +87,14 @@ namespace SimpleAI.Game
             {
                 EntityManager.Instance.RemoveEntity(this);
             }
+
+            HandleDestory();
         }
 
         public virtual void OnUpdate(float dt)
         {
+            TheUpdate();
+
             Process(dt);
         }
 
