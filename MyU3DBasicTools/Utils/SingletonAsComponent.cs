@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using SimpleAI.Logger;
 
@@ -40,10 +41,13 @@ namespace SimpleAI.Utils
                         }
                         else if (managers.Length > 1)
                         {
-                            TinyLogger.Instance.DebugLog(
-                            "$You have more than one " +
-                                typeof(T).Name + " in the scene. You only" +
-                                "need 1, it's a singleton!");
+                            StringBuilder sb = new StringBuilder();
+                            sb.Append("$You have more than one");
+                            sb.Append(typeof(T).Name);
+                            sb.Append(" in the scene. You only");
+                            sb.Append("need 1, it's a singleton!");
+                            TinyLogger.Instance.DebugLog(sb.ToString());
+
                             for (int i = 0; i < managers.Length; ++i)
                             {
                                 T manager = managers[i];

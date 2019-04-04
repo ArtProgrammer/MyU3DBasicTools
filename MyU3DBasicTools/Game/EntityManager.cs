@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using SimpleAI.Utils;
+using GameContent;
+using GameContent.Agents;
+using GameContent.Defence;
 
 namespace SimpleAI.Game
 {
@@ -88,6 +91,34 @@ namespace SimpleAI.Game
         public void Reset()
         {
             EntityDic.Clear();
+        }
+
+        public void GetEntitiesByRaceType(int raceSignal, 
+            List<BaseGameEntity> objList)
+        {
+            DefenceSystem.Instance.Int2RaceType(raceSignal);
+
+            //EntityDic.Values
+
+            foreach (var item in EntityDic)
+            { 
+                if (item.Value.RaceSignal == raceSignal)
+                {
+                    objList.Add(item.Value);
+                }
+            }
+        }
+
+        public void GetEntitiesByRaceType(RaceTypeEnum raceType,
+            List<BaseGameEntity> objList)
+        {
+            foreach (var item in EntityDic)
+            {
+                if (item.Value.RaceType == raceType)
+                {
+                    objList.Add(item.Value);
+                }
+            }
         }
     }
 }

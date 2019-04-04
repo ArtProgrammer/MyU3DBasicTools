@@ -6,6 +6,7 @@ using SimpleAI.Messaging;
 using SimpleAI.Utils;
 using SimpleAI.Logger;
 using SimpleAI.Spatial;
+using GameContent.Defence;
 
 namespace SimpleAI.Game
 {
@@ -18,7 +19,45 @@ namespace SimpleAI.Game
             get { return TheID; }
         }
 
-        public int TheSpatialNodeID = 0;
+        [SerializeField]
+        protected int TheRaceSignal = 0;
+
+        public int RaceSignal
+        { 
+            set
+            {
+                if (TheRaceSignal != value)
+                {
+                    TheRaceSignal = value;
+                    RaceType = DefenceSystem.Instance.Int2RaceType(TheRaceSignal);
+                }
+            }
+            get
+            {
+                return TheRaceSignal;
+            }
+        }
+
+        [SerializeField]
+        public RaceTypeEnum RaceType
+        {
+            set;get;
+        }
+
+        [SerializeField]
+        protected int TheCampType = 0;
+
+        public int CampType
+        { 
+            set
+            {
+                TheCampType = value;
+            }
+            get
+            {
+                return TheCampType;
+            }
+        }
 
         public BaseGameEntity()
         {
@@ -27,6 +66,17 @@ namespace SimpleAI.Game
 
         ~BaseGameEntity()
         {
+
+        }
+
+        public virtual void LoadData()
+        {
+            //TheRaceType = 0;
+            //TheCampType = 0;
+        }
+
+        public virtual void SaveData()
+        { 
 
         }
 
@@ -40,7 +90,6 @@ namespace SimpleAI.Game
         /// </summary>
         public virtual void Initialize()
         {
-            TheSpatialNodeID = SpatialNodeID;
         }
 
         /// <summary>
