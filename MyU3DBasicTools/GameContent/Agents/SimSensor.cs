@@ -75,11 +75,20 @@ namespace GameContent.Agents
 
         }
 
+        private List<MeshRenderer> TargetList = new List<MeshRenderer>();
+
         public virtual void UpdateWithinRange()
         {
             Targets.Clear();
             Owner.GetPosition(ref SelfPos);
             SearchBound.center = SelfPos;
+
+            for (int i = 0; i < TargetList.Count; ++i)
+            {
+                TargetList[i].enabled = true;
+            }
+
+            TargetList.Clear();
 
             SpatialManager.Instance.QueryRange(ref SearchBound, Targets);
 
@@ -89,13 +98,19 @@ namespace GameContent.Agents
                 if (!System.Object.ReferenceEquals(item, null) &&
                     !System.Object.ReferenceEquals(item, Owner))
                 {
-                    if (DefenceSystem.Instance.IsEnemyRace(Owner.RaceType,
-                        item.RaceType))
+                    if (DefenceSystem.Instance.IsEnemyRace(Owner.RaceSignal,
+                        item.RaceSignal))
                     {
-                        item.transform.position =
-                            new Vector3(item.transform.position.x,
-                                10,
-                                item.transform.position.z);
+                        //item.transform.position =
+                        //new Vector3(item.transform.position.x,
+                        //10,
+                        //item.transform.position.z);
+                        MeshRenderer rdr = item.GetComponent<MeshRenderer>();
+                        if (rdr != null)
+                        {
+                            TargetList.Add(rdr);
+                            rdr.enabled = false;
+                        }
                     }
 
                 }

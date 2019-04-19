@@ -72,6 +72,12 @@ namespace SimpleAI.Spatial
             IsPosDirty = isMoved;
         }
 
+        public void SetPosition(ref Vector3 pos)
+        {
+            Position = pos;
+            IsPosDirty = true;
+        }
+
         public void MemberIsDirty()
         {
             SpatialManager.Instance.HandleNodePosChanged(this);

@@ -316,7 +316,7 @@ namespace SimpleAI.Spatial
             sub7.Attach();
             sub8.Attach();
 
-            TinyLogger.Instance.DebugLog("$$$ SubDivide ->");
+            //TinyLogger.Instance.DebugLog("$$$ SubDivide ->");
             //for (var i = 0; i < SubTreeCount; i++)
             //{
             //    TinyLogger.Instance.DebugLog(
