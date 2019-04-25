@@ -12,7 +12,7 @@ namespace SimpleAI.TheCamera
 
         private bool HasChanged = false;
 
-        private float Dis2Target = 10.0f;
+        public float Dis2Target = 100.0f;
 
         private float AxisZRot = 0.0f;
 

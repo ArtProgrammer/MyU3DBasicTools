@@ -13,7 +13,8 @@ namespace GameContent.SimAgent
 {
     public class SimWood : BaseGameEntity
     {
-        private NavMeshAgent NMAgent = null;
+        //public NavMeshAgent NMAgent = null;
+        public bool IsPlayerCtrl = false;
 
         public Transform Home = null;
 
@@ -47,9 +48,14 @@ namespace GameContent.SimAgent
 
         public override void Initialize()
         {
+            if (IsPlayerCtrl)
+            {
+                EntityManager.Instance.PlayerEntity = this;
+            }
+
             TinyLogger.Instance.DebugLog("$$$ SimWood register to MessagingSystem");
 
-            NMAgent = GetComponent<NavMeshAgent>();
+            //NMAgent = GetComponent<NavMeshAgent>();
 
             SelfTrans = GetComponent<Transform>();
 

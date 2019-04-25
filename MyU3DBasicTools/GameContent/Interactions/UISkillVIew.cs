@@ -11,6 +11,8 @@ namespace GameContent.Interaction
 {
     public class UISkillVIew : MonoBehaviour
     {
+        UISkillInteractor SkillIter = null;
+
         RectTransform Root = null;
 
         List<Image> BtnList = new List<Image>();
@@ -18,16 +20,25 @@ namespace GameContent.Interaction
         // Start is called before the first frame update
         void Start()
         {
+            SkillIter = GetComponent<UISkillInteractor>();
+
             Root = GetComponent<RectTransform>();
 
             if (!System.Object.ReferenceEquals(null, Root))
             {
                 for (int i = 0; i < Root.childCount; i++)
                 {
-                    Image btn = Root.GetChild(i).GetComponent<Image>();
-                    BtnList.Add(btn);
+                    Image btnimg = Root.GetChild(i).GetComponent<Image>();
+                    Button btn = btnimg.GetComponent<Button>();
+                    //btn.onClick.AddListener( () => OnSkilLClick(i));
+                    BtnList.Add(btnimg);
                 }
             }
+        }
+
+        public void OnSkilLClick(int index)
+        {
+            //SkillIter.TryItem(index);
         }
 
         public void LoadContent()
@@ -69,7 +80,7 @@ namespace GameContent.Interaction
             
             if (File.Exists(path))
             {
-                TinyLogger.Instance.ErrorLog("$file: " + path + " exits");
+                //TinyLogger.Instance.ErrorLog("$file: " + path + " exits");
                 fileData = File.ReadAllBytes(path);
                 tex = new Texture2D(2, 2);
 
@@ -80,7 +91,7 @@ namespace GameContent.Interaction
 
                 if (tex.LoadImage(fileData))
                 {
-                    TinyLogger.Instance.ErrorLog("$ yet load image");
+                    //TinyLogger.Instance.ErrorLog("$ yet load image");
                     return tex;
                 }
                 else

@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace SimpleAI.Timer
 {
@@ -50,7 +51,8 @@ namespace SimpleAI.Timer
         {
             get
             {
-                return GetDeltaTime();
+                return Time.deltaTime;
+                //return GetDeltaTime();
             }
         }
 
@@ -79,7 +81,8 @@ namespace SimpleAI.Timer
 
             CurTicks = DateTime.Now.Ticks;
 
-            RealTimeFromStart = (float)(CurTicks - StartTicks) * MilliSecPerTicks;
+            RealTimeFromStart = 
+                (float)(CurTicks - StartTicks) * MilliSecPerTicks;
 
             return RealTimeFromStart;
         }

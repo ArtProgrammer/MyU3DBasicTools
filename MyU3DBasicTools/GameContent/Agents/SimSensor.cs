@@ -105,12 +105,13 @@ namespace GameContent.Agents
                         //new Vector3(item.transform.position.x,
                         //10,
                         //item.transform.position.z);
-                        MeshRenderer rdr = item.GetComponent<MeshRenderer>();
-                        if (rdr != null)
-                        {
-                            TargetList.Add(rdr);
-                            rdr.enabled = false;
-                        }
+
+                        //MeshRenderer rdr = item.GetComponent<MeshRenderer>();
+                        //if (rdr != null)
+                        //{
+                        //    TargetList.Add(rdr);
+                        //    rdr.enabled = false;
+                        //}
                     }
 
                 }

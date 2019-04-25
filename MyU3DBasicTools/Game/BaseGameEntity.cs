@@ -1,23 +1,49 @@
 ﻿using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 using SimpleAI.Messaging;
 using SimpleAI.Utils;
 using SimpleAI.Logger;
 using SimpleAI.Spatial;
 using GameContent.Defence;
+using GameContent.Skill;
 
 namespace SimpleAI.Game
 {
     public class BaseGameEntity : SpatialFruitNode, ITelegramReceiver, IUpdateable
     {
+        [SerializeField]
         private int TheID = 0;
 
         public int ID
         {
             get { return TheID; }
         }
+
+        [SerializeField]
+        private int TheXue = 100;
+
+        public int Xue
+        { 
+            get
+            {
+                return TheXue;
+            }
+            set
+            {
+                TheXue = value;
+                if (!System.Object.ReferenceEquals(null, OnXueChanged))
+                {
+                    OnXueChanged(TheXue);
+                }
+            }
+        }
+
+        Action<int> OnXueChanged;
+
 
         [SerializeField]
         protected int TheRaceSignal = 0;
@@ -57,6 +83,37 @@ namespace SimpleAI.Game
             {
                 return TheCampType;
             }
+        }
+
+        private List<BaseBuff<BaseGameEntity>> BuffList = 
+            new List<BaseBuff<BaseGameEntity>>();
+
+        public void AddBuff(BaseBuff<BaseGameEntity> buff)
+        {
+            BuffList.Add(buff);
+        }
+
+        public void RemoveBuff(BaseBuff<BaseGameEntity> buff)
+        {
+            BuffList.Remove(buff);
+        }
+
+        protected void ProcessBuffs(ref float dt)
+        { 
+            for (int i = 0; i < BuffList.Count; i++)
+            {
+                BuffList[i].OnUpdate(dt);
+            }
+        }
+
+        public void ClearBuffList()
+        {
+            for (int i = 0; i < BuffList.Count; i++)
+            {
+                BuffList[i].Despawned();
+            }
+
+            BuffList.Clear();
         }
 
         public BaseGameEntity()
@@ -100,12 +157,41 @@ namespace SimpleAI.Game
 
         }
 
-        public virtual void Process(float dt) { }
+        public virtual void Process(float dt) 
+        {
+
+        }
+
+        public NavMeshAgent NMAgent = null;
+
+        public virtual void UseSkill(BaseSkill skill, ref Vector3 position)
+        {
+            skill.SetOwner(this);
+            SKillMananger.Instance.TryUseSkill(skill, ref position);
+        }
+
+        public virtual void UseSkill(BaseSkill skill, BaseGameEntity target)
+        {
+            skill.SetOwner(this);
+            SKillMananger.Instance.TryUseSkill(skill, target);
+        }
+
+        public virtual void UseSkill(int skillid, ref Vector3 pos)
+        {
+            //skill.SetOwner(this);
+        }
+
+        public virtual void UseSkill(int skillid, BaseGameEntity target)
+        {
+            //skill.SetOwner(this);
+        }
 
         void Awake()
         {
             TheID = IDAllocator.Instance.GetID();
             TinyLogger.Instance.DebugLog(string.Format("$ BaseGameEnity got id: {0}", TheID));
+
+            NMAgent = GetComponent<NavMeshAgent>();
         }
 
         void Start()
@@ -120,6 +206,8 @@ namespace SimpleAI.Game
 
         void OnDestroy()
         {
+            ClearBuffList();
+
             if (IDAllocator.IsAlive)
             {
                 IDAllocator.Instance.RecycleID(TheID);
@@ -143,6 +231,8 @@ namespace SimpleAI.Game
         public virtual void OnUpdate(float dt)
         {
             TheUpdate();
+
+            ProcessBuffs(ref dt);
 
             Process(dt);
         }

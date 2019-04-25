@@ -2,7 +2,7 @@
 
 namespace SimpleAI.Timer
 {
-    class Regulator
+    public class Regulator
     {
         private float UpdatePeriod = 0.0f;
 

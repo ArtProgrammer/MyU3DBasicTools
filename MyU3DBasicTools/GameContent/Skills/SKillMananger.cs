@@ -14,7 +14,7 @@ namespace GameContent.Skill
         private Dictionary<int, BaseSkill> Skills =
             new Dictionary<int, BaseSkill>();
 
-        private Vector3 Position2Use = Vector3.zero;
+        public Vector3 Position2Use = Vector3.zero;
 
         private Vector3 SkillRangeSize = Vector3.zero;
 
@@ -47,19 +47,21 @@ namespace GameContent.Skill
 
         public void OnUpdate(float dt)
         {
-            UpdateSkills();
+            UpdateSkills(dt);
         }
 
-        public void FindCurSkillTargets(ref Vector3 position)
+        public void FindCurSkillTargets(ref Vector3 position, float range)
         { 
             if (!System.Object.ReferenceEquals(CurSkill2Use, null))
             {
                 SkillBound.center = position;
 
-                SkillRangeSize.x = CurSkill2Use.Range;
-                SkillRangeSize.y = CurSkill2Use.Range;
-                SkillRangeSize.z = CurSkill2Use.Range;
+                SkillRangeSize.x = range;
+                SkillRangeSize.y = range;
+                SkillRangeSize.z = range;
                 SkillBound.size = SkillRangeSize;
+
+                Targets.Clear();
 
                 SpatialManager.Instance.QueryRange(ref SkillBound,
                     Targets);
@@ -69,14 +71,14 @@ namespace GameContent.Skill
         public bool TryUseSkill(int uniqueID)
         {
             TinyLogger.Instance.DebugLog(
-                string.Format("$ try use skill with kind {0}",
+                string.Format("$ try use skill with uniqueID {0}",
                 uniqueID)
             );
 
             if (CanBeUsed(uniqueID))
             {
                 CurSkill2Use = new RiseupSkill();
-                FindCurSkillTargets(ref Position2Use);
+                FindCurSkillTargets(ref Position2Use, CurSkill2Use.Range);
 
                 for (int i = 0; i < Targets.Count; ++i)
                 {
@@ -90,7 +92,59 @@ namespace GameContent.Skill
             else {
                 return false;
             }
+        }
 
+        public bool TryUseSkill(BaseSkill skill, BaseGameEntity target)
+        {
+            if (!System.Object.ReferenceEquals(null, skill) &&
+                !System.Object.ReferenceEquals(null, target))
+            {
+                skill.Use(target);
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool TryUseSkill(BaseSkill skill, ref Vector3 position)
+        {
+            if (!System.Object.ReferenceEquals(null, skill))
+            {
+                FindCurSkillTargets(ref position, skill.Range);
+
+                TinyLogger.Instance.DebugLog("$$$ skill targets count: " + Targets.Count.ToString());
+
+                for (int i = 0; i < Targets.Count; ++i)
+                {
+                    //if (!System.Object.ReferenceEquals(skill.GetOwner(), Targets[i]))
+                        skill.Use((BaseGameEntity)Targets[i]);
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool TryUseSkill(BaseSkill skill)
+        { 
+            if (!System.Object.ReferenceEquals(null, skill))
+            {
+                CurSkill2Use = skill;
+                FindCurSkillTargets(ref Position2Use, skill.Range);
+
+                for (int i = 0; i < Targets.Count; ++i)
+                {
+                    //CurSkill2Use.Use((BaseGameEntity)Targets[i]);
+                    EntityManager.Instance.PlayerEntity.UseSkill(CurSkill2Use, 
+                        (BaseGameEntity)Targets[i]);
+                    CurSkill2Use.Use((BaseGameEntity)Targets[i]);
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
         public void TriggerSkillOnUI(int index)
@@ -114,8 +168,12 @@ namespace GameContent.Skill
 
         }
 
-        public void UpdateSkills()
+        public void UpdateSkills(float dt)
         { 
+            for (int i = 0; i < Skills.Count; i++)
+            {
+                Skills[i].Process(dt);
+            }
         }
 
         public bool CanBeUsed(int uniqueID)

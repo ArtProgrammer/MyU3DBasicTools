@@ -14,6 +14,11 @@ namespace SimpleAI.Game
         private Dictionary<int, BaseGameEntity> EntityDic =
             new Dictionary<int, BaseGameEntity>();
 
+        public List<BaseGameEntity> PlayerControlEntities =
+            new List<BaseGameEntity>();
+
+        public BaseGameEntity PlayerEntity = null;
+
         private EntityManager() { }
 
         static EntityManager() { }

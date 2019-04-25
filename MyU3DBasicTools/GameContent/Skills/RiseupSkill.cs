@@ -19,7 +19,7 @@ namespace GameContent.Skill
 
         public RiseupSkill()
         {
-            Range = 100.0f;
+            Range = 20.0f;
         }
 
         public override void Use(List<BaseGameEntity> targets)
@@ -32,7 +32,9 @@ namespace GameContent.Skill
                     //target.GetPosition(ref Offset);
                     Offset.y += 5.0f;
                     //target.SetPosition(ref Offset);
-                    targets[i].transform.Translate(Offset);
+                    //targets[i].transform.Translate(Offset);
+                    RotBuff rbuff = new RotBuff();
+                    rbuff.Attach(targets[i]);
 
                     //TinyLogger.Instance.DebugLog(string.Format("$ new y {0}",
                     //Offset.y));
@@ -72,10 +74,12 @@ namespace GameContent.Skill
                 //target.GetPosition(ref Offset);
                 Offset.y += 5.0f;
                 //target.SetPosition(ref Offset);
-                target.transform.Translate(Offset);
+                //target.transform.Translate(Offset);
+                RotBuff rbuff = new RotBuff();
+                rbuff.Attach(target);
 
                 //TinyLogger.Instance.DebugLog(string.Format("$ new y {0}",
-                    //Offset.y));
+                //Offset.y));
             }
         }
     }
