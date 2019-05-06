@@ -15,6 +15,8 @@ namespace GameContent.Skill
 
         public T Target;
 
+        public T Dst;
+
         public bool IsActive = true;
 
         public int SenderID = 0;

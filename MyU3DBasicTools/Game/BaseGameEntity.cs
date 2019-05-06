@@ -11,6 +11,8 @@ using SimpleAI.Spatial;
 using GameContent.Defence;
 using GameContent.Skill;
 
+using GameContent.Item;
+
 namespace SimpleAI.Game
 {
     public class BaseGameEntity : SpatialFruitNode, ITelegramReceiver, IUpdateable
@@ -24,26 +26,47 @@ namespace SimpleAI.Game
         }
 
         [SerializeField]
-        private int TheXue = 100;
+        private int XueNum = 100;
 
         public int Xue
         { 
             get
             {
-                return TheXue;
+                return XueNum;
             }
             set
             {
-                TheXue = value;
+                XueNum = value;
                 if (!System.Object.ReferenceEquals(null, OnXueChanged))
                 {
-                    OnXueChanged(TheXue);
+                    OnXueChanged(XueNum);
                 }
             }
         }
 
-        Action<int> OnXueChanged;
+        protected Action<int> OnXueChanged;
 
+        [SerializeField]
+        private int QiNum = 100;
+
+        public int Qi
+        { 
+            set
+            {
+                QiNum = value;
+
+                if (!System.Object.ReferenceEquals(null, QiChanged))
+                {
+                    QiChanged(QiNum);
+                }
+            }
+            get
+            {
+                return QiNum;
+            }
+        }
+
+        protected Action<int> QiChanged;
 
         [SerializeField]
         protected int TheRaceSignal = 0;
@@ -137,6 +160,11 @@ namespace SimpleAI.Game
 
         }
 
+        public void SetPosition(Vector3 pos)
+        {
+            transform.position = pos;
+        }
+
         public void GetPosition(ref Vector3 val)
         {
             val = transform.position;
@@ -179,11 +207,28 @@ namespace SimpleAI.Game
         public virtual void UseSkill(int skillid, ref Vector3 pos)
         {
             //skill.SetOwner(this);
+            SKillMananger.Instance.TryUseSkill(skillid, ref pos, this);
         }
 
         public virtual void UseSkill(int skillid, BaseGameEntity target)
         {
             //skill.SetOwner(this);
+            SKillMananger.Instance.TryUseSkill(skillid, target, this);
+        }
+
+        //public virtual void UseItem(BaseItem item, BaseGameEntity target)
+        //{ 
+        //    if (!System.Object.ReferenceEquals(null, item) &&
+        //        !System.Object.ReferenceEquals(null, target))
+        //    {
+        //        //item.Use(target);
+        //        //ItemManager.Instance.TryUseItem()
+        //    }
+        //}
+
+        public virtual void UseItem(int itemid, BaseGameEntity target)
+        {
+            ItemManager.Instance.TryUseItem(itemid, target);
         }
 
         void Awake()

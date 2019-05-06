@@ -1,54 +1,116 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GameContent.UsableItem;
+using SimpleAI.Game;
 
-public class BaseItem : MonoBehaviour
+namespace GameContent.Item
 {
-    private int TheID = 0;
+    public class BaseItem : IBaseUsableItem
+    {
+        private int TheID = 0;
 
-    public int ID
-    { 
-        set
+        public int ID
         {
-            TheID = value;
+            set
+            {
+                TheID = value;
+            }
+            get
+            {
+                return TheID;
+            }
         }
-        get
+
+        private int TheCount = 1;
+
+        public int Count
         {
-            return TheID;
+            set
+            {
+                TheCount = value;
+            }
+            get
+            {
+                return TheCount;
+            }
         }
-    }
 
-    private int TheCount = 1;
+        private int TheKind = 0;
 
-    public int Count
-    { 
-        set
+        public int Kind
         {
-            TheCount = value;
+            set
+            {
+                TheKind = value;
+            }
+            get
+            {
+                return TheKind;
+            }
         }
-        get
+
+        //void Start()
+        //{
+        //    Initialize();
+        //}
+
+        //public void OnUpdate(float dt)
+        //{
+        //    Process(dt);
+        //}
+
+        //void OnDestroy()
+        //{
+        //    Destroy();
+        //}
+
+        /// <summary>
+        /// Initialize this instance.
+        /// </summary>
+        public virtual void Initialize()
         {
-            return TheCount;
+
         }
-    }
 
-    private int TheKind = 0;
+        public virtual void Process(float dt)
+        { 
 
-    public int Kind
-    { 
-        set
-        {
-            TheKind = value;
         }
-        get
-        {
-            return TheKind;
+
+        public virtual void Destroy()
+        { 
+
         }
-    }
 
-    public virtual void Use()
-    { 
+        public virtual void TakeEffect()
+        { 
 
+        }
+
+        public virtual void Use(Vector3 pos)
+        { 
+
+        }
+
+        public virtual void Use(BaseGameEntity target)
+        { 
+
+        }
+
+        public virtual void Use(List<BaseGameEntity> targets)
+        { 
+
+        }
+
+        public virtual void Use(IBaseUsableItem target)
+        { 
+
+        }
+
+        public virtual void Use(List<IBaseUsableItem> targets)
+        { 
+
+        }
     }
 }
-

@@ -14,10 +14,18 @@ namespace GameContent.Skill
 
         public override void Use(BaseGameEntity target)
         {
-            SuckBloodBuff sbbuff = new SuckBloodBuff();
-            sbbuff.Attach(target);
+            //SuckBloodBuff sbbuff = new SuckBloodBuff();
+            //sbbuff.Attach(target);
 
-            sbbuff.SetDst(GetOwner());
+            //sbbuff.SetDst(GetOwner());
+
+            // --------------
+            base.Use(target);
+
+            for (int i = 0; i < BuffList.Count; i++)
+            {
+                BuffList[i].Dst = GetOwner();
+            }
         }
     }
 }

@@ -24,22 +24,22 @@ namespace GameContent.Skill
 
         public override void Use(List<BaseGameEntity> targets)
         {
-            for (int i = 0; i < targets.Count; ++i)
-            {
-                if (!System.Object.ReferenceEquals(targets[i], null))
-                {
-                    Offset = targets[i].transform.position;
-                    //target.GetPosition(ref Offset);
-                    Offset.y += 5.0f;
-                    //target.SetPosition(ref Offset);
-                    //targets[i].transform.Translate(Offset);
-                    RotBuff rbuff = new RotBuff();
-                    rbuff.Attach(targets[i]);
+            //for (int i = 0; i < targets.Count; ++i)
+            //{
+            //    if (!System.Object.ReferenceEquals(targets[i], null))
+            //    {
+            //        Offset = targets[i].transform.position;
+            //        //target.GetPosition(ref Offset);
+            //        Offset.y += 5.0f;
+            //        //target.SetPosition(ref Offset);
+            //        //targets[i].transform.Translate(Offset);
+            //        RotBuff rbuff = new RotBuff();
+            //        rbuff.Attach(targets[i]);
 
-                    //TinyLogger.Instance.DebugLog(string.Format("$ new y {0}",
-                    //Offset.y));
-                }
-            }
+            //        //TinyLogger.Instance.DebugLog(string.Format("$ new y {0}",
+            //        //Offset.y));
+            //    }
+            //}
         }
 
         public override void Use(BaseGameEntity target)
@@ -68,19 +68,23 @@ namespace GameContent.Skill
             //TinyLogger.Instance.DebugLog(string.Format("$found {0} targets",
                 //targets.Count));
 
-            if (!System.Object.ReferenceEquals(target, null))
-            {
-                Offset = target.transform.position;
-                //target.GetPosition(ref Offset);
-                Offset.y += 5.0f;
-                //target.SetPosition(ref Offset);
-                //target.transform.Translate(Offset);
-                RotBuff rbuff = new RotBuff();
-                rbuff.Attach(target);
+            // ---------------------------
+            //if (!System.Object.ReferenceEquals(target, null))
+            //{
+            //    Offset = target.transform.position;
+            //    //target.GetPosition(ref Offset);
+            //    Offset.y += 5.0f;
+            //    //target.SetPosition(ref Offset);
+            //    //target.transform.Translate(Offset);
+            //    RotBuff rbuff = new RotBuff();
+            //    rbuff.Attach(target);
 
-                //TinyLogger.Instance.DebugLog(string.Format("$ new y {0}",
-                //Offset.y));
-            }
+            //    //TinyLogger.Instance.DebugLog(string.Format("$ new y {0}",
+            //    //Offset.y));
+            //}
+
+            //----------------
+            base.Use(target);
         }
     }
 }

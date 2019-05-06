@@ -5,9 +5,48 @@ using SimpleAI.Utils;
 using SimpleAI.Game;
 using SimpleAI.Logger;
 using SimpleAI.Spatial;
+using GameContent.UsableItem;
 
 namespace GameContent.Skill
 {
+    public class SkillData : BaseUsableData
+    {
+        public bool AttackEnemy;
+        public bool IsItemSkill;
+        public bool IsRoleSkill;
+        public bool IsLinked;
+        public int SkillID;
+        public int Level;
+        public int CostType;
+        public int Cost;
+        public int EffectID;
+        public int BuffID;
+        public float UseRange;
+        public float EffectRange;
+        public float DelayTime;
+        public float LastTime;
+        public float CooldownTime;
+        public float Speed;
+
+        public SkillData()
+        {
+            Catalog = UsableCatalog.Skill;
+        }
+    }
+
+    public class BuffData
+    {
+        public float Delay;
+        public float LifeTime;
+        public float Duration;
+        public float MaxTimes;
+    }
+
+    /// <summary>
+    /// SKill mananger.
+    /// Handle skills data load and clean.
+    /// Handle runtime skill instances process.
+    /// </summary>
     public class SKillMananger : SingletonAsComponent<SKillMananger>, 
         IUpdateable
     {
@@ -23,8 +62,75 @@ namespace GameContent.Skill
         List<SpatialFruitNode> Targets =
                 new List<SpatialFruitNode>();
 
-        private void LoadSkills()
+        private Dictionary<int, SkillData> SkillDataPool =
+            new Dictionary<int, SkillData>();
+
+        /// <summary>
+        /// Loads the skills' config data.
+        /// </summary>
+        public void LoadSkills()
+        {
+            {
+                SkillData sd = new SkillData();
+                sd.ID = 10001; // IDAllocator.Instance.GetID();
+                sd.SkillID = 1;
+                sd.BuffID = 1;
+                sd.Level = 1;
+                sd.Cost = 10;
+                sd.CostType = 1;
+
+                sd.AttackEnemy = true;
+
+                sd.EffectID = 100001;
+                sd.EffectRange = 20.0f;
+                sd.UseRange = 10.0f;
+                sd.IsItemSkill = false;
+                sd.IsRoleSkill = true;
+                sd.Speed = 0.0f;
+                sd.DelayTime = 0.0f;
+                sd.LastTime = 0.0f;
+                sd.CooldownTime = 1;
+
+                sd.Icon = Application.dataPath + "/Images/PureImages/Board-Games.png";
+
+                SkillDataPool.Add(sd.ID, sd);
+            }
+
+            {
+                SkillData sd = new SkillData();
+                sd.ID = 10002; // IDAllocator.Instance.GetID();
+                sd.SkillID = 2;
+                sd.BuffID = 2;
+                sd.Level = 1;
+                sd.Cost = 10;
+                sd.CostType = 1;
+
+                sd.AttackEnemy = true;
+
+                sd.EffectID = 100001;
+                sd.EffectRange = 20.0f;
+                sd.UseRange = 10.0f;
+                sd.IsItemSkill = false;
+                sd.IsRoleSkill = true;
+                sd.Speed = 0.0f;
+                sd.DelayTime = 0.0f;
+                sd.LastTime = 0.0f;
+                sd.CooldownTime = 1;
+
+                sd.Icon = Application.dataPath + "/Images/PureImages/Board-Games.png";
+
+                SkillDataPool.Add(sd.ID, sd);
+            }
+        }
+
+        public SkillData GetSkillData(int id)
         { 
+            if (SkillDataPool.ContainsKey(id))
+            {
+                return SkillDataPool[id];
+            }
+
+            return null;
         }
 
         public static SKillMananger Instance
@@ -40,8 +146,6 @@ namespace GameContent.Skill
         // Start is called before the first frame update
         void Start()
         {
-            LoadSkills();
-
             GameLogicSupvisor.Instance.Register(this);
         }
 
@@ -52,19 +156,25 @@ namespace GameContent.Skill
 
         public void FindCurSkillTargets(ref Vector3 position, float range)
         { 
-            if (!System.Object.ReferenceEquals(CurSkill2Use, null))
-            {
-                SkillBound.center = position;
+            SkillBound.center = position;
 
-                SkillRangeSize.x = range;
-                SkillRangeSize.y = range;
-                SkillRangeSize.z = range;
-                SkillBound.size = SkillRangeSize;
+            SkillRangeSize.x = range;
+            SkillRangeSize.y = range;
+            SkillRangeSize.z = range;
+            SkillBound.size = SkillRangeSize;
 
-                Targets.Clear();
+            Targets.Clear();
 
-                SpatialManager.Instance.QueryRange(ref SkillBound,
-                    Targets);
+            SpatialManager.Instance.QueryRange(ref SkillBound,
+                Targets);
+
+            for (int i = 0; i < Targets.Count; i++)
+            { 
+                if (!SkillBound.Contains(Targets[i].Position))
+                {
+                    Targets.RemoveAt(i);
+                    i--;
+                }
             }
         }
 
@@ -92,6 +202,88 @@ namespace GameContent.Skill
             else {
                 return false;
             }
+        }
+
+        public BaseSkill SpawnSkill(int id)
+        { 
+            if (id == 1)
+            {
+                return new RiseupSkill();
+            }
+            else
+            {
+                return new SuckBloodSkill();
+            }
+        }
+
+        public BaseBuff<BaseGameEntity> SpawnBuff(int id)
+        {
+            //return new BaseBuff<T>();
+            if (id == 1)
+            {
+                return new RotBuff();
+            }
+            else if (id == 2)
+            {
+                return new SuckBloodBuff();
+            }
+
+            return null;
+        }
+
+        public bool TryUseSkill(int id, BaseGameEntity target, BaseGameEntity src)
+        {
+            if (!System.Object.ReferenceEquals(null, target))
+            {
+                var data = GetSkillData(id);
+                var skill = SpawnSkill(data.SkillID);
+                skill.AddBuff(SpawnBuff(data.BuffID));
+                skill.Range = data.EffectRange;
+                skill.Delay = data.DelayTime;
+                skill.Duration = data.LastTime;
+
+                skill.SetOwner(src);
+                skill.Use(target);
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool TryUseSkill(int id, ref Vector3 position, BaseGameEntity src)
+        {
+            var data = GetSkillData(id);
+            var skill = SpawnSkill(data.SkillID);
+
+            if (!System.Object.ReferenceEquals(null, skill))
+            {
+                //var buff = SpawnBuff(data.BuffID);
+                //skill.AddBuff(buff);
+                skill.AddBufID(data.BuffID);
+                skill.Range = data.EffectRange;
+                skill.Delay = data.DelayTime;
+                skill.Duration = data.LastTime;
+
+                skill.SetOwner(src);
+                FindCurSkillTargets(ref position, skill.Range);
+
+                TinyLogger.Instance.DebugLog("$$$ skill targets count: " + Targets.Count.ToString());
+
+                for (int i = 0; i < Targets.Count; ++i)
+                {
+                    if (data.AttackEnemy && 
+                        System.Object.ReferenceEquals(skill.GetOwner(), Targets[i]))
+                    {
+                        continue;
+                    }
+                    
+                    skill.Use((BaseGameEntity)Targets[i]);
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
         public bool TryUseSkill(BaseSkill skill, BaseGameEntity target)

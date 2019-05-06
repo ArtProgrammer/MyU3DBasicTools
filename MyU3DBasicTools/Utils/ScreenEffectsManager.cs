@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SimpleAI.Utils
 {
-    [ExecuteInEditMode]
+    //[ExecuteInEditMode]
     public class ScreenEffectsManager : MonoBehaviour
     {
         #region Variables
@@ -12,7 +12,14 @@ namespace SimpleAI.Utils
 
         public float GrayScaleAmount = 1.0f;
 
-        private Material CurMaterial;
+        private Material CurMaterial = null;
+
+        //
+        public Shader DepthShader = null;
+
+        private Material DepthMaterial = null;
+
+        public float DepthPower = 1.0f;
         #endregion
 
         #region Properties
@@ -26,6 +33,19 @@ namespace SimpleAI.Utils
                     CurMaterial.hideFlags = HideFlags.HideAndDontSave;
                 }
                 return CurMaterial;
+            }
+        }
+
+        Material DepthMat
+        { 
+            get
+            { 
+                if (System.Object.ReferenceEquals(null, DepthMaterial))
+                {
+                    DepthMaterial = new Material(DepthShader);
+                    DepthMaterial.hideFlags = HideFlags.HideAndDontSave;
+                }
+                return DepthMaterial;
             }
         }
 
@@ -45,22 +65,44 @@ namespace SimpleAI.Utils
                 enabled = false;
             }
 
+            if (!DepthShader && !DepthShader.isSupported)
+            {
+                enabled = false; 
+            }
+
         }
 
         // Update is called once per frame
         void Update()
         {
             GrayScaleAmount = Mathf.Clamp(GrayScaleAmount, 0.0f, 1.0f);
+
+            Camera.main.depthTextureMode = DepthTextureMode.Depth;
+
+            DepthPower = Mathf.Clamp(DepthPower, 0, 5);
         }
 
         private void OnRenderImage(RenderTexture source, RenderTexture destination)
         {
-            if (!System.Object.ReferenceEquals(null, CurShader))
+            bool hasMat = false;
+
+            if (!System.Object.ReferenceEquals(null, CurShader) &&
+                !System.Object.ReferenceEquals(null, TheMaterial))
             {
                 TheMaterial.SetFloat("_LuminosityAmount", GrayScaleAmount);
                 Graphics.Blit(source, destination, TheMaterial);
+                hasMat = true;
             }
-            else
+
+            if (!System.Object.ReferenceEquals(null, DepthShader) &&
+                !System.Object.ReferenceEquals(null, DepthMat))
+            {
+                DepthMat.SetFloat("_DepthPower", DepthPower);
+                Graphics.Blit(source, destination, DepthMat);
+                hasMat = true;
+            }
+
+            if (!hasMat)
             {
                 Graphics.Blit(source, destination);
             }
@@ -71,6 +113,11 @@ namespace SimpleAI.Utils
             if (CurMaterial)
             {
                 DestroyImmediate(CurMaterial);
+            }
+
+            if (DepthMat)
+            {
+                DestroyImmediate(DepthMat);
             }
         }
     }

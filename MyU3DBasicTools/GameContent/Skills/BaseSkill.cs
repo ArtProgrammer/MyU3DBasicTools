@@ -3,10 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using SimpleAI.Game;
 using SimpleAI.Utils;
+using GameContent.Item;
+using GameContent.UsableItem;
 
 namespace GameContent.Skill
 {
-    public class BaseSkill
+    public enum SkillTargetType
+    { 
+
+    }
+
+    public class BaseSkill : IBaseUsableItem
     {
         private int TheUniqueID = 0;
 
@@ -54,6 +61,20 @@ namespace GameContent.Skill
             }
         }
 
+        private float DurationTime = 0f;
+
+        public float Duration
+        { 
+            set
+            {
+                DurationTime = value;
+            }
+            get
+            {
+                return DurationTime;
+            }
+        }
+
         public float Range
         {
             set;get;
@@ -63,9 +84,24 @@ namespace GameContent.Skill
 
         private BaseGameEntity Owner = null;
 
+        public List<BaseBuff<BaseGameEntity>> BuffList =
+            new List<BaseBuff<BaseGameEntity>>();
+
+        public List<int> BuffIDList = new List<int>();
+
+        public void AddBuff(BaseBuff<BaseGameEntity> buff)
+        {
+            BuffList.Add(buff);
+        }
+
         public void SetOwner(BaseGameEntity entity)
         {
             Owner = entity;
+        }
+
+        public void AddBufID(int id)
+        {
+            BuffIDList.Add(id);
         }
 
         public BaseGameEntity GetOwner()
@@ -94,32 +130,40 @@ namespace GameContent.Skill
 
         }
 
+        //
+        public virtual void TakeEffect()
+        {
+
+        }
+
+        public virtual void Use(Vector3 pos)
+        {
+
+        }
+
         public virtual void Use(BaseGameEntity target)
         {
-
-        }
-
-        public virtual void Use(BaseItem target)
-        {
-
-        }
-
-        public virtual void Use(BaseSkill target)
-        {
-
+            for (int i = 0; i < BuffIDList.Count; i++)
+            {
+                var buff = SKillMananger.Instance.SpawnBuff(BuffIDList[i]);
+                if (!System.Object.ReferenceEquals(null, buff))
+                {
+                    buff.Attach(target);
+                }
+            }
         }
 
         public virtual void Use(List<BaseGameEntity> targets)
-        { 
-
-        }
-
-        public virtual void Use(List<BaseItem> targets)
         {
 
         }
 
-        public virtual void Use(List<BaseSkill> targets)
+        public virtual void Use(IBaseUsableItem target)
+        {
+
+        }
+
+        public virtual void Use(List<IBaseUsableItem> targets)
         {
 
         }

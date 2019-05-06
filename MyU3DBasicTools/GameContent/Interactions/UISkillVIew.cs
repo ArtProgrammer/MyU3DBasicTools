@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 using GameContent.Skill;
 using SimpleAI.Logger;
+using GameContent.UsableItem;
 
 namespace GameContent.Interaction
 {
@@ -107,16 +108,16 @@ namespace GameContent.Interaction
             return null;
         }
 
-        public void OnAddItem(int index, BaseSkill skill)
+        public void OnAddItem(int index, BaseUsableData data)
         {
-            if (!System.Object.ReferenceEquals(null, skill))
+            if (!System.Object.ReferenceEquals(null, data))
             {
-                if (!System.Object.ReferenceEquals(null, skill.Icon))
+                if (!System.Object.ReferenceEquals(null, data.Icon))
                 {
                     // change the element with given texture.
                     if (index < BtnList.Count)
                     {
-                        Sprite sp = LoadSprite(skill.Icon);
+                        Sprite sp = LoadSprite(data.Icon);
 
                         if (!System.Object.ReferenceEquals(null, sp))
                             BtnList[index].sprite = sp;
@@ -131,6 +132,11 @@ namespace GameContent.Interaction
         public void OnRemoveItem(int index)
         {
             //
+        }
+
+        public void OnItemChange(int index)
+        { 
+
         }
     }
 }
