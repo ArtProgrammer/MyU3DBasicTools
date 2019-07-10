@@ -5,7 +5,7 @@ using SimpleAI.Game;
 
 namespace GameContent.Skill
 {
-    public class SuckBloodBuff : BaseBuff<BaseGameEntity>
+    public class SuckBloodBuff : BaseBuff
     {
         public int Num = 5;
 
@@ -15,7 +15,15 @@ namespace GameContent.Skill
 
         public float Iter = 1.0f;
 
-        BaseGameEntity Dst = null;
+        public SuckBloodBuff()
+        {
+            KindType = BuffKindType.SuckXue;
+        }
+
+        public override BaseBuff Clone()
+        {
+            return new SuckBloodBuff();
+        }
 
         public override void Attach(BaseGameEntity target)
         {

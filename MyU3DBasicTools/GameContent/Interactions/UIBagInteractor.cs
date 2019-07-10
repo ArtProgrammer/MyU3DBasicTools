@@ -7,6 +7,8 @@ namespace GameContent.Interaction
 {
     public class UIBagInteractor : MonoBehaviour
     {
+        private UIBagData BagData = null;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -52,6 +54,11 @@ namespace GameContent.Interaction
 
         public void SweepItems(int srcIndex, int dstIndex)
         {
+        }
+
+        public void Close()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

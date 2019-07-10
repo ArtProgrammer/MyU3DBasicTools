@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using SimpleAI.Game;
 using SimpleAI.Utils;
+using SimpleAI.PoolSystem;
 using GameContent.Item;
 using GameContent.UsableItem;
 
+
 namespace GameContent.Skill
 {
-    public enum SkillTargetType
-    { 
-
-    }
-
-    public class BaseSkill : IBaseUsableItem
+    public class BaseSkill : IBaseUsableItem, IPoolableComponent, IPrototype<BaseSkill>
     {
         private int TheUniqueID = 0;
 
@@ -29,17 +26,17 @@ namespace GameContent.Skill
             }
         }
 
-        private int TheKindID = 0;
+        private SkillKindType TheKindType = 0;
 
-        private int KindID
+        public SkillKindType KindType
         {
             set
             {
-                TheKindID = value;
+                TheKindType = value;
             }
             get
             {
-                return TheKindID;
+                return TheKindType;
             }
         }
 
@@ -61,17 +58,21 @@ namespace GameContent.Skill
             }
         }
 
-        private float DurationTime = 0f;
+        private float CurTime = 0f;
 
-        public float Duration
+        private bool IsAlive = true;
+
+        private float LifeTime = 0f;
+
+        public float Life
         { 
             set
             {
-                DurationTime = value;
+                LifeTime = value;
             }
             get
             {
-                return DurationTime;
+                return LifeTime;
             }
         }
 
@@ -82,24 +83,33 @@ namespace GameContent.Skill
 
         public string Icon = null;
 
-        private BaseGameEntity Owner = null;
+        public string EffectObject = null;
 
-        public List<BaseBuff<BaseGameEntity>> BuffList =
-            new List<BaseBuff<BaseGameEntity>>();
+        private BaseGameEntity Owner = null;
 
         public List<int> BuffIDList = new List<int>();
 
-        public void AddBuff(BaseBuff<BaseGameEntity> buff)
-        {
-            BuffList.Add(buff);
+        public virtual void Spawned()
+        { 
+
         }
 
-        public void SetOwner(BaseGameEntity entity)
+        public virtual void Despawned()
+        { 
+
+        }
+
+        public virtual BaseSkill Clone()
+        {
+            return NullSkill.Instance;
+        }
+
+        public virtual void SetOwner(BaseGameEntity entity)
         {
             Owner = entity;
         }
 
-        public void AddBufID(int id)
+        public virtual void AddBufID(int id)
         {
             BuffIDList.Add(id);
         }
@@ -112,6 +122,7 @@ namespace GameContent.Skill
         public BaseSkill()
         {
             TheUniqueID = IDAllocator.Instance.GetID();
+            KindType = SkillKindType.None;
         }
 
         ~BaseSkill()
@@ -121,8 +132,16 @@ namespace GameContent.Skill
         }
 
         public virtual void Process(float dt)
-        { 
+        {
+            if (!IsAlive) return;
 
+            CurTime += dt;
+
+            if (CurTime > LifeTime)
+            {
+                IsAlive = false;
+                Despawned();
+            }
         }
 
         public virtual void Finish()

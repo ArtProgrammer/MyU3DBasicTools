@@ -129,25 +129,25 @@ namespace SimpleAI.Spatial
             }
         }
 
-        public void OnDrawGizmos()
-        {
-            //if (!System.Object.ReferenceEquals(QTree, null))
-            //{
-            //    Gizmos.color = Color.yellow;
-            //    Gizmos.DrawWireCube(QTree.Boundbox.center, QTree.Boundbox.size);
+        //public void OnDrawGizmos()
+        //{
+        //    //if (!System.Object.ReferenceEquals(QTree, null))
+        //    //{
+        //    //    Gizmos.color = Color.yellow;
+        //    //    Gizmos.DrawWireCube(QTree.Boundbox.center, QTree.Boundbox.size);
 
-            //    Gizmos.color = Color.red;
-            //    Gizmos.DrawWireCube(QTree.Boundbox.center, QTree.Boundbox.extents);
-            //}
+        //    //    Gizmos.color = Color.red;
+        //    //    Gizmos.DrawWireCube(QTree.Boundbox.center, QTree.Boundbox.extents);
+        //    //}
 
-            foreach (var item in SubNodes)
-            {
-                ;
-                Gizmos.color = Color.red;
-                Gizmos.DrawWireCube(item.Value.Boundbox.center, 
-                    item.Value.Boundbox.size);
-            }
-        }
+        //    foreach (var item in SubNodes)
+        //    {
+        //        ;
+        //        Gizmos.color = Color.red;
+        //        Gizmos.DrawWireCube(item.Value.Boundbox.center, 
+        //            item.Value.Boundbox.size);
+        //    }
+        //}
     }
 
     public class QuadTree

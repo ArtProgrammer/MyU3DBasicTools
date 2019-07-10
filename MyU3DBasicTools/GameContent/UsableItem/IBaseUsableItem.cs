@@ -7,6 +7,11 @@ using GameContent.Item;
 
 namespace GameContent.UsableItem
 {
+    public interface IPrototype<T>
+    {
+        T Clone();
+    }
+
     public interface IBaseUsableItem
     {
         void TakeEffect();

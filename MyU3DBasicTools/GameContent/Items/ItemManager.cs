@@ -10,7 +10,17 @@ namespace GameContent.Item
     public enum ItemKind
     { 
         Qi,
-        Xue
+        Xue,
+        LeiFu,
+        HuoFu
+    }
+
+    public enum ItemTargetType
+    {
+        PlayerSelf,
+        TargetBody,
+        Place,
+        Direction
     }
 
     public class ItemData : BaseUsableData
@@ -21,6 +31,8 @@ namespace GameContent.Item
         }
 
         public ItemKind Kind;
+
+        public ItemTargetType TargetType;
     }
 
     public class ItemManager : SingletonAsComponent<ItemManager>,
@@ -40,14 +52,18 @@ namespace GameContent.Item
         private Dictionary<int, ItemData> ItemDataPool =
             new Dictionary<int, ItemData>();
 
+        private ItemProducer ItemMaker = new ItemProducer();
+
         public void LoadDatas()
         {
             {
                 ItemData idata = new ItemData();
                 idata.ID = 1000001;
                 idata.Count = 1;
+                idata.TargetType = ItemTargetType.PlayerSelf;
                 idata.Kind = ItemKind.Qi;
-                idata.Icon = Application.dataPath + "/Images/PureImages/red_cross.png";
+                //idata.Icon = "red_cross.png";
+                idata.IconID = 1;
 
                 ItemDataPool.Add(idata.ID, idata);
             }
@@ -56,26 +72,47 @@ namespace GameContent.Item
                 ItemData idata = new ItemData();
                 idata.ID = 1000002;
                 idata.Count = 1;
+                idata.TargetType = ItemTargetType.PlayerSelf;
                 idata.Kind = ItemKind.Xue;
-                idata.Icon = Application.dataPath + "/Images/PureImages/red_cross.png";
+                //idata.Icon = "red_cross.png";
+                idata.IconID = 1;
 
                 ItemDataPool.Add(idata.ID, idata);
             }
+
+            {
+                ItemData idata = new ItemData();
+                idata.ID = 1000003;
+                idata.Count = 1;
+                idata.TargetType = ItemTargetType.TargetBody;
+                idata.Kind = ItemKind.LeiFu;
+                //idata.Icon = "red_cross.png";
+                idata.IconID = 1;
+
+                ItemDataPool.Add(idata.ID, idata);
+            }
+
+            {
+                ItemData idata = new ItemData();
+                idata.ID = 1000004;
+                idata.Count = 1;
+                idata.TargetType = ItemTargetType.TargetBody;
+                idata.Kind = ItemKind.HuoFu;
+                //idata.Icon = "Board-Games.png";
+                idata.IconID = 1;
+
+                ItemDataPool.Add(idata.ID, idata);
+            }
+
+            ItemMaker.AddPrototype(new QiItem());
+            ItemMaker.AddPrototype(new XueItem());
+            ItemMaker.AddPrototype(new LeiFu());
+            ItemMaker.AddPrototype(new HuoFu());
         }
 
         public BaseItem SpawnItem(ItemKind kind)
-        { 
-            switch (kind)
-            {
-                case ItemKind.Qi:
-                    var qiitem = new QiItem();
-                    return qiitem;
-                case ItemKind.Xue:
-                    var xueitem = new XueItem();
-                    return xueitem;
-                default:
-                    return null;
-            }
+        {
+            return ItemMaker.FindAndClone(kind);
         }
 
         public bool TryUseItem(int id, BaseGameEntity target)

@@ -9,6 +9,17 @@ namespace GameContent.Item
     {
         private int Num = 30;
 
+        public XueItem()
+        {
+            Kind = ItemKind.Xue;
+            TargetType = ItemTargetType.PlayerSelf;
+        }
+
+        public override BaseItem Clone()
+        {
+            return new XueItem();
+        }
+
         public override void Initialize()
         {
 

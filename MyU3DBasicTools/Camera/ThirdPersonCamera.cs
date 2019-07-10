@@ -4,20 +4,25 @@ using UnityEngine;
 
 namespace SimpleAI.TheCamera
 {
+    [ExecuteInEditMode]
     public class ThirdPersonCamera : MonoBehaviour
     {
         public Transform Target = null;
 
         private bool IsReady = false;
 
+        [SerializeField]
         private bool HasChanged = false;
 
         public float Dis2Target = 100.0f;
 
+        [SerializeField]
         private float AxisZRot = 0.0f;
 
+        [SerializeField]
         private float AxisYRot = 45.0f;
 
+        [SerializeField]
         private float AxisXRot = 0.0f;
 
         public float Distance
@@ -148,7 +153,7 @@ namespace SimpleAI.TheCamera
                 OffsetPos.y = Distance * Mathf.Sin(Mathf.Deg2Rad * AxisYRot);
                 OffsetPos.x = Distance * Mathf.Cos(AxisYRot * Mathf.Deg2Rad) *
                     Mathf.Sin(AxisXRot * Mathf.Deg2Rad);
-                OffsetPos.z = Distance * Mathf.Cos(AxisYRot * Mathf.Deg2Rad) *
+                OffsetPos.z = -Distance * Mathf.Cos(AxisYRot * Mathf.Deg2Rad) *
                     Mathf.Cos(AxisXRot * Mathf.Deg2Rad);
             }
         }

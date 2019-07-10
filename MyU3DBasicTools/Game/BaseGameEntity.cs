@@ -25,6 +25,8 @@ namespace SimpleAI.Game
             get { return TheID; }
         }
 
+        public bool IsPlayerControl = false;
+
         [SerializeField]
         private int XueNum = 100;
 
@@ -108,15 +110,15 @@ namespace SimpleAI.Game
             }
         }
 
-        private List<BaseBuff<BaseGameEntity>> BuffList = 
-            new List<BaseBuff<BaseGameEntity>>();
+        private List<BaseBuff> BuffList = 
+            new List<BaseBuff>();
 
-        public void AddBuff(BaseBuff<BaseGameEntity> buff)
+        public void AddBuff(BaseBuff buff)
         {
             BuffList.Add(buff);
         }
 
-        public void RemoveBuff(BaseBuff<BaseGameEntity> buff)
+        public void RemoveBuff(BaseBuff buff)
         {
             BuffList.Remove(buff);
         }
@@ -192,17 +194,17 @@ namespace SimpleAI.Game
 
         public NavMeshAgent NMAgent = null;
 
-        public virtual void UseSkill(BaseSkill skill, ref Vector3 position)
-        {
-            skill.SetOwner(this);
-            SKillMananger.Instance.TryUseSkill(skill, ref position);
-        }
+        //public virtual void UseSkill(BaseSkill skill, ref Vector3 position)
+        //{
+        //    skill.SetOwner(this);
+        //    SKillMananger.Instance.TryUseSkill(skill, ref position);
+        //}
 
-        public virtual void UseSkill(BaseSkill skill, BaseGameEntity target)
-        {
-            skill.SetOwner(this);
-            SKillMananger.Instance.TryUseSkill(skill, target);
-        }
+        //public virtual void UseSkill(BaseSkill skill, BaseGameEntity target)
+        //{
+        //    skill.SetOwner(this);
+        //    SKillMananger.Instance.TryUseSkill(skill, target);
+        //}
 
         public virtual void UseSkill(int skillid, ref Vector3 pos)
         {
@@ -234,7 +236,7 @@ namespace SimpleAI.Game
         void Awake()
         {
             TheID = IDAllocator.Instance.GetID();
-            TinyLogger.Instance.DebugLog(string.Format("$ BaseGameEnity got id: {0}", TheID));
+            //TinyLogger.Instance.DebugLog(string.Format("$ BaseGameEnity got id: {0}", TheID));
 
             NMAgent = GetComponent<NavMeshAgent>();
         }
@@ -245,6 +247,10 @@ namespace SimpleAI.Game
             GameLogicSupvisor.Instance.Register(this);
             EntityManager.Instance.RegisterEntity(this);
 
+            if (IsPlayerControl)
+            {
+                EntityManager.Instance.PlayerEntity = this;
+            }
 
             Initialize();
         }

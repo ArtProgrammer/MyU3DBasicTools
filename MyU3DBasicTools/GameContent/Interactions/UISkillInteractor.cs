@@ -6,6 +6,8 @@ using GameContent.Skill;
 using SimpleAI.Logger;
 using SimpleAI.Inputs;
 using GameContent.Item;
+using GameContent.UsableItem;
+
 
 namespace GameContent.Interaction
 {
@@ -19,6 +21,8 @@ namespace GameContent.Interaction
 
         public int CurSkillID = -1;
 
+        public int CurItemID = -1;
+
         public SkillData CurSkillData = null;
 
         public void UpdateCirclePos(Vector3 pos)
@@ -27,10 +31,35 @@ namespace GameContent.Interaction
             TestCircle.position = pos;
         }
 
+        public void CancelItemUse(Vector3 pos)
+        {
+            if (CurSkillID != -1)
+            {
+                CurSkillID = -1;
+            }
+
+            if (CurItemID != -1)
+            {
+                CurItemID = -1;
+            }
+        }
+
+        public void CancelItemUse(Transform trans)
+        {
+            if (CurSkillID != -1)
+            {
+                CurSkillID = -1;
+            }
+
+            if(CurItemID != -1)
+            {
+                CurItemID = -1;
+            }
+        }
+
         // for aoe skill
         public void FireCurSkill(Vector3 pos)
         {
-            //if (!System.Object.ReferenceEquals(null, CurSkill))
             if (-1 != CurSkillID)
             {
                 if (!System.Object.ReferenceEquals(null, TestCircle))
@@ -45,9 +74,37 @@ namespace GameContent.Interaction
                 EntityManager.Instance.PlayerEntity.UseSkill(CurSkillID,
                     ref pos);
 
-                //CurSkill = null;
-                //CurSkillData = null;
                 CurSkillID = -1;
+            }
+
+            if (-1 != CurItemID)
+            {
+                //EntityManager.Instance.PlayerEntity.UseItem(CurItemID, )
+            }
+        }
+
+        public void FireCurSkillOnTarget(Transform trans)
+        {
+            if (-1 != CurSkillID)
+            {
+                if (!System.Object.ReferenceEquals(null, trans))
+                {
+                    var bge = trans.GetComponent<BaseGameEntity>();
+                    if (!System.Object.ReferenceEquals(null, bge))
+                    {
+                        EntityManager.Instance.PlayerEntity.UseSkill(CurSkillID,
+                            bge);
+                    }
+                }
+            }
+
+            if (-1 != CurItemID)
+            {
+                var bge = trans.GetComponent<BaseGameEntity>();
+                if (!System.Object.ReferenceEquals(null, bge))
+                {
+                    EntityManager.Instance.PlayerEntity.UseItem(CurItemID, bge);
+                }
             }
         }
 
@@ -68,52 +125,64 @@ namespace GameContent.Interaction
 
             InputKeeper.Instance.OnLeftClickPos += UpdateCirclePos;
             InputKeeper.Instance.OnLeftClickPos += FireCurSkill;
+            InputKeeper.Instance.OnLeftClickObject += FireCurSkillOnTarget;
+            InputKeeper.Instance.OnRightClickPos += CancelItemUse;
+            InputKeeper.Instance.OnRightClickObject += CancelItemUse;
+        }
+
+        protected void HandleSkillTry(BaseUsableData data)
+        {
+            SkillData sd = (SkillData)data;
+
+            if (!System.Object.ReferenceEquals(null, sd))
+            {
+                if (sd.TargetType == SkillTargetType.PlayerSelf)
+                {
+                    CurSkillID = -1;
+                    EntityManager.Instance.PlayerEntity.UseSkill(sd.ID,
+                        EntityManager.Instance.PlayerEntity);
+                }
+                else
+                {
+                    CurSkillID = sd.ID;
+                }
+            }
+        }
+
+        protected void HandleItemTry(BaseUsableData data)
+        {
+            ItemData idata = (ItemData)data;
+
+            if (!System.Object.ReferenceEquals(null, idata))
+            {
+                if (idata.TargetType == ItemTargetType.TargetBody)
+                {
+                    CurItemID = idata.ID;
+                }
+                else if (idata.TargetType == ItemTargetType.PlayerSelf)
+                {
+                    EntityManager.Instance.PlayerEntity.UseItem(data.ID,
+                        EntityManager.Instance.PlayerEntity);
+                }
+            }            
         }
 
         public void TryItem(int index)
         {
             TinyLogger.Instance.DebugLog("$$$ try skill index" +
                 index.ToString());
-            //SkillData
+
             var data = SkillDataUI.GetItemByIndex(index);
 
             if (!System.Object.ReferenceEquals(data, null))
             {
                 if (data.Catalog == UsableItem.UsableCatalog.Skill)
                 {
-                    //TinyLogger.Instance.DebugLog("$$$ try skill UniqueID" +
-                    //data.SkillID.ToString());
-
-                    //skill.SetOwner(EntityManager.Instance.PlayerEntity);
-                    //EntityManager.Instance.PlayerEntity.UseSkill(skill, null);
-                    //SKillMananger.Instance.TryUseSkill(skill.UniqueID);
-                    //SKillMananger.Instance.TryUseSkill(skill);
-
-                    //SKillMananger.Instance.CurSkill2Use = skill;
-                    //SKillMananger.Instance.Position2Use = Vector3.zero;
-
-                    //if (!System.Object.ReferenceEquals(null, TestCircle))
-                    //{
-                    //    TestCircle.localScale = 
-                    //      new Vector3(skill.Range / 10.0f, 1.0f, skill.Range / 10.0f);
-                    //}
-
-                    //CurSkill = skill;
-                    CurSkillID = data.ID;
-
-                    //EntityManager.Instance.PlayerEntity.UseSkill(skill, 
-                    //ref SKillMananger.Instance.Position2Use);
-
-                    //EntityManager.Instance.PlayerEntity.UseSkill(data.ID, 
-                    //ref SKillMananger.Instance.Position2Use);
+                    HandleSkillTry(data);
                 }
                 else if (data.Catalog == UsableItem.UsableCatalog.Item)
                 {
-                    //QiItem qiItem = new QiItem();
-                    //EntityManager.Instance.PlayerEntity.UseItem(qiItem,
-                    //EntityManager.Instance.PlayerEntity);
-                    EntityManager.Instance.PlayerEntity.UseItem(data.ID,
-                        EntityManager.Instance.PlayerEntity);
+                    HandleItemTry(data);
                 }
             }
         }

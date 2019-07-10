@@ -48,12 +48,12 @@ namespace GameContent.SimAgent
 
         public override void Initialize()
         {
-            if (IsPlayerCtrl)
-            {
-                EntityManager.Instance.PlayerEntity = this;
-            }
+            //if (IsPlayerCtrl)
+            //{
+            //    EntityManager.Instance.PlayerEntity = this;
+            //}
 
-            TinyLogger.Instance.DebugLog("$$$ SimWood register to MessagingSystem");
+            //TinyLogger.Instance.DebugLog("$$$ SimWood register to MessagingSystem");
 
             //NMAgent = GetComponent<NavMeshAgent>();
 
@@ -79,7 +79,7 @@ namespace GameContent.SimAgent
 
         public override void Process(float dt)
         {
-            if (BrainReg.IsReady())
+            if (!IsPlayerCtrl && BrainReg.IsReady())
             {
                 Brain.Process();
             }
@@ -104,14 +104,14 @@ namespace GameContent.SimAgent
             return true;
         }
 
-        public void OnDrawGizmos()
-        {
-            if (!System.Object.ReferenceEquals(TheSensor, null))
-            {
-                Gizmos.color = Color.blue;
-                Gizmos.DrawWireCube(TheSensor.SearchBound.center,
-                    TheSensor.SearchBound.size);
-            }
-        }
+        //public void OnDrawGizmos()
+        //{
+        //    if (!System.Object.ReferenceEquals(TheSensor, null))
+        //    {
+        //        Gizmos.color = Color.blue;
+        //        Gizmos.DrawWireCube(TheSensor.SearchBound.center,
+        //            TheSensor.SearchBound.size);
+        //    }
+        //}
     }
 }

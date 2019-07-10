@@ -4,12 +4,6 @@ using UnityEngine;
 
 namespace SimpleAI.PoolSystem
 {
-    public interface IPoolableComponent
-    {
-        void Spawned();
-        void Despawned();
-    }
-
     public struct PoolablePrefabData
     {
         public GameObject Go;

@@ -9,7 +9,13 @@ namespace GameContent.Skill
     {
         public SuckBloodSkill()
         {
+            KindType = SkillKindType.SuckXue;
             Range = 20.0f;
+        }
+
+        public override BaseSkill Clone()
+        {
+            return new SuckBloodSkill();
         }
 
         public override void Use(BaseGameEntity target)
@@ -22,10 +28,10 @@ namespace GameContent.Skill
             // --------------
             base.Use(target);
 
-            for (int i = 0; i < BuffList.Count; i++)
-            {
-                BuffList[i].Dst = GetOwner();
-            }
+            //for (int i = 0; i < BuffList.Count; i++)
+            //{
+            //    BuffList[i].Dst = GetOwner();
+            //}
         }
     }
 }

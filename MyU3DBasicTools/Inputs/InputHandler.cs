@@ -51,7 +51,7 @@ namespace SimpleAI.Inputs
 
             if (Input.GetMouseButtonDown(0))
             {
-                TinyLogger.Instance.DebugLog("$$$ mouse click");
+                CurHitObject = null;
 
                 if (GetClick(Input.mousePosition, 
                     ref CurHitObject,
@@ -69,15 +69,31 @@ namespace SimpleAI.Inputs
 
                     if (!System.Object.ReferenceEquals(null, InputKeeper.Instance.OnLeftClickObject) &&
                         !System.Object.ReferenceEquals(null, CurHitObject))
-                    {
+                    {                        
                         InputKeeper.Instance.OnLeftClickObject(CurHitObject.transform);
+                        CurHitObject = null;
                     }
                 }
             }
 
             if (Input.GetMouseButtonDown(1))
-            { 
+            {
+                if (GetClick(Input.mousePosition,
+                    ref CurHitObject,
+                    ref CurClickPos))
+                {
+                    if (!System.Object.ReferenceEquals(null, InputKeeper.Instance.OnLeftClickPos))
+                    {
+                        InputKeeper.Instance.OnRightClickPos(CurClickPos);
+                    }
 
+                    if (!System.Object.ReferenceEquals(null, InputKeeper.Instance.OnRightClickObject) &&
+                        !System.Object.ReferenceEquals(null, CurHitObject))
+                    {
+                        InputKeeper.Instance.OnRightClickObject(CurHitObject.transform);
+                        CurHitObject = null;
+                    }
+                }
             }
 
             if (InputKeeper.Instance.NeedMovingState)
@@ -96,6 +112,7 @@ namespace SimpleAI.Inputs
                         !System.Object.ReferenceEquals(null, CurHitObject))
                     {
                         InputKeeper.Instance.OnMovingObject(CurHitObject.transform);
+                        CurHitObject = null;
                     }
                 }
             }
@@ -118,8 +135,14 @@ namespace SimpleAI.Inputs
             TheRay = Camera.main.ScreenPointToRay(pos);
             if (Physics.Raycast(TheRay, out TheHit, MaxDistance))
             {
-                
-                //obj = TheHit.rigidbody.gameObject;
+                if (!System.Object.ReferenceEquals(null, TheHit.rigidbody))
+                {
+                    obj = TheHit.rigidbody.gameObject;
+                }
+                else if (!System.Object.ReferenceEquals(null, TheHit.transform))
+                {
+                    obj = TheHit.transform.gameObject;
+                }
 
                 clickPos = TheHit.point;
 

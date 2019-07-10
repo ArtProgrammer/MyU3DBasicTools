@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using SimpleAI.Game;
+using SimpleAI.PoolSystem;
+
+using GameContent.UsableItem;
 
 namespace GameContent.Skill
 {
-    public class BaseBuff<T> : IUpdateable
+    public class BaseBuff : IUpdateable, IPoolableComponent, IPrototype<BaseBuff>
     {
         public float DelayTime = 0.0f;
 
@@ -13,9 +16,9 @@ namespace GameContent.Skill
 
         public float CurTime = 0.0f;
 
-        public T Target;
+        public BaseGameEntity Target;
 
-        public T Dst;
+        public BaseGameEntity Dst;
 
         public bool IsActive = true;
 
@@ -23,16 +26,52 @@ namespace GameContent.Skill
 
         public int ReceiverID = 0;
 
-        public BaseBuff()
+        private int TheUniqueID = 0;
+
+        public string EffectName = null;
+
+        public int UniqueID
         {
+            set
+            {
+                TheUniqueID = value;
+            }
+            get
+            {
+                return TheUniqueID;
+            }
         }
 
-        public void Spawned()
+        private BuffKindType TheKindType = 0;
+
+        public BuffKindType KindType
+        {
+            set
+            {
+                TheKindType = value;
+            }
+            get
+            {
+                return TheKindType;
+            }
+        }
+
+        public BaseBuff()
+        {
+            KindType = BuffKindType.None;
+        }
+
+        public virtual BaseBuff Clone()
+        {
+            return NullBuff.Instance;
+        }
+
+        public virtual void Spawned()
         {
             IsActive = true;
         }
 
-        public void Despawned()
+        public virtual void Despawned()
         {
             IsActive = false;
         }
@@ -42,7 +81,7 @@ namespace GameContent.Skill
 
         }
 
-        public virtual void Attach(T target)
+        public virtual void Attach(BaseGameEntity target)
         {
             Target = target;
 

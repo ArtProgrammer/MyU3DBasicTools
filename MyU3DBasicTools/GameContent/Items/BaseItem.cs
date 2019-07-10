@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+using SimpleAI.PoolSystem;
 using GameContent.UsableItem;
 using SimpleAI.Game;
 
 namespace GameContent.Item
 {
-    public class BaseItem : IBaseUsableItem
+    public class BaseItem : IBaseUsableItem, IPoolableComponent, IPrototype<BaseItem>
     {
         private int TheID = 0;
 
@@ -36,9 +38,9 @@ namespace GameContent.Item
             }
         }
 
-        private int TheKind = 0;
+        private ItemKind TheKind = 0;
 
-        public int Kind
+        public ItemKind Kind
         {
             set
             {
@@ -49,6 +51,13 @@ namespace GameContent.Item
                 return TheKind;
             }
         }
+
+        public ItemTargetType TargetType
+        {
+            get;set;
+        }
+
+        public GameObject TheObject = null;
 
         //void Start()
         //{
@@ -64,6 +73,26 @@ namespace GameContent.Item
         //{
         //    Destroy();
         //}
+
+        public BaseItem()
+        {
+            TargetType = ItemTargetType.PlayerSelf;
+        }
+
+        public virtual void Spawned()
+        {
+
+        }
+
+        public virtual void Despawned()
+        {
+
+        }
+
+        public virtual BaseItem Clone()
+        {
+            return new BaseItem();
+        }
 
         /// <summary>
         /// Initialize this instance.

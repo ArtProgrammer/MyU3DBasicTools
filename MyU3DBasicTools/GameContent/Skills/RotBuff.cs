@@ -6,13 +6,23 @@ using SimpleAI.Logger;
 
 namespace GameContent.Skill
 {
-    public class RotBuff : BaseBuff<BaseGameEntity>
+    public class RotBuff : BaseBuff
     {
         public float RotSpeed = 60.0f;
 
         public Vector3 Rotdir = Vector3.zero;
 
         public Vector3 OldScale = Vector3.zero;
+
+        public RotBuff()
+        {
+            KindType = BuffKindType.ZhenYa;
+        }
+
+        public override BaseBuff Clone()
+        {
+            return new RotBuff();
+        }
 
         public override void Attach(BaseGameEntity target)
         {

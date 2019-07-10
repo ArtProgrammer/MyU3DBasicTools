@@ -19,8 +19,15 @@ namespace GameContent.Skill
 
         public RiseupSkill()
         {
+            KindType = SkillKindType.ZhenYa;
             Range = 20.0f;
         }
+
+        public override BaseSkill Clone()
+        {
+            return new RiseupSkill();
+        }
+
 
         public override void Use(List<BaseGameEntity> targets)
         {

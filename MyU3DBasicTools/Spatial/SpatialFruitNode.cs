@@ -40,8 +40,9 @@ namespace SimpleAI.Spatial
         {
             SpatialNodeID = IDAllocator.Instance.GetID();
 
-            TinyLogger.Instance.DebugLog(string.Format("$ spatial node Start {0}", 
-                SpatialNodeID));
+            //TinyLogger.Instance.DebugLog(string.Format("$ spatial node Start {0}", 
+            //    SpatialNodeID));
+
             SetPosition(transform.position.x, transform.position.y, transform.position.z);
 
             RegistSpatial();

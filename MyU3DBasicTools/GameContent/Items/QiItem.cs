@@ -9,6 +9,17 @@ namespace GameContent.Item
     {
         private int Num = 30;
 
+        public QiItem()
+        {
+            Kind = ItemKind.Qi;
+            TargetType = ItemTargetType.PlayerSelf;
+        }
+
+        public override BaseItem Clone()
+        {
+            return new QiItem();
+        }
+
         public override void Initialize()
         {
 

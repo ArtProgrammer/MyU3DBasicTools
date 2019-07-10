@@ -20,6 +20,10 @@ namespace SimpleAI.Inputs
 
         public Action<Transform> OnLeftClickObject;
 
+        public Action<Vector3> OnRightClickPos;
+
+        public Action<Transform> OnRightClickObject;
+
         public Action<Vector3> OnMovingPos;
 
         public Action<Transform> OnMovingObject;
