@@ -9,6 +9,16 @@ namespace GameContent.Skill
 {
     public class JinGuangShenZhou : BaseFaShu
     {
+        public JinGuangShenZhou()
+        {
+            KindType = SkillKindType.JingGuang;
+        }
+
+        public override BaseSkill Clone()
+        {
+            return new JinGuangShenZhou();
+        }
+
         public override void Process(float dt)
         {
 

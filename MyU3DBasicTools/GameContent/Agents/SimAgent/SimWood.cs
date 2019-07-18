@@ -33,12 +33,26 @@ namespace GameContent.SimAgent
 
         public int FoodCount = 0;
 
+        protected Regulator FoodCostReg = null;
+
         private Transform SelfTrans = null;
 
         public void SetDestination(Vector3 pos)
         {
             if (NMAgent)
                 NMAgent.destination = pos;
+        }
+
+        public void StopMove()
+        {
+            if (NMAgent)
+                NMAgent.isStopped = true;
+        }
+
+        public void StartMove()
+        {
+            if (NMAgent)
+                NMAgent.isStopped = false;
         }
 
         //public void GetPosition(ref Vector3 val)
@@ -60,6 +74,8 @@ namespace GameContent.SimAgent
             SelfTrans = GetComponent<Transform>();
 
             BrainReg = new Regulator(15.0f);
+
+            FoodCostReg = new Regulator(0.5f);
 
             Brain = new SimWoodBrain(this, 0);
 
@@ -89,6 +105,11 @@ namespace GameContent.SimAgent
                 TheSensor.Process(dt);
             }
 
+            if (FoodCostReg.IsReady())
+            {
+                if (FoodCount > 0)
+                    FoodCount--;
+            }
         }
 
         public override bool HandleMessage(Telegram msg)

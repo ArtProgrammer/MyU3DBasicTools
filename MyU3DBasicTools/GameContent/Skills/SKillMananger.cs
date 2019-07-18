@@ -19,6 +19,7 @@ namespace GameContent.Skill
         ZhenYa,
         JuFu,
         TianLei,
+        JingGuang,
         None
     }
 
@@ -28,6 +29,7 @@ namespace GameContent.Skill
         ZhenYa,
         TianLei,
         LeiJi,
+        JingGuang,
         None
     }
     
@@ -204,24 +206,57 @@ namespace GameContent.Skill
                 SkillDataPool.Add(sd.ID, sd);
             }
 
+            {
+                SkillData sd = new SkillData();
+                sd.ID = 10008; // IDAllocator.Instance.GetID();
+                sd.KindType = (int)SkillKindType.JingGuang;
+                sd.BuffID = (int)BuffKindType.JingGuang;
+                sd.Level = 1;
+                sd.Cost = 10;
+                sd.CostType = 1;
+
+                sd.TargetType = SkillTargetType.PlayerSelf;
+
+                sd.AttackEnemy = true;
+
+                sd.EffectID = 100001;
+                sd.EffectRange = 30.0f;
+                sd.UseRange = 30.0f;
+                sd.IsItemSkill = false;
+                sd.IsRoleSkill = true;
+                sd.Speed = 0.0f;
+                sd.DelayTime = 0.0f;
+                sd.LastTime = 0.0f;
+                sd.CooldownTime = 1;
+
+                //sd.Icon = "Board-Games.png";
+                sd.IconID = 2;
+
+                SkillDataPool.Add(sd.ID, sd);
+            }
+
             // prepare skill pool system.
             SkillMaker.AddPrototype(new SuckBloodSkill());
             SkillMaker.AddPrototype(new RiseupSkill());
             SkillMaker.AddPrototype(new TianLeiSkill());
+            SkillMaker.AddPrototype(new JinGuangShenZhou());
 
             // 
             SKMgr.Prespawn(SkillKindType.SuckXue, 3);
             SKMgr.Prespawn(SkillKindType.ZhenYa, 3);
             SKMgr.Prespawn(SkillKindType.TianLei, 3);
+            SKMgr.Prespawn(SkillKindType.TianLei, 1);
 
             // prepare buff pool system.
             SkillMaker.AddPrototype(new RotBuff());
             SkillMaker.AddPrototype(new SuckBloodBuff());
             SkillMaker.AddPrototype(new TianLeiBuff());
+            SkillMaker.AddPrototype(new JinGuangShenZhou_Buff());
 
             BPMgr.Prespawn(BuffKindType.SuckXue, 3);
             BPMgr.Prespawn(BuffKindType.ZhenYa, 3);
             BPMgr.Prespawn(BuffKindType.TianLei, 3);
+            BPMgr.Prespawn(BuffKindType.JingGuang, 1);
         }
 
         public SkillData GetSkillData(int id)

@@ -20,13 +20,14 @@ namespace GameContent.SimAgent
             Status = GoalStatus.Active;
 
             Owner.SetDestination(TargetPos);
+            Owner.StartMove();
         }
 
         public override GoalStatus Process()
         {
             ActiveIfInactive();
 
-            if ((Owner.transform.position - TargetPos).sqrMagnitude < 9.0f)
+            if (Owner.IsCloseEnough(ref TargetPos))
             {
                 Status = GoalStatus.Complete;
             }

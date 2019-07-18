@@ -10,6 +10,10 @@ namespace GameContent.SimAgent
     { 
         GoHome,
         GotFood,
+        Follow,
+        Attack,
+        Flee,
+        Hurt,
         None
     }
 
@@ -23,8 +27,9 @@ namespace GameContent.SimAgent
         public SimWoodBrain(SimWood p, int type) :
             base(p, type)
         {
-            Evaluators.Add(new SimWoodGoHomEval(1.0f));
-            Evaluators.Add(new SimWoodGotFoodEval(1.0f));
+            Evaluators.Add(new SimWoodGoHomEval(.50f));
+            Evaluators.Add(new SimWoodGotFoodEval(0.5f));
+            Evaluators.Add(new SimWoodAttackEval(1.0f));
         }
 
         ~SimWoodBrain()
@@ -92,15 +97,30 @@ namespace GameContent.SimAgent
 
         public void AddGotFoodGoal()
         {
-            //if (NotPresent())
-            RemoveAllSubgoals();
-            AddSubGoal(new SimWoodGotFoodGoal(Owner, 1));
+            if (NotPresent((int)SimWoodGoalType.GotFood))
+            {
+                RemoveAllSubgoals();
+                AddSubGoal(new SimWoodGotFoodGoal(Owner, (int)SimWoodGoalType.GotFood));
+            }                
         }
 
         public void AddGoHomeGoal()
         {
-            RemoveAllSubgoals();
-            AddSubGoal(new SimWoodGoHomeGoal(Owner, 2));
+            if (NotPresent((int)SimWoodGoalType.GoHome))
+            {
+                RemoveAllSubgoals();
+                AddSubGoal(new SimWoodGoHomeGoal(Owner, (int)SimWoodGoalType.GoHome));
+            }                
+        }
+
+        public void AddAttackGoal()
+        {
+            if (NotPresent((int)SimWoodGoalType.Attack))
+            {
+                Debug.Log("$Add attack goal");
+                RemoveAllSubgoals();
+                AddSubGoal(new SimWoodAttackGoal(Owner, (int)SimWoodGoalType.Attack));
+            }            
         }
     }
 }

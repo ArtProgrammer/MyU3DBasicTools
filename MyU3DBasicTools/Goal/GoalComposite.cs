@@ -26,7 +26,10 @@ namespace SimpleAI
 
         public override void Terminate() { }
 
-        public override bool HandleMessage(Telegram msg) { return false; }
+        public override bool HandleMessage(Telegram msg)
+        {
+            return ForwardMessageToFrontSubgoal(msg);
+        }
 
         public override void AddSubGoal(Goal<T> g)
         {
@@ -48,7 +51,7 @@ namespace SimpleAI
 
         protected List<Goal<T>> SubGoals = new List<Goal<T>>();
 
-        protected GoalStatus ProcessSubgoals()
+        protected virtual GoalStatus ProcessSubgoals()
         {
             while (SubGoals.Count > 0)
             {

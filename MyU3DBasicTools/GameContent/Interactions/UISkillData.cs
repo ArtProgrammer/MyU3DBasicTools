@@ -77,7 +77,7 @@ namespace GameContent.Interaction
                 UISkillItem usi = new UISkillItem();
                 usi.Index = 0;
                 usi.Count = 1;
-                usi.Data = SKillMananger.Instance.GetSkillData(10001);
+                usi.Data = SKillMananger.Instance.GetSkillData(10008);
 
                 AddItem(usi, false);
             }

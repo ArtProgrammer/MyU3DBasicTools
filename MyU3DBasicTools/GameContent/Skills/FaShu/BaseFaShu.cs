@@ -10,6 +10,26 @@ namespace GameContent.Skill
 {
     public class BaseFaShu : BaseSkill
     {
+        public override void Spawned()
+        {
+
+        }
+
+        public override void Despawned()
+        {
+
+        }
+
+        public BaseFaShu()
+        {
+            KindType = SkillKindType.None;
+        }
+
+        public override BaseSkill Clone()
+        {
+            return new BaseFaShu();
+        }
+
         public override void Process(float dt)
         {
 
