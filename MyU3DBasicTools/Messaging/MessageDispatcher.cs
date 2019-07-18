@@ -9,7 +9,7 @@ using SimpleAI.Timer;
 namespace SimpleAI.Messaging
 {
     public sealed class MessageDispatcher : 
-        SingletonAsComponent<MessageDispatcher>
+        SingletonAsComponent<MessageDispatcher>, IUpdateable
     {
         private float ImmediatelyMsgTime = float.Epsilon;
 
@@ -30,6 +30,11 @@ namespace SimpleAI.Messaging
             get {
                 return (MessageDispatcher)InsideInstance;
             }
+        }
+
+        void Start()
+        {
+            GameLogicSupvisor.Instance.Register(this);
         }
 
         /// <summary>
@@ -133,6 +138,8 @@ namespace SimpleAI.Messaging
 
             if (delay < ImmediatelyMsgTime)
             {
+                // todo: there should be a queue to hold left immediately messages to
+                // limit the time cost on them if there were to many messages per frame.
                 Discharge(receiver, msg);
             }
             else
@@ -180,13 +187,13 @@ namespace SimpleAI.Messaging
         /// <summary>
         /// Check and dispatch the delayed messages that dispatch time arrived.
         /// </summary>
-        void DispatchDelayedMessages()
+        void DispatchDelayedMessages(float dt)
         {
             // TODO: get the current time.
             float currentTime = TimeWrapper.Instance.realtimeSinceStartup;
 
             while (PriorityQ.Count > 0 && 
-                PriorityQ.Min.DispatchTime > currentTime &&
+                PriorityQ.Min.DispatchTime < currentTime &&
                 PriorityQ.Min.DispatchTime > 0.0) {
 
                 Telegram msg = PriorityQ.Min;
@@ -198,6 +205,11 @@ namespace SimpleAI.Messaging
 
                 PriorityQ.Remove(PriorityQ.Min);
             }
+        }
+
+        public void OnUpdate(float dt)
+        {
+            DispatchDelayedMessages(dt);
         }
     }
 }

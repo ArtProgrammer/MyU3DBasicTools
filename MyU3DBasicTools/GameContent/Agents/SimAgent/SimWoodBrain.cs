@@ -27,7 +27,7 @@ namespace GameContent.SimAgent
         public SimWoodBrain(SimWood p, int type) :
             base(p, type)
         {
-            Evaluators.Add(new SimWoodGoHomEval(.50f));
+            Evaluators.Add(new SimWoodGoHomEval(0.50f));
             Evaluators.Add(new SimWoodGotFoodEval(0.5f));
             Evaluators.Add(new SimWoodAttackEval(1.0f));
         }
@@ -117,7 +117,7 @@ namespace GameContent.SimAgent
         {
             if (NotPresent((int)SimWoodGoalType.Attack))
             {
-                Debug.Log("$Add attack goal");
+                //Debug.Log("$Add attack goal");
                 RemoveAllSubgoals();
                 AddSubGoal(new SimWoodAttackGoal(Owner, (int)SimWoodGoalType.Attack));
             }            

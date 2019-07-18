@@ -43,6 +43,7 @@ namespace SimpleAI.Timer
         {
             get
             {
+                //return Time.time;
                 return GetRunningTime();
             }
         }

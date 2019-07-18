@@ -31,7 +31,27 @@ namespace GameContent.SimAgent
 
         public int FoodNeed = 5;
 
-        public int FoodCount = 0;
+        public int FoodCount
+        {
+            get
+            {
+                return CurFoodCount;
+            }
+            set
+            {                
+                if (CurFoodCount != value)
+                {
+                    CurFoodCount = value;
+
+                    if (CurFoodCount <= 0)
+                    {
+                        MessageDispatcher.Instance.DispatchMsg(0.01f, this.ID, this.ID, 101);
+                    }
+                }
+            }
+        }
+
+        public int CurFoodCount = 0;
 
         protected Regulator FoodCostReg = null;
 
@@ -103,6 +123,8 @@ namespace GameContent.SimAgent
             if (SensorReg.IsReady())
             {
                 TheSensor.Process(dt);
+
+                Target = TheSensor.CurTarget;
             }
 
             if (FoodCostReg.IsReady())
@@ -116,11 +138,11 @@ namespace GameContent.SimAgent
         {
             if (Brain.HandleMessage(msg)) return true;
 
-            TinyLogger.Instance.DebugLog("$$$ sin wood back msg got!");
+            //TinyLogger.Instance.DebugLog("$$$ sin wood back msg got!");
 
-            SimWoodBackMsg swbmsg = (SimWoodBackMsg)msg;
+            //SimWoodBackMsg swbmsg = (SimWoodBackMsg)msg;
 
-            NMAgent.destination = swbmsg.Pos;
+            //NMAgent.destination = swbmsg.Pos;
 
             return true;
         }

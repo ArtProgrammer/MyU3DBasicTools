@@ -77,6 +77,10 @@ namespace GameContent.Agents
 
         private List<MeshRenderer> TargetList = new List<MeshRenderer>();
 
+        //public List<BaseGameEntity> Targets = new List<BaseGameEntity>();
+
+        public BaseGameEntity CurTarget = null;
+
         public virtual void UpdateWithinRange()
         {
             Targets.Clear();
@@ -112,6 +116,8 @@ namespace GameContent.Agents
                         //    TargetList.Add(rdr);
                         //    rdr.enabled = false;
                         //}
+
+                        CurTarget = item;
                     }
 
                 }

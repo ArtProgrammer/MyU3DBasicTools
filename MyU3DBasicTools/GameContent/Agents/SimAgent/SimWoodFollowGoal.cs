@@ -33,29 +33,41 @@ namespace GameContent.SimAgent
         {
             ActiveIfInactive();
 
-            if (Owner.IsTargetLost)
+            if (Status == GoalStatus.Active)
             {
-                Status = GoalStatus.Complete;
-            }
-            else if ((Owner.IsCloseEnough(Owner.GetTarget())))
-            {
-                Owner.StopMove();
-                Status = GoalStatus.Complete;
-            }
-            else
-            {
-                Owner.GetTarget().GetPosition(ref TargetPos);
-                Owner.SetDestination(TargetPos);
-                Status = GoalStatus.Active;
-            }
+                if (Owner.IsTargetLost || (Owner.IsCloseEnough(Owner.GetTarget())))
+                {
+                    Owner.StopMove();
+                    Status = GoalStatus.Complete;
+                }
+                else
+                {
+                    Owner.GetTarget().GetPosition(ref TargetPos);
+                    Owner.SetDestination(TargetPos);
+                    Status = GoalStatus.Active;
+                }
+            }            
 
             return Status;
         }
 
         public override void Terminate()
-        {
-            Status = GoalStatus.Inactive;
+        {            
             Owner.StopMove();
+        }
+
+        public override bool HandleMessage(Telegram msg)
+        {
+            Debug.Log("$ msg arrived");
+            if (msg.MsgType == 101)
+            {
+                Debug.Log("$Got msg 101");
+                Status = GoalStatus.Failed;
+
+                return true;
+            }
+            
+            return false;
         }
     }
 }

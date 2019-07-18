@@ -43,6 +43,7 @@ namespace GameContent.SimAgent
         public float Rate2Attack(SimWood p)
         {
             float rate = 1.0f;
+
             //if (p.FoodCount <= p.FoodNeed * 0.5)
             //{
             //    rate = 0.5f;
