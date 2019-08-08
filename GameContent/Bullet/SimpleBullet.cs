@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using SimpleAI.Game;
+using GameContent.SimAgent;
 
 namespace GameContent
 {
@@ -14,21 +15,26 @@ namespace GameContent
 
         public Vector3 Dir = Vector3.zero;
 
-        private bool IsActive = true;
+        private bool IsActive = false;
 
         public int OwnerID = 0;
+
+        public void Go()
+        {
+            IsActive = true;
+        }
 
         // Start is called before the first frame update
         void Start()
         {
-            
+            GameLogicSupvisor.Instance.Register(this);
         }
 
         public void OnUpdate(float dt)
         {
             if (IsActive)
             {
-                transform.position += Dir * Speed;
+                transform.position += Dir * Speed * dt;
             }
         }
 
@@ -37,13 +43,13 @@ namespace GameContent
             if (collision.transform)
             {
                 var trans = collision.transform;
-                var target = trans.GetComponent<BaseGameEntity>();
+                var target = trans.GetComponent<SimWood>();
                 if (!target)
                 {
                     trans = trans.parent;
                     if (trans)
                     {
-                        target = trans.GetComponent<BaseGameEntity>();
+                        target = trans.GetComponent<SimWood>();
                     }
                 }
 
@@ -57,6 +63,12 @@ namespace GameContent
                     }
                 }
             }
+        }
+
+        public void OnDestroy()
+        {
+            if (GameLogicSupvisor.IsAlive)
+                GameLogicSupvisor.Instance.Unregister(this);
         }
     }
 }

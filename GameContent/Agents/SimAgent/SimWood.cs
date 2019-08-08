@@ -57,6 +57,8 @@ namespace GameContent.SimAgent
 
         private Transform SelfTrans = null;
 
+        public BaseWeapon Weapon = null;
+
         public void SetDestination(Vector3 pos)
         {
             if (NMAgent)
@@ -104,6 +106,8 @@ namespace GameContent.SimAgent
             TheSensor = new SimSensor<BaseGameEntity>(this);
 
             TheSensor.Initialize();
+
+            Weapon = GetComponent<BaseWeapon>();
         }
 
         /// <summary>
@@ -156,5 +160,13 @@ namespace GameContent.SimAgent
         //            TheSensor.SearchBound.size);
         //    }
         //}
+
+        public void UseWeapon()
+        {
+            if (Weapon)
+            {
+                Weapon.Use(CurTarget);
+            }
+        }
     }
 }
