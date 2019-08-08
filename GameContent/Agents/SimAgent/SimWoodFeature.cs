@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using GameContent;
+
 namespace GameContent.SimAgent
 {
     public sealed class SimWoodFeature
@@ -57,7 +59,7 @@ namespace GameContent.SimAgent
         public float Rate2Hurt(SimWood p)
         {
             float rate = 0.0f;
-            if (p.IsInAttackRange(p.GetTarget()))
+            if (CombatHolder.Instance.IsInAttackRange(p, p.Target))
             {
                 rate = 1.0f;
             }
@@ -68,7 +70,7 @@ namespace GameContent.SimAgent
         public float Rate2Follow(SimWood p)
         {
             float rate = 0.0f;
-            if (p.IsCloseEnough(p.GetTarget()))
+            if (CombatHolder.Instance.IsCloseEnough(p, p.Target))
             {
                 rate = 1.0f;
             }

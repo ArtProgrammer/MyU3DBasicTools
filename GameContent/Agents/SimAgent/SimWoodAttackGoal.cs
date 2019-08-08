@@ -17,8 +17,8 @@ namespace GameContent.SimAgent
         public SimWoodAttackGoal(SimWood p, int type) :
             base(p, type)
         {
-            AddSubGoal(new SimWoodHurtGoal(p, type, Owner.GetTarget()));
-            AddSubGoal(new SimWoodFollowGoal(p, type, Owner.GetTarget(), Owner.AttackRadius));
+            AddSubGoal(new SimWoodHurtGoal(p, type, Owner.Target));
+            AddSubGoal(new SimWoodFollowGoal(p, type, Owner.Target, Owner.AttackRadius));
 
             //Evaluators.Add(new SimWoodFollowEval(0.5f));
             //Evaluators.Add(new SimWoodHurtEval(1.0f));
@@ -122,7 +122,7 @@ namespace GameContent.SimAgent
         //    if (NotPresent((int)SimWoodGoalType.Follow))
         //    {
         //        RemoveAllSubgoals();
-        //        AddSubGoal(new SimWoodFollowGoal(Owner, (int)SimWoodGoalType.GotFood, Owner.GetTarget()));
+        //        AddSubGoal(new SimWoodFollowGoal(Owner, (int)SimWoodGoalType.GotFood, Owner.Target));
         //    }
         //}
 
@@ -131,7 +131,7 @@ namespace GameContent.SimAgent
         //    if (NotPresent((int)SimWoodGoalType.Hurt))
         //    {
         //        RemoveAllSubgoals();
-        //        AddSubGoal(new SimWoodHurtGoal(Owner, (int)SimWoodGoalType.GotFood, Owner.GetTarget()));
+        //        AddSubGoal(new SimWoodHurtGoal(Owner, (int)SimWoodGoalType.GotFood, Owner.Target));
         //    }
         //}
     }

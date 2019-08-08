@@ -110,8 +110,32 @@ namespace SimpleAI.Game
             }
         }
 
+        public float AttackRadius = 1;
+
         private List<BaseBuff> BuffList = 
             new List<BaseBuff>();
+
+        public BaseGameEntity CurTarget = null;
+
+        public BaseGameEntity Target
+        {
+            set
+            {
+                CurTarget = value;
+            }
+            get
+            {
+                return CurTarget;
+            }
+        }
+
+        public bool IsTargetLost
+        {
+            get
+            {
+                return System.Object.ReferenceEquals(null, CurTarget);
+            }
+        }
 
         public void AddBuff(BaseBuff buff)
         {

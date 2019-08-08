@@ -6,6 +6,8 @@ using SimpleAI;
 using SimpleAI.Game;
 using SimpleAI.Messaging;
 
+using GameContent;
+
 namespace GameContent.SimAgent
 {
     public class SimWoodFollowGoal : Goal<SimWood>
@@ -17,14 +19,14 @@ namespace GameContent.SimAgent
         public SimWoodFollowGoal(SimWood p, int type, BaseGameEntity target, float distance) :
             base(p, type)
         {
-            Owner.SetTarget(target);
+            Owner.Target = target;
             Distance = distance;
         }
 
         public override void Activate()
         {
             Status = GoalStatus.Active;
-            Owner.GetTarget().GetPosition(ref TargetPos);
+            Owner.Target.GetPosition(ref TargetPos);
             Owner.SetDestination(TargetPos);
             Owner.StartMove();
         }
@@ -35,14 +37,14 @@ namespace GameContent.SimAgent
 
             if (Status == GoalStatus.Active)
             {
-                if (Owner.IsTargetLost || (Owner.IsCloseEnough(Owner.GetTarget())))
+                if (Owner.IsTargetLost || (CombatHolder.Instance.IsCloseEnough(Owner, Owner.Target)))
                 {
                     Owner.StopMove();
                     Status = GoalStatus.Complete;
                 }
                 else
                 {
-                    Owner.GetTarget().GetPosition(ref TargetPos);
+                    Owner.Target.GetPosition(ref TargetPos);
                     Owner.SetDestination(TargetPos);
                     Status = GoalStatus.Active;
                 }

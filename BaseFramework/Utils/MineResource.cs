@@ -6,8 +6,18 @@ using SimpleAI.Logger;
 
 namespace SimpleAI.Utils
 {
-    public class MineResource : MonoBehaviour
+    public class MineResource
     {
+        private static MineResource TheInstance = new MineResource();
+
+        public static MineResource Instance
+        {
+            get
+            {
+                return TheInstance;
+            }
+        }
+
         private Dictionary<string, Sprite> Sprites =
             new Dictionary<string, Sprite>();
 
@@ -24,6 +34,21 @@ namespace SimpleAI.Utils
         void Update()
         {
 
+        }
+
+        public void LoadAssetBundleDependencies(string path, string name)
+        {
+
+        }
+
+        public Sprite LoadSpriteFromAB(string path, string name)
+        {
+            return null;
+        }
+
+        public T LoadObjectFromAB<T>(string path, string name) where T : Object
+        {
+            return null;
         }
 
         private Sprite LoadSprite(string path,

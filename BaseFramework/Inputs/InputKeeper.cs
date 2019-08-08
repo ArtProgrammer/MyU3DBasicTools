@@ -28,6 +28,8 @@ namespace SimpleAI.Inputs
 
         public Action<Transform> OnMovingObject;
 
+        public Action<RaycastHit> OnLeftClickHit;
+
         public bool NeedMovingState = false;
     }
 }

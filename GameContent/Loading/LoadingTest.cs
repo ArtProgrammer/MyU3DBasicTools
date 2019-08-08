@@ -19,8 +19,8 @@ namespace GameContent.Loading
         // Start is called before the first frame update
         void Start()
         {
-            HttpModular.Instance.TryGetTexture("http://192.168.124.112/Mongol.png", setImage);
-            HttpModular.Instance.TryGetAudio("http://192.168.124.112/Nohchicho.wav", AudioType.WAV, SetAudio);
+            // HttpModular.Instance.TryGetTexture("http://192.168.124.112/Mongol.png", setImage);
+            // HttpModular.Instance.TryGetAudio("http://192.168.124.112/Nohchicho.wav", AudioType.WAV, SetAudio);
         }
 
         public void setImage(Texture2D tex)

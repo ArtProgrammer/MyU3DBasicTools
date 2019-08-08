@@ -5,6 +5,8 @@ using SimpleAI;
 using SimpleAI.Game;
 using SimpleAI.Messaging;
 
+using GameContent;
+
 namespace GameContent.SimAgent
 {
     public class SimWoodHurtGoal : Goal<SimWood>
@@ -12,7 +14,7 @@ namespace GameContent.SimAgent
         public SimWoodHurtGoal(SimWood p, int type, BaseGameEntity target) :
             base(p, type)
         {
-            Owner.SetTarget(target);
+            Owner.Target = target;
         }
 
         public override void Activate()
@@ -31,7 +33,7 @@ namespace GameContent.SimAgent
             {
                 Status = GoalStatus.Complete;
             }
-            else if (Owner.IsInAttackRange(Owner.GetTarget()))
+            else if (CombatHolder.Instance.IsInAttackRange(Owner, Owner.Target))
             {
                 Debug.Log("$ try hurt target");
                 Status = GoalStatus.Complete;

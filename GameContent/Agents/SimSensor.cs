@@ -73,11 +73,7 @@ namespace GameContent.Agents
         public virtual void UpdateWithSrc(BaseGameEntity p)
         { 
 
-        }
-
-        private List<MeshRenderer> TargetList = new List<MeshRenderer>();
-
-        //public List<BaseGameEntity> Targets = new List<BaseGameEntity>();
+        }        
 
         public BaseGameEntity CurTarget = null;
 
@@ -86,14 +82,7 @@ namespace GameContent.Agents
             Targets.Clear();
             Owner.GetPosition(ref SelfPos);
             SearchBound.center = SelfPos;
-
-            for (int i = 0; i < TargetList.Count; ++i)
-            {
-                TargetList[i].enabled = true;
-            }
-
-            TargetList.Clear();
-
+            
             SpatialManager.Instance.QueryRange(ref SearchBound, Targets);
 
             for (int i = 0; i < Targets.Count; ++i)
@@ -105,18 +94,6 @@ namespace GameContent.Agents
                     if (DefenceSystem.Instance.IsEnemyRace(Owner.RaceSignal,
                         item.RaceSignal))
                     {
-                        //item.transform.position =
-                        //new Vector3(item.transform.position.x,
-                        //10,
-                        //item.transform.position.z);
-
-                        //MeshRenderer rdr = item.GetComponent<MeshRenderer>();
-                        //if (rdr != null)
-                        //{
-                        //    TargetList.Add(rdr);
-                        //    rdr.enabled = false;
-                        //}
-
                         CurTarget = item;
                     }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using SimpleAI;
+using GameContent;
 
 namespace GameContent.SimAgent
 {
@@ -27,7 +28,7 @@ namespace GameContent.SimAgent
         {
             ActiveIfInactive();
 
-            if (Owner.IsCloseEnough(ref TargetPos))
+            if (CombatHolder.Instance.IsCloseEnough(Owner, TargetPos))
             {
                 Status = GoalStatus.Complete;
             }
