@@ -20,17 +20,30 @@ namespace  GameContent
 
         public bool IsCloseEnough(BaseGameEntity src, BaseGameEntity dst)
         {
-            return false;
+            Vector3 dis = src.Position - dst.Position;
+
+            return dis.sqrMagnitude < src.CollideRadius * src.CollideRadius;
         }
 
         public bool IsCloseEnough(BaseGameEntity src, Vector3 pos)
         {
-            return false;
+            Vector3 dis = src.Position - pos;
+
+            return dis.sqrMagnitude < src.CollideRadius * src.CollideRadius;
         }
 
-        public bool IsInAttackRange(BaseGameEntity src, BaseGameEntity pos)
+        public bool IsInAttackRange(BaseGameEntity src, BaseGameEntity dst)
         {
-            return false;
+            Vector3 dis = src.Position - dst.Position;
+            
+            return dis.sqrMagnitude < src.AttackRadius * src.AttackRadius;
+        }
+
+        public bool IsInAttackRange(BaseGameEntity src, Vector3 pos)
+        {
+            Vector3 dis = src.Position - pos;
+
+            return dis.sqrMagnitude < src.AttackRadius * src.AttackRadius;
         }
     }
 }

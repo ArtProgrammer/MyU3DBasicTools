@@ -26,9 +26,12 @@ namespace GameContent.SimAgent
         public override void Activate()
         {
             Status = GoalStatus.Active;
-            Owner.Target.GetPosition(ref TargetPos);
-            Owner.SetDestination(TargetPos);
-            Owner.StartMove();
+            if (Owner.Target)
+            {
+                Owner.Target.GetPosition(ref TargetPos);
+                Owner.SetDestination(TargetPos);
+                Owner.StartMove();
+            }            
         }
 
         public override GoalStatus Process()

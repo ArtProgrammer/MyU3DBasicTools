@@ -110,7 +110,9 @@ namespace SimpleAI.Game
             }
         }
 
-        public float AttackRadius = 1;
+        public float AttackRadius = 1.0f;
+
+        public float CollideRadius = 1.0f;
 
         private List<BaseBuff> BuffList = 
             new List<BaseBuff>();
@@ -262,7 +264,7 @@ namespace SimpleAI.Game
             TheID = IDAllocator.Instance.GetID();
             //TinyLogger.Instance.DebugLog(string.Format("$ BaseGameEnity got id: {0}", TheID));
 
-            NMAgent = GetComponent<NavMeshAgent>();
+            NMAgent = GetComponentInChildren<NavMeshAgent>();
         }
 
         void Start()
