@@ -20,12 +20,16 @@ namespace GameContent.SimAgent
 
         public Transform Food = null;
 
+        public Transform WeaponPoint = null;
+
         private Regulator BrainReg = null;
 
         public SimWoodBrain Brain = null;
 
         [SerializeField]
         private SimSensor<BaseGameEntity> TheSensor = null;
+
+        private WeaponSystem WeaponSys = null;
 
         private Regulator SensorReg = null;
 
@@ -57,8 +61,6 @@ namespace GameContent.SimAgent
 
         private Transform SelfTrans = null;
 
-        public BaseWeapon Weapon = null;
-
         public void SetDestination(Vector3 pos)
         {
             if (NMAgent)
@@ -89,10 +91,6 @@ namespace GameContent.SimAgent
             //    EntityManager.Instance.PlayerEntity = this;
             //}
 
-            //TinyLogger.Instance.DebugLog("$$$ SimWood register to MessagingSystem");
-
-            //NMAgent = GetComponent<NavMeshAgent>();
-
             SelfTrans = GetComponent<Transform>();
 
             BrainReg = new Regulator(15.0f);
@@ -105,9 +103,19 @@ namespace GameContent.SimAgent
 
             TheSensor = new SimSensor<BaseGameEntity>(this);
 
-            TheSensor.Initialize();
+            TheSensor.Initialize();            
 
-            Weapon = GetComponent<BaseWeapon>();
+            WeaponSys = GetComponent<WeaponSystem>();
+
+            if (WeaponSys)
+            {
+                WeaponSys.OnWeaponChanged += OnWeaponChanged;
+            }
+        }
+
+        public void OnWeaponChanged(float range)
+        {
+            AttackRadius = range;
         }
 
         /// <summary>
@@ -163,9 +171,9 @@ namespace GameContent.SimAgent
 
         public void UseWeapon()
         {
-            if (Weapon)
+            if (WeaponSys && WeaponSys.CurWeapon)
             {
-                Weapon.Use(CurTarget);
+                WeaponSys.CurWeapon.Use(CurTarget);
             }
         }
     }

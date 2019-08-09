@@ -7,7 +7,7 @@ namespace GameContent
     public class WeaponConfig
     {
         public int ID;
-        public int BulletID;
+        public int BulletCfgID;
         public int Type;
         public float Range;
         public float Rate;

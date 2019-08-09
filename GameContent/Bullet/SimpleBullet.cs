@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using SimpleAI.Game;
+using SimpleAI.PoolSystem;
 using GameContent.SimAgent;
 
 namespace GameContent
 {
-    public class SimpleBullet : MonoBehaviour, IUpdateable
+    public class SimpleBullet : MonoBehaviour, IUpdateable, IPoolableComponent
     {
         public int ID = 0;
 
@@ -28,6 +29,16 @@ namespace GameContent
         void Start()
         {
             GameLogicSupvisor.Instance.Register(this);
+        }
+
+        public virtual void Spawned()
+        {
+            IsActive = true;
+        }
+
+        public virtual void Despawned()
+        {
+            IsActive = false;
         }
 
         public void OnUpdate(float dt)
@@ -58,8 +69,10 @@ namespace GameContent
                     if (target.ID != OwnerID)
                     {
                         Debug.Log("$$$ bullet collider");
-                        IsActive = false;
-                        gameObject.SetActive(false);
+                        //IsActive = false;
+                        //gameObject.SetActive(false);
+
+                        PrefabPoolingSystem.Instance.Despawn(gameObject);
                     }
                 }
             }

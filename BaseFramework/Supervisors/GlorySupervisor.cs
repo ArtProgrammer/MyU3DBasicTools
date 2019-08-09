@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using SimpleAI.Spatial;
+using GameContent;
 using GameContent.Skill;
 using GameContent.Item;
 
@@ -21,6 +22,10 @@ namespace SimpleAI.Supervisors
             SKillMananger.Instance.LoadSkills();
 
             ItemManager.Instance.LoadDatas();
+
+            BulletCfgMgr.Instance.LoadCfgs();
+
+            WeaponConfigMgr.Instance.LoadConfigs();
 
             // load from config
             SpatialManager.Instance.Init(0, 0, 0, 100, 100, 100);

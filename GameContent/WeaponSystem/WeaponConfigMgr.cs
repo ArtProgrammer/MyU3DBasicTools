@@ -21,7 +21,29 @@ namespace GameContent
 
         public void LoadConfigs()
         {
+            {
+                WeaponConfig wc = new WeaponConfig();
+                wc.ID = 101;
+                wc.Prefab = "";
+                wc.Range = 10.0f;
+                wc.Rate = 1.0f;
+                wc.Type = 1;
+                wc.BulletCfgID = 1001;
 
+                WeaponConfigs.Add(wc.ID, wc);
+            }
+
+            {
+                WeaponConfig wc = new WeaponConfig();
+                wc.ID = 102;
+                wc.Prefab = "";
+                wc.Range = 5.0f;
+                wc.Rate = 2.0f;
+                wc.Type = 2;
+                wc.BulletCfgID = 1002;
+
+                WeaponConfigs.Add(wc.ID, wc);
+            }
         }
 
         public WeaponConfig GetDataByID(int id)
