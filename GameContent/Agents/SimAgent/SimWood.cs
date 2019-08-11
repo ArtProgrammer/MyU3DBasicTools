@@ -20,7 +20,9 @@ namespace GameContent.SimAgent
 
         public Transform Food = null;
 
-        public Transform WeaponPoint = null;
+        //public Transform WeaponPoint = null;
+
+        //public Transform Body = null;
 
         private Regulator BrainReg = null;
 
@@ -95,7 +97,7 @@ namespace GameContent.SimAgent
 
             BrainReg = new Regulator(15.0f);
 
-            FoodCostReg = new Regulator(0.5f);
+            FoodCostReg = new Regulator(0.1f);
 
             Brain = new SimWoodBrain(this, 0);
 
@@ -126,10 +128,15 @@ namespace GameContent.SimAgent
         }
 
         public override void Process(float dt)
-        {
-            if (!IsPlayerCtrl && BrainReg.IsReady())
+        {            
+            if (!IsPlayerCtrl)
             {
                 Brain.Process();
+
+                if (BrainReg.IsReady())
+                {
+                    Brain.Arbitrate();
+                }                
             }
 
             if (SensorReg.IsReady())
@@ -143,6 +150,15 @@ namespace GameContent.SimAgent
             {
                 if (FoodCount > 0)
                     FoodCount--;
+            }
+
+            // temp codes.
+            if (IsPlayerCtrl)
+            {
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    UseWeapon();
+                }
             }
         }
 
@@ -171,9 +187,14 @@ namespace GameContent.SimAgent
 
         public void UseWeapon()
         {
-            if (WeaponSys && WeaponSys.CurWeapon)
+            if (System.Object.ReferenceEquals(null, WeaponPoint))
             {
-                WeaponSys.CurWeapon.Use(CurTarget);
+                WeaponPoint = transform;
+            }
+
+            if (!System.Object.ReferenceEquals(null, WeaponSys))
+            {
+                WeaponSys.Use(CurTarget, this);
             }
         }
     }

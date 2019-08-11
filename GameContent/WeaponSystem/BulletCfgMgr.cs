@@ -30,7 +30,7 @@ namespace GameContent
                 bc.ID = 1001;
                 bc.Speed = 5.0f;
                 bc.Damage = 5;
-                bc.AssetPath = "";
+                bc.AssetPath = "Prefabs/SimpleBullet";
 
                 Cfgs.Add(bc.ID, bc);
 
@@ -43,7 +43,7 @@ namespace GameContent
                 bc.ID = 1002;
                 bc.Speed = 5.0f;
                 bc.Damage = 10;
-                bc.AssetPath = "";
+                bc.AssetPath = "Prefabs/SimpleBullet";
 
                 Cfgs.Add(bc.ID, bc);
                 var pref = Resources.Load<GameObject>(bc.AssetPath);

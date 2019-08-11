@@ -119,6 +119,10 @@ namespace SimpleAI.Game
 
         public BaseGameEntity CurTarget = null;
 
+        public Transform Body = null;
+
+        public Transform WeaponPoint = null;
+
         public BaseGameEntity Target
         {
             set

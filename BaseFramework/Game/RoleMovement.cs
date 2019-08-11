@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SimpleAI.Game;
@@ -28,6 +29,8 @@ namespace SimpleAI.Game
             HandleInputs(dt);
         }
 
+        public Action OnSpaceClick;
+
         void HandleInputs(float dt)
         { 
             if (Input.GetKey(KeyCode.W))
@@ -52,6 +55,14 @@ namespace SimpleAI.Game
             {
                 Offset.x += dt * MoveSpeed;
                 NeedMove = true;
+            }
+
+            if (Input.GetKey(KeyCode.Space))
+            {
+                if (OnSpaceClick != null)
+                {
+                    OnSpaceClick();
+                }
             }
 
             if (NeedMove)

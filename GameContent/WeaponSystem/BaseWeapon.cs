@@ -15,7 +15,7 @@ namespace GameContent
 
         public int BulletCfgID = 0;        
 
-        public float Rate = 1.0f * 0.5f;
+        public float Rate = 10.0f;
 
         public Regulator UseRate;
 
@@ -44,24 +44,29 @@ namespace GameContent
             
         }
 
-        public virtual void Use(BaseGameEntity target)
+        public bool IsReady()
+        {
+            return UseRate.IsReady();
+        }
+
+        public virtual void Use(BaseGameEntity target, BaseGameEntity origin)
         {
             if (!System.Object.ReferenceEquals(null, target))
             {
-                Use(target.Position);
+                Use(target.Body.position, origin);
             }
         }
 
-        public virtual void Use(Vector3 pos)
+        public virtual void Use(Vector3 pos, BaseGameEntity origin)
         {
-            var dir = pos - transform.position;
+            var dir = pos - origin.WeaponPoint.position;
             dir.Normalize();
-            Use(pos, dir);
+            Use(pos, dir, origin);
         }
 
-        public virtual void Use(Vector3 pos, Vector3 dir)
+        public virtual void Use(Vector3 pos, Vector3 dir, BaseGameEntity origin)
         {
-            if (UseRate.IsReady())
+            //if (UseRate.IsReady())
             {
                 var prefab = BulletCfgMgr.Instance.GetPrefabByID(BulletCfgID);
                 if (prefab)
@@ -76,11 +81,59 @@ namespace GameContent
                         {
                             var bullet = bul.GetComponent<SimpleBullet>();
                             bullet.ID = IDAllocator.Instance.GetID();
+                            bullet.OwnerID = origin.ID;
                             bullet.Speed = bulletData.Speed;
 
                             if (bullet)
                             {
-                                bul.position = transform.position;
+                                bul.position = origin.WeaponPoint.position;
+                                bullet.Dir = dir;
+                                bullet.Go();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public virtual void Use(BaseGameEntity target, Transform origin)
+        {
+            if (!System.Object.ReferenceEquals(null, target))
+            {                
+                Use(target.Body.position, origin);
+            }
+        }
+
+        public virtual void Use(Vector3 pos, Transform origin)
+        {
+            var dir = pos - origin.position;
+            dir.Normalize();
+            Use(pos, dir, origin);
+        }
+
+        public virtual void Use(Vector3 pos, Vector3 dir, Transform origin)
+        {
+            //if (UseRate.IsReady())
+            {
+                var prefab = BulletCfgMgr.Instance.GetPrefabByID(BulletCfgID);
+                if (prefab)
+                {
+                    var gameObj = PrefabPoolingSystem.Instance.Spawn(prefab);
+                    var bulletData = BulletCfgMgr.Instance.GetDataByID(BulletCfgID);
+                    if (gameObj &&
+                        !System.Object.ReferenceEquals(null, bulletData))
+                    {
+                        Transform bul = gameObj.transform;
+                        if (bul)
+                        {
+                            var bullet = bul.GetComponent<SimpleBullet>();
+                            bullet.ID = IDAllocator.Instance.GetID();
+                            //bullet.OwnerID = 
+                            bullet.Speed = bulletData.Speed;
+
+                            if (bullet)
+                            {
+                                bul.position = origin.position;
                                 bullet.Dir = dir;
                                 bullet.Go();
                             }

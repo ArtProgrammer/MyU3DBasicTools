@@ -35,7 +35,7 @@ namespace GameContent.Agents
             Owner = owner;
         }
 
-        private List<SpatialFruitNode> Targets = 
+        private List<SpatialFruitNode> PotentialTargets = 
             new List<SpatialFruitNode>();
 
         public Bounds SearchBound;
@@ -79,15 +79,15 @@ namespace GameContent.Agents
 
         public virtual void UpdateWithinRange()
         {
-            Targets.Clear();
+            PotentialTargets.Clear();
             Owner.GetPosition(ref SelfPos);
             SearchBound.center = SelfPos;
             
-            SpatialManager.Instance.QueryRange(ref SearchBound, Targets);
+            SpatialManager.Instance.QueryRange(ref SearchBound, PotentialTargets);
 
-            for (int i = 0; i < Targets.Count; ++i)
+            for (int i = 0; i < PotentialTargets.Count; ++i)
             {
-                T item = (T)Targets[i];
+                T item = (T)PotentialTargets[i];
                 if (!System.Object.ReferenceEquals(item, null) &&
                     !System.Object.ReferenceEquals(item, Owner))
                 {

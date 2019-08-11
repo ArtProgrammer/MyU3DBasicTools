@@ -78,6 +78,38 @@ namespace GameContent
             }
         }
 
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other)
+            {
+                if (other.transform)
+                {
+                    var trans = other.transform;
+                    var target = trans.GetComponent<SimWood>();
+                    if (!target)
+                    {
+                        trans = trans.parent;
+                        if (trans)
+                        {
+                            target = trans.GetComponent<SimWood>();
+                        }
+                    }
+
+                    if (target)
+                    {
+                        if (target.ID != OwnerID)
+                        {
+                            //Debug.Log("$$$ bullet collider");
+                            //IsActive = false;
+                            //gameObject.SetActive(false);
+
+                            PrefabPoolingSystem.Instance.Despawn(gameObject);
+                        }
+                    }
+                }
+            }
+        }
+
         public void OnDestroy()
         {
             if (GameLogicSupvisor.IsAlive)

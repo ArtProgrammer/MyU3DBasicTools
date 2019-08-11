@@ -12,6 +12,8 @@ namespace GameContent
         //private Dictionary<int, BaseWeapon> Weapons =
         //    new Dictionary<int, BaseWeapon>();
 
+        //public Transform WeaponPoint = null;
+
         List<BaseWeapon> Weapons = new List<BaseWeapon>();
 
         private int WeaponIDInUse = 0;
@@ -45,9 +47,9 @@ namespace GameContent
         {
             set
             {
-                if (!System.Object.ReferenceEquals(CurWeapon, value))
+                if (!System.Object.ReferenceEquals(WeaponInUse, value))                             
                 {
-                    CurWeapon = value;
+                    WeaponInUse = value;
                 }
             }
             get
@@ -137,10 +139,24 @@ namespace GameContent
             {
                 CurWeaponID = id;
                 CurWeapon = GetWeaponByID(CurWeaponID);
-                if (System.Object.ReferenceEquals(null, OnWeaponChanged))
+                if (!System.Object.ReferenceEquals(null, OnWeaponChanged))
                 {
                     OnWeaponChanged(CurWeaponID);
                 }
+            }
+        }
+
+        public void Use(BaseGameEntity target, BaseGameEntity origin)
+        {
+            Use(target, origin.WeaponPoint);
+        }
+
+        public void Use(BaseGameEntity target, Transform origin)
+        {
+            if (!System.Object.ReferenceEquals(null, CurWeapon) &&
+                CurWeapon.IsReady())
+            {
+                CurWeapon.Use(target, origin);
             }
         }
 
