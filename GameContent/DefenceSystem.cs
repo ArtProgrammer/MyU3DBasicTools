@@ -39,12 +39,8 @@ namespace GameContent.Defence
         private Dictionary<int, int> CampRelations =
             new Dictionary<int, int>();
 
-        public Dictionary<int, RaceTypeEnum> RaceTypeMap =
-            new Dictionary<int, RaceTypeEnum>();
-
         public void Initialize()
         {
-            ;
         }
 
         public void Load()
@@ -54,23 +50,13 @@ namespace GameContent.Defence
         }
 
         public RaceTypeEnum Int2RaceType(int val)
-        { 
-            if (RaceTypeMap.ContainsKey(val))
-            {
-                return RaceTypeMap[val];
-            }
-
-            return RaceTypeEnum.None;
+        {
+            return (RaceTypeEnum)val;            
         }
 
         public int RaceType2Int(RaceTypeEnum type)
-        { 
-            if (RaceTypeMap.ContainsValue(type))
-            { 
-                //return RaceTypeMap.
-            }
-
-            return 0;
+        {
+            return (int)type;
         }
 
         /// <summary>

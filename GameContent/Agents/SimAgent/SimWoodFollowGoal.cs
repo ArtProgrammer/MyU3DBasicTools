@@ -40,7 +40,8 @@ namespace GameContent.SimAgent
 
             if (Status == GoalStatus.Active)
             {
-                if (Owner.IsTargetLost || (CombatHolder.Instance.IsCloseEnough(Owner, Owner.Target)))
+                if (Owner.IsTargetLost ||
+                    (CombatHolder.Instance.IsCloseEnough(Owner, Owner.Target, Distance)))
                 {
                     Owner.StopMove();
                     Status = GoalStatus.Complete;

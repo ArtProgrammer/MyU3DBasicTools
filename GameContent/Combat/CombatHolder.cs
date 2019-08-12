@@ -25,6 +25,13 @@ namespace  GameContent
             return dis.sqrMagnitude < src.CollideRadius * src.CollideRadius;
         }
 
+        public bool IsCloseEnough(BaseGameEntity src, BaseGameEntity dst,
+            float distance)
+        {
+            Vector3 dis = src.Position - dst.Position;
+            return dis.sqrMagnitude < distance * distance;
+        }
+
         public bool IsCloseEnough(BaseGameEntity src, Vector3 pos)
         {
             Vector3 dis = src.Position - pos;

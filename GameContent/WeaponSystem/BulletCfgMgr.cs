@@ -28,10 +28,12 @@ namespace GameContent
             {
                 BulletCfg bc = new BulletCfg();
                 bc.ID = 1001;
+                bc.EffectID = 10001;
                 bc.Speed = 5.0f;
                 bc.Damage = 5;
+                bc.LifeTime = 10.0f;
                 bc.AssetPath = "Prefabs/SimpleBullet";
-
+                
                 Cfgs.Add(bc.ID, bc);
 
                 var pref = Resources.Load<GameObject>(bc.AssetPath);
@@ -41,8 +43,10 @@ namespace GameContent
             {
                 BulletCfg bc = new BulletCfg();
                 bc.ID = 1002;
+                bc.EffectID = 10002;
                 bc.Speed = 5.0f;
                 bc.Damage = 10;
+                bc.LifeTime = 10.0f;
                 bc.AssetPath = "Prefabs/SimpleBullet";
 
                 Cfgs.Add(bc.ID, bc);

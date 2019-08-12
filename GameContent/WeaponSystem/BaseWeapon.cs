@@ -83,6 +83,7 @@ namespace GameContent
                             bullet.ID = IDAllocator.Instance.GetID();
                             bullet.OwnerID = origin.ID;
                             bullet.Speed = bulletData.Speed;
+                            bullet.LifeTime = bulletData.LifeTime;
 
                             if (bullet)
                             {
@@ -128,8 +129,9 @@ namespace GameContent
                         {
                             var bullet = bul.GetComponent<SimpleBullet>();
                             bullet.ID = IDAllocator.Instance.GetID();
-                            //bullet.OwnerID = 
+                            //bullet.OwnerID = origin.ID;
                             bullet.Speed = bulletData.Speed;
+                            bullet.LifeTime = bulletData.LifeTime;
 
                             if (bullet)
                             {

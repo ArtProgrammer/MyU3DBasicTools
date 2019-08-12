@@ -8,7 +8,7 @@ namespace GameContent.SimAgent
 {
     public class SimWoodCollectItemGoal : Goal<SimWood>
     {
-        public Regulator CollectReg = new Regulator(3.0f);
+        public Regulator CollectReg = new Regulator(10.0f);
 
         int ItemCount = 0;
 
@@ -38,7 +38,8 @@ namespace GameContent.SimAgent
                 if (CollectReg.IsReady())
                 {
                     // handle collection action.
-                    Owner.FoodCount++;
+                    Owner.FoodCount = Owner.FoodCount + 1;
+                    int a = 0;
                 }
 
                 Status = GoalStatus.Active;

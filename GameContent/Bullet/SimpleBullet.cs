@@ -14,6 +14,10 @@ namespace GameContent
 
         public float Speed = 0;
 
+        public float LifeTime = 0;
+
+        public float CurTime = 0;
+
         public Vector3 Dir = Vector3.zero;
 
         private bool IsActive = false;
@@ -34,11 +38,13 @@ namespace GameContent
         public virtual void Spawned()
         {
             IsActive = true;
+            CurTime = 0.0f;
         }
 
         public virtual void Despawned()
         {
             IsActive = false;
+            CurTime = 0.0f;
         }
 
         public void OnUpdate(float dt)
@@ -46,6 +52,14 @@ namespace GameContent
             if (IsActive)
             {
                 transform.position += Dir * Speed * dt;
+
+                CurTime += dt;
+
+                if (CurTime >= LifeTime)
+                {
+                    IsActive = false;
+                    PrefabPoolingSystem.Instance.Despawn(gameObject);                    
+                }
             }
         }
 

@@ -148,7 +148,12 @@ namespace GameContent
 
         public void Use(BaseGameEntity target, BaseGameEntity origin)
         {
-            Use(target, origin.WeaponPoint);
+            //Use(target, origin.WeaponPoint);
+            if (!System.Object.ReferenceEquals(null, CurWeapon) &&
+                CurWeapon.IsReady())
+            {
+                CurWeapon.Use(target, origin);
+            }
         }
 
         public void Use(BaseGameEntity target, Transform origin)

@@ -26,7 +26,7 @@ namespace GameContent
                 wc.ID = 101;
                 wc.Prefab = "";
                 wc.Range = 10.0f;
-                wc.Rate = 30f;
+                wc.Rate = 3f;
                 wc.Type = 1;
                 wc.BulletCfgID = 1001;
 
