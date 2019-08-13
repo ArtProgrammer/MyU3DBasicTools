@@ -20,17 +20,23 @@ namespace SimpleAI
 
         public FzOR(FuzzyTerm op1, FuzzyTerm op2)
         {
-
+            Terms.Add(op1.Clone());
+            Terms.Add(op2.Clone());
         }
 
         public FzOR(FuzzyTerm op1, FuzzyTerm op2, FuzzyTerm op3)
         {
-
+            Terms.Add(op1.Clone());
+            Terms.Add(op2.Clone());
+            Terms.Add(op3.Clone());
         }
 
         public FzOR(FuzzyTerm op1, FuzzyTerm op2, FuzzyTerm op3, FuzzyTerm op4)
         {
-
+            Terms.Add(op1.Clone());
+            Terms.Add(op2.Clone());
+            Terms.Add(op3.Clone());
+            Terms.Add(op4.Clone());
         }
 
         public override FuzzyTerm Clone()

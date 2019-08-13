@@ -1,9 +1,10 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace SimpleAI
 {
-    class FuzzySet_LeftShoulder : FuzzySet
+    class FuzzySet_RightShoulder : FuzzySet
     {
         private float PeakPoint;
 
@@ -11,7 +12,7 @@ namespace SimpleAI
 
         private float LeftOffset;
 
-        public FuzzySet_LeftShoulder(
+        public FuzzySet_RightShoulder(
             float peak,
             float leftOffset,
             float rightOffset) :
@@ -30,16 +31,16 @@ namespace SimpleAI
                 return 1.0f;
             }
 
-            //find DOM if right of center
-            else if ((val >= PeakPoint) && (val < (PeakPoint + RightOffset)))
-            {
-                float grad = 1.0f / -RightOffset;
-
-                return grad * (val - PeakPoint) + 1.0f;
-            }
-
             //find DOM if left of center
             else if ((val < PeakPoint) && (val >= PeakPoint - LeftOffset))
+            {
+                float grad = 1.0f / LeftOffset;
+
+                return grad * (val - (PeakPoint - LeftOffset));
+            }
+
+            //find DOM if right of center
+            else if ((val >= PeakPoint) && (val < (PeakPoint + RightOffset)))
             {
                 return 1.0f;
             }
