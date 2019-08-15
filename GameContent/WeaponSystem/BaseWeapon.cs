@@ -49,6 +49,16 @@ namespace GameContent
             return UseRate.IsReady();
         }
 
+        public virtual float GetDesirability(float distToTarget)
+        {
+            if (Range < distToTarget)
+            {
+                return 0.0f;
+            }
+
+            return 1.0f;
+        }
+
         public virtual void Use(BaseGameEntity target, BaseGameEntity origin)
         {
             if (!System.Object.ReferenceEquals(null, target))
@@ -147,7 +157,8 @@ namespace GameContent
 
         public void Destroy()
         {
-            GameLogicSupvisor.Instance.Unregister(this);
+            if (GameLogicSupvisor.IsAlive)
+                GameLogicSupvisor.Instance.Unregister(this);
         }
     }
 }

@@ -8,12 +8,14 @@ namespace GameContent
 {
     public class TargetSystem
     {
-        public List<BaseGameEntity> TargetList =
-            new List<BaseGameEntity>();
+        public BaseGameEntity Owner = null;
 
-        private int TargetCount = 0;
+        protected BaseGameEntity TargetInMind = null;
 
-        private BaseGameEntity TargetInMind = null;
+        public TargetSystem(BaseGameEntity owner)
+        {
+            Owner = owner;
+        }
 
         public BaseGameEntity CurTarget
         {
@@ -32,39 +34,67 @@ namespace GameContent
             
         }
 
+        List<BaseGameEntity> PotentialOps = new List<BaseGameEntity>();
         public virtual void Process(float dt)
         {
+            float sqrClosestDist = float.MaxValue;
 
-        }
+            PotentialOps.Clear();
 
-        public virtual BaseGameEntity GetCurTarget()
-        {
-            if (TargetCount > 0)
+            CurTarget = null;
+
+            PotentialOps = Owner.SimSensorMem.GetRecentlySensedOpponents();
+
+            for (int i = 0; i < PotentialOps.Count; i++)
             {
-                return TargetList[0];
-            }
+                if (PotentialOps[i].IsAlive && 
+                    (!System.Object.ReferenceEquals(PotentialOps[i], Owner)))
+                {
+                    float sqrDist = Vector3.SqrMagnitude(Owner.Position -
+                        PotentialOps[i].Position);
 
-            return null;
+                    if (sqrDist < sqrClosestDist)
+                    {
+                        sqrClosestDist = sqrDist;
+                        CurTarget = PotentialOps[i];
+                    }
+                }
+            }
         }
 
         public virtual bool IsTargetPresent()
         {
-            return true;
+            return !System.Object.ReferenceEquals(CurTarget, null);
         }
 
-        public virtual bool IsTargetInFOV()
+        public virtual bool IsTargetWithInFOV()
         {
-            return false;
+            return Owner.SimSensorMem.IsOpponentWithinFOV(CurTarget);
         }
 
         public virtual bool IsTargetAttackable()
         {
-            return !System.Object.ReferenceEquals(TargetInMind, null);
+            return Owner.SimSensorMem.IsOpponentAttackable(CurTarget);
+        }
+
+        public Vector3 GetLastRecordedPosition()
+        {
+            return Owner.SimSensorMem.GetLastRecordedPositionOfOpponent(CurTarget);
+        }
+
+        public float GetTimeTargetHasBeenVisible()
+        {
+            return Owner.SimSensorMem.GetTimeOpponentHasBeenVisible(CurTarget);
+        }
+
+        public float GetTimeTargetHasBeenOutOfView()
+        {
+            return Owner.SimSensorMem.GetTimeOpponentHasBeenOutOfView(CurTarget);
         }
 
         public virtual void ClearTarget()
         {
-
+            CurTarget = null;
         }
     }
 }

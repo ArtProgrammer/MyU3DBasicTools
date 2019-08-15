@@ -27,13 +27,16 @@ namespace GameContent.SimAgent
         private Regulator BrainReg = null;
 
         public SimWoodBrain Brain = null;
-
-        [SerializeField]
-        private SimSensor<BaseGameEntity> TheSensor = null;
-
+        
         private WeaponSystem WeaponSys = null;
 
+        public int[] SkillIDs = new int[3];
+
         private Regulator SensorReg = null;
+
+        private Regulator TargetSysReg = null;
+
+        private Regulator WeaponSelectionReg = new Regulator(100.0f);
 
         public int FoodNeed = 5;
 
@@ -61,7 +64,7 @@ namespace GameContent.SimAgent
 
         protected Regulator FoodCostReg = null;
 
-        private Transform SelfTrans = null;
+        private Transform SelfTrans = null;        
 
         public void SetDestination(Vector3 pos)
         {
@@ -88,6 +91,7 @@ namespace GameContent.SimAgent
 
         public override void Initialize()
         {
+            base.Initialize();
             //if (IsPlayerCtrl)
             //{
             //    EntityManager.Instance.PlayerEntity = this;
@@ -103,9 +107,9 @@ namespace GameContent.SimAgent
 
             SensorReg = new Regulator(10f);
 
-            TheSensor = new SimSensor<BaseGameEntity>(this);
+            TargetSysReg = new Regulator(100.0f);
 
-            TheSensor.Initialize();            
+            TargetSys = new TargetSystem(this);
 
             WeaponSys = GetComponent<WeaponSystem>();
 
@@ -125,10 +129,13 @@ namespace GameContent.SimAgent
         /// </summary>
         public override void Finish()
         {
+            base.Finish();
         }
 
         public override void Process(float dt)
-        {            
+        {
+            base.Process(dt);
+
             if (!IsPlayerCtrl)
             {
                 Brain.Process();
@@ -136,14 +143,23 @@ namespace GameContent.SimAgent
                 if (BrainReg.IsReady())
                 {
                     Brain.Arbitrate();
-                }                
+                }
             }
 
             if (SensorReg.IsReady())
             {
                 TheSensor.Process(dt);
+            }
 
-                Target = TheSensor.CurTarget;
+            if (TargetSysReg.IsReady())
+            {
+                TargetSys.Process(dt);
+                Target = TargetSys.CurTarget;
+            }
+
+            if (WeaponSelectionReg.IsReady())
+            {
+                WeaponSys.SelectWeapon();
             }
 
             if (FoodCostReg.IsReady())

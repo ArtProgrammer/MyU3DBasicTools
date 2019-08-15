@@ -8,8 +8,10 @@ using SimpleAI.Messaging;
 using SimpleAI.Utils;
 using SimpleAI.Logger;
 using SimpleAI.Spatial;
+using GameContent;
 using GameContent.Defence;
 using GameContent.Skill;
+using GameContent.Agents;
 
 using GameContent.Item;
 
@@ -43,6 +45,14 @@ namespace SimpleAI.Game
                 {
                     OnXueChanged(XueNum);
                 }
+            }
+        }
+
+        public bool IsAlive
+        {
+            get
+            {
+                return XueNum <= 0;
             }
         }
 
@@ -119,9 +129,28 @@ namespace SimpleAI.Game
 
         public BaseGameEntity CurTarget = null;
 
+        protected SimSensor<BaseGameEntity> TheSensor = null;
+
+        public SimSensor<BaseGameEntity> SimSensorMem
+        {
+            get
+            {
+                return TheSensor;
+            }
+        }
+
+        public TargetSystem TargetSys
+        {
+            set;get;
+        }
+
         public Transform Body = null;
 
         public Transform WeaponPoint = null;
+
+        public Vector3 Facing = Vector3.forward;
+
+        public float FOV = 60.0f;
 
         public BaseGameEntity Target
         {
@@ -207,6 +236,9 @@ namespace SimpleAI.Game
         /// </summary>
         public virtual void Initialize()
         {
+            TheSensor = new SimSensor<BaseGameEntity>(this);
+
+            TheSensor.Initialize();
         }
 
         /// <summary>

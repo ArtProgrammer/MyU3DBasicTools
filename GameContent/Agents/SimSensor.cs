@@ -4,15 +4,40 @@ using UnityEngine;
 
 using SimpleAI.Game;
 using SimpleAI.Spatial;
+using SimpleAI.Timer;
 using GameContent.Agents;
 using GameContent.SimAgent;
 using GameContent.Defence;
 
 namespace GameContent.Agents
 {
+    public class MemoryRecord
+    {
+        public bool WithinFOV = false;
+
+        public bool Attackable = false;
+
+        public float TimeLastSensed = -1;
+
+        public float TimeBecameVisible = -1;
+
+        public float TimeLastVisible = 0.0f;
+
+        public Vector3 LastSensedPosition = Vector3.zero;        
+
+        public MemoryRecord()
+        {
+        }
+    }
+
     public class SimSensor<T> where T : BaseGameEntity
     {
+        private Dictionary<T, MemoryRecord> Memories =
+            new Dictionary<T, MemoryRecord>();
+
         public float SearchRange = 16.0f;
+
+        private T Owner = null;
 
         public float Range
         {
@@ -30,7 +55,7 @@ namespace GameContent.Agents
             }
         }
 
-        public SimSensor(T owner)
+        public SimSensor(T owner) : base()
         {
             Owner = owner;
         }
@@ -41,10 +66,10 @@ namespace GameContent.Agents
         public Bounds SearchBound;
 
         private Vector3 BoundSize = Vector3.one;
-
-        private T Owner = null;
-
+        
         private Vector3 SelfPos = Vector3.zero;
+
+        private float MemorySpan;
 
         private void UpdateBoundsSize(float range)
         {
@@ -55,6 +80,141 @@ namespace GameContent.Agents
             SearchBound.size = BoundSize;
         }
 
+        private void MakeNewRecordIfNotPresent(T target)
+        {
+            if (!Memories.ContainsKey(target))
+            {
+                Memories.Add(target, new MemoryRecord());
+            }
+        }
+        
+        public void RemoveFromMemory(T target)
+        {
+            if (Memories.ContainsKey(target))
+            {
+                Memories.Remove(target);
+            }
+        }
+
+        public void AddNewResource(T target)
+        {
+            if (!System.Object.ReferenceEquals(target, null) &&
+                !System.Object.ReferenceEquals(target, Owner))
+            {
+                MakeNewRecordIfNotPresent(target);
+
+                MemoryRecord mr = Memories[target];
+
+                // if target is attackable.
+                if (CombatHolder.Instance.IsLOSOkay(target.Position, 
+                    Owner.Position))                
+                {
+                    mr.Attackable = true;
+                    mr.LastSensedPosition = target.Position;
+                }
+                else
+                {
+                    mr.Attackable = false;
+                }
+                
+                mr.TimeLastSensed = TimeWrapper.Instance.realtimeSinceStartup;
+            }
+        }
+
+        public bool IsOpponentAttackable(T op)
+        {
+            if (Memories.ContainsKey(op))
+            {
+                return Memories[op].Attackable;
+            }
+            return false;
+        }
+
+        public bool IsOpponentWithinFOV(T op)
+        {
+            if (Memories.ContainsKey(op))
+            {
+                return Memories[op].WithinFOV;
+            }
+            return false;
+        }
+
+        public Vector3 GetLastRecordedPositionOfOpponent(T op)
+        {
+            if (Memories.ContainsKey(op))
+            {
+                return Memories[op].LastSensedPosition;
+            }
+
+            return Vector3.zero;
+        }
+
+        public void GetLastRecordedPositionOfOpponent(T op, ref Vector3 pos)
+        {
+            if (Memories.ContainsKey(op))
+            {
+                pos = Memories[op].LastSensedPosition;
+            }
+        }
+
+        public float GetTimeOpponentHasBeenVisible(T op)
+        {
+            if (Memories.ContainsKey(op))
+            {
+                if (Memories[op].WithinFOV)
+                {
+                    return TimeWrapper.Instance.realtimeSinceStartup - 
+                        Memories[op].TimeBecameVisible;
+                }
+            }
+            return 0.0f;
+        }
+
+        public float GetTimeSinceLastSensed(T op)
+        {
+            if (Memories.ContainsKey(op))
+            {
+                if (Memories[op].WithinFOV)
+                {
+                    return TimeWrapper.Instance.realtimeSinceStartup -
+                        Memories[op].TimeLastSensed;
+                }
+            }
+            return 0.0f;
+        }
+
+        public float GetTimeOpponentHasBeenOutOfView(T op)
+        {
+            if (Memories.ContainsKey(op))
+            {
+                return TimeWrapper.Instance.realtimeSinceStartup -
+                    Memories[op].TimeLastVisible;
+            }
+            return 0.0f;
+        }
+
+        List<T> RecentlySensedOpponents = new List<T>();
+
+        public List<T> GetRecentlySensedOpponents()
+        {
+            RecentlySensedOpponents.Clear();
+
+            float curTime = TimeWrapper.Instance.realtimeSinceStartup;
+
+            foreach (var item in Memories)
+            {
+                if ((curTime - item.Value.TimeLastSensed) <= MemorySpan)
+                {
+                    RecentlySensedOpponents.Add(item.Key);
+                }
+            }
+
+            return RecentlySensedOpponents;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual void Initialize()
         {
             UpdateBoundsSize(SearchRange);
@@ -75,9 +235,9 @@ namespace GameContent.Agents
 
         }        
 
-        public BaseGameEntity CurTarget = null;
+        //public BaseGameEntity CurTarget = null;
 
-        public virtual void UpdateWithinRange()
+        protected virtual void UpdateWithinRange()
         {
             PotentialTargets.Clear();
             Owner.GetPosition(ref SelfPos);
@@ -91,12 +251,46 @@ namespace GameContent.Agents
                 if (!System.Object.ReferenceEquals(item, null) &&
                     !System.Object.ReferenceEquals(item, Owner))
                 {
-                    if (DefenceSystem.Instance.IsEnemyRace(Owner.RaceSignal,
-                        item.RaceSignal))
-                    {
-                        CurTarget = item;
-                    }
+                    //if (DefenceSystem.Instance.IsEnemyRace(Owner.RaceSignal,
+                    //    item.RaceSignal))
+                    //{
+                    //    CurTarget = item;
+                    //}
 
+                    MakeNewRecordIfNotPresent(item);
+
+                    MemoryRecord mr = Memories[item];
+
+                    // out method.
+                    if (CombatHolder.Instance.IsLOSOkay(item.Position, 
+                        Owner.Position))
+                    {
+                        mr.Attackable = true;
+
+                        if (CombatHolder.Instance.IsSecondInFOVOfFirst(
+                            Owner.Position, Owner.Facing, 
+                            item.Position, Owner.FOV))
+                        {
+                            mr.TimeLastSensed = TimeWrapper.Instance.realtimeSinceStartup;
+                            mr.LastSensedPosition = item.Position;
+                            mr.TimeLastVisible = TimeWrapper.Instance.realtimeSinceStartup;
+
+                            if (!mr.WithinFOV)
+                            {
+                                mr.WithinFOV = true;
+                                mr.TimeBecameVisible = mr.TimeLastSensed;
+                            }
+                        }
+                        else
+                        {
+                            mr.WithinFOV = false;
+                        }
+                    }
+                    else
+                    {
+                        mr.Attackable = false;
+                        mr.WithinFOV = false;
+                    }
                 }
             }
         }

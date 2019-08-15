@@ -4,7 +4,7 @@ using UnityEngine;
 
 using SimpleAI.Game;
 
-namespace  GameContent
+namespace GameContent
 {
     public class CombatHolder
     {
@@ -42,7 +42,7 @@ namespace  GameContent
         public bool IsInAttackRange(BaseGameEntity src, BaseGameEntity dst)
         {
             Vector3 dis = src.Position - dst.Position;
-            
+
             return dis.sqrMagnitude < src.AttackRadius * src.AttackRadius;
         }
 
@@ -51,6 +51,21 @@ namespace  GameContent
             Vector3 dis = src.Position - pos;
 
             return dis.sqrMagnitude < src.AttackRadius * src.AttackRadius;
+        }
+
+        Vector3 Src2Dst = Vector3.zero;
+        public bool IsSecondInFOVOfFirst(Vector3 srcPos,
+            Vector3 facing, Vector3 dstPos, float fov)
+        {
+            Src2Dst = dstPos - srcPos;
+            Src2Dst.Normalize();
+
+            return Vector3.Dot(facing, Src2Dst) >= Mathf.Cos(fov * 0.5f);
+        }
+
+        public bool IsLOSOkay(Vector3 srcPos, Vector3 dstPos)
+        {
+            return true;
         }
     }
 }

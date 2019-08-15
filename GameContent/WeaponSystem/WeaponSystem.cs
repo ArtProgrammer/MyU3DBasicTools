@@ -4,17 +4,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using SimpleAI.Game;
+using SimpleAI.Timer;
 
 namespace GameContent
 {
     public class WeaponSystem : MonoBehaviour, IUpdateable
     {
-        //private Dictionary<int, BaseWeapon> Weapons =
-        //    new Dictionary<int, BaseWeapon>();
+        public BaseGameEntity Owner = null;
 
-        //public Transform WeaponPoint = null;
+        private List<BaseWeapon> Weapons = new List<BaseWeapon>();
 
-        List<BaseWeapon> Weapons = new List<BaseWeapon>();
+        private Regulator SensorReg = null;
 
         private int WeaponIDInUse = 0;
 
@@ -77,6 +77,17 @@ namespace GameContent
         
         public int[] WeaponCfgIDs;
 
+        public WeaponSystem(BaseGameEntity owner)
+        {
+            Owner = owner;
+
+            SensorReg = new Regulator(50.0f);
+        }
+
+        /// <summary>
+        /// Now, load weapons from static config id and data.
+        /// </summary>
+        /// <param name="id"></param>
         public void LoadWeapons(int id)
         {
             var data = WeaponConfigMgr.Instance.GetDataByID(id);
@@ -84,8 +95,15 @@ namespace GameContent
             if (!System.Object.ReferenceEquals(null, data))
             {
                 BaseWeapon bw = new BaseWeapon(data);
-                //Weapons.Add(bw.ID, bw);
-                Weapons.Add(bw);
+                AddWeapon(bw);
+            }
+        }
+
+        public void AddWeapon(BaseWeapon weapon)
+        {
+            if (!System.Object.ReferenceEquals(null, weapon))
+            {
+                Weapons.Add(weapon);
             }
         }
 
@@ -128,9 +146,54 @@ namespace GameContent
         }
 
         // Update is called once per frame
+        private Vector3 Dist2Target = Vector3.zero;
         public virtual void OnUpdate(float dt)
         {
+            //if (SensorReg.IsReady())
+            //{
+                
+            //}
+        }
 
+        public void SelectWeapon()
+        {
+            if (Owner.TargetSys.IsTargetPresent())
+            {
+                BaseWeapon temp = null;
+
+                Dist2Target = Owner.TargetSys.CurTarget.Position - Owner.Position;
+                float dist = Dist2Target.magnitude;
+
+                float bestSoFar = float.MinValue;
+
+                for (int i = 0; i < Weapons.Count; i++)
+                {
+                    if (!System.Object.ReferenceEquals(null, Weapons[i]))
+                    {
+                        float score = Weapons[i].GetDesirability(dist);
+
+                        if (score > bestSoFar)
+                        {
+                            bestSoFar = score;
+                            temp = Weapons[i];
+                        }
+                    }
+                }
+
+                if (!System.Object.ReferenceEquals(null, temp))
+                {
+                    ChangeWeapon(temp);
+                }
+            }
+            else
+            {
+                // set the default weapon;
+                if (!System.Object.ReferenceEquals(null, CurWeapon) &&
+                    Weapons.Count > 0)
+                {
+                    CurWeapon = Weapons[0];
+                }
+            }
         }
 
         public void ChangeWeapon(int id)
@@ -146,9 +209,21 @@ namespace GameContent
             }
         }
 
+        public void ChangeWeapon(BaseWeapon weapon)
+        {
+            if (!System.Object.ReferenceEquals(null, weapon) &&
+                !System.Object.ReferenceEquals(CurWeapon, weapon))
+            {
+                CurWeapon = weapon;
+                if (!System.Object.ReferenceEquals(null, OnWeaponChanged))
+                {
+                    OnWeaponChanged(CurWeaponID);
+                }
+            }
+        }
+
         public void Use(BaseGameEntity target, BaseGameEntity origin)
         {
-            //Use(target, origin.WeaponPoint);
             if (!System.Object.ReferenceEquals(null, CurWeapon) &&
                 CurWeapon.IsReady())
             {
