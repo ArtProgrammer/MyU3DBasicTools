@@ -8,7 +8,7 @@ using SimpleAI.Timer;
 
 namespace GameContent
 {
-    public class WeaponSystem : MonoBehaviour, IUpdateable
+    public class WeaponSystem// : MonoBehaviour, IUpdateable
     {
         public BaseGameEntity Owner = null;
 
@@ -141,8 +141,8 @@ namespace GameContent
                 ChangeWeapon(Weapons[0].ID);
             }
 
-            if (GameLogicSupvisor.IsAlive)
-                GameLogicSupvisor.Instance.Register(this);
+            //if (GameLogicSupvisor.IsAlive)
+            //    GameLogicSupvisor.Instance.Register(this);
         }
 
         // Update is called once per frame
@@ -242,8 +242,8 @@ namespace GameContent
 
         public void OnDestroy()
         {
-            if (GameLogicSupvisor.IsAlive)
-                GameLogicSupvisor.Instance.Unregister(this);
+            //if (GameLogicSupvisor.IsAlive)
+            //    GameLogicSupvisor.Instance.Unregister(this);
         }
     }
 }

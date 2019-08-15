@@ -111,9 +111,10 @@ namespace GameContent.SimAgent
 
             TargetSys = new TargetSystem(this);
 
-            WeaponSys = GetComponent<WeaponSystem>();
+            //WeaponSys = GetComponent<WeaponSystem>();
+            WeaponSys = new WeaponSystem(this);
 
-            if (WeaponSys)
+            if (!System.Object.ReferenceEquals(null, WeaponSys))
             {
                 WeaponSys.OnWeaponChanged += OnWeaponChanged;
             }
@@ -144,6 +145,11 @@ namespace GameContent.SimAgent
                 {
                     Brain.Arbitrate();
                 }
+
+                if (WeaponSelectionReg.IsReady())
+                {
+                    WeaponSys.SelectWeapon();
+                }
             }
 
             if (SensorReg.IsReady())
@@ -155,11 +161,6 @@ namespace GameContent.SimAgent
             {
                 TargetSys.Process(dt);
                 Target = TargetSys.CurTarget;
-            }
-
-            if (WeaponSelectionReg.IsReady())
-            {
-                WeaponSys.SelectWeapon();
             }
 
             if (FoodCostReg.IsReady())
