@@ -24,9 +24,6 @@ namespace GameContent.SimAgent
 
         public override GoalStatus Process()
         {
-            //if (Status == GoalStatus.Complete)
-            //    return Status;
-
             ActiveIfInactive();
 
             if (Owner.IsTargetLost)

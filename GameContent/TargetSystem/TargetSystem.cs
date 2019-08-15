@@ -77,6 +77,19 @@ namespace GameContent
             return Owner.SimSensorMem.IsOpponentAttackable(CurTarget);
         }
 
+        public virtual bool CanTargetAttack()
+        {
+            bool isAttackable = false;
+            if (Owner.SimSensorMem.IsOpponentAttackable(CurTarget))
+            {
+                if (CombatHolder.Instance.IsInAttackRange(Owner, CurTarget))
+                {
+                    isAttackable = true;
+                }
+            }
+            return isAttackable;
+        }
+
         public Vector3 GetLastRecordedPosition()
         {
             return Owner.SimSensorMem.GetLastRecordedPositionOfOpponent(CurTarget);
