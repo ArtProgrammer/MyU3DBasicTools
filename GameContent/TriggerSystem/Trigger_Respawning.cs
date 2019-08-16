@@ -5,7 +5,7 @@ using SimpleAI.Game;
 
 namespace GameContent
 {
-    public class Trigger_Respawning : Trigger<BaseGameEntity>
+    public class Trigger_Respawning<T> : Trigger<T>
     {
         private int NumUpdatesBetweenRespawns;
 

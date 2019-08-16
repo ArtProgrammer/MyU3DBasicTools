@@ -8,13 +8,13 @@ using SimpleAI.Timer;
 
 namespace GameContent
 {
-    public class WeaponSystem// : MonoBehaviour, IUpdateable
+    public class WeaponSystem
     {
         public BaseGameEntity Owner = null;
 
-        private List<BaseWeapon> Weapons = new List<BaseWeapon>();
+        public int OwnerID = 0;
 
-        private Regulator SensorReg = null;
+        private List<BaseWeapon> Weapons = new List<BaseWeapon>();
 
         private int WeaponIDInUse = 0;
 
@@ -77,18 +77,22 @@ namespace GameContent
         
         public int[] WeaponCfgIDs;
 
+        private Vector3 Dist2Target = Vector3.zero;
+
         public WeaponSystem(BaseGameEntity owner)
         {
             Owner = owner;
 
-            SensorReg = new Regulator(50.0f);
+            OwnerID = Owner.ID;
+
+            Initialize();
         }
 
         /// <summary>
         /// Now, load weapons from static config id and data.
         /// </summary>
         /// <param name="id"></param>
-        public void LoadWeapons(int id)
+        public void AddWeapon(int id)
         {
             var data = WeaponConfigMgr.Instance.GetDataByID(id);
 
@@ -103,6 +107,7 @@ namespace GameContent
         {
             if (!System.Object.ReferenceEquals(null, weapon))
             {
+                weapon.OwnerID = OwnerID;
                 Weapons.Add(weapon);
             }
         }
@@ -120,8 +125,7 @@ namespace GameContent
             return null;
         }
 
-        // Start is called before the first frame update
-        void Start()
+        public void Initialize()
         {
             WeaponCfgIDs = new int[MaxWeaponCount];
 
@@ -133,28 +137,15 @@ namespace GameContent
 
             for (int i = 0; i < MaxWeaponCount; i++)
             {
-                LoadWeapons(WeaponCfgIDs[i]);
+                AddWeapon(WeaponCfgIDs[i]);
             }
 
             if (MaxWeaponCount > 0)
             {
                 ChangeWeapon(Weapons[0].ID);
             }
-
-            //if (GameLogicSupvisor.IsAlive)
-            //    GameLogicSupvisor.Instance.Register(this);
         }
-
-        // Update is called once per frame
-        private Vector3 Dist2Target = Vector3.zero;
-        public virtual void OnUpdate(float dt)
-        {
-            //if (SensorReg.IsReady())
-            //{
-                
-            //}
-        }
-
+        
         public void SelectWeapon()
         {
             if (Owner.TargetSys.IsTargetPresent())
@@ -184,6 +175,8 @@ namespace GameContent
                 {
                     ChangeWeapon(temp);
                 }
+
+                temp = null;
             }
             else
             {
@@ -222,6 +215,15 @@ namespace GameContent
             }
         }
 
+        public void Use(BaseGameEntity target)
+        {
+            if (!System.Object.ReferenceEquals(null, CurWeapon) &&
+                CurWeapon.IsReady())
+            {
+                CurWeapon.Use(target, Owner);
+            }
+        }
+
         public void Use(BaseGameEntity target, BaseGameEntity origin)
         {
             if (!System.Object.ReferenceEquals(null, CurWeapon) &&
@@ -240,10 +242,26 @@ namespace GameContent
             }
         }
 
+        public void Use(Vector3 pos)
+        {
+            if (!System.Object.ReferenceEquals(null, CurWeapon) &&
+                CurWeapon.IsReady())
+            {
+                CurWeapon.Use(pos, Owner);
+            }
+        }
+
+        public void Use(Vector3 pos, Vector3 dir)
+        {
+            if (!System.Object.ReferenceEquals(null, CurWeapon) &&
+                CurWeapon.IsReady())
+            {
+                CurWeapon.Use(pos, dir, Owner);
+            }
+        }
+
         public void OnDestroy()
         {
-            //if (GameLogicSupvisor.IsAlive)
-            //    GameLogicSupvisor.Instance.Unregister(this);
         }
     }
 }

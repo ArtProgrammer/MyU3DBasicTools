@@ -57,22 +57,7 @@ namespace GameContent.Item
             get;set;
         }
 
-        public GameObject TheObject = null;
-
-        //void Start()
-        //{
-        //    Initialize();
-        //}
-
-        //public void OnUpdate(float dt)
-        //{
-        //    Process(dt);
-        //}
-
-        //void OnDestroy()
-        //{
-        //    Destroy();
-        //}
+        public GameObject TheObject = null;        
 
         public BaseItem()
         {

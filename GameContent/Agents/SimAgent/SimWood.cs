@@ -27,8 +27,8 @@ namespace GameContent.SimAgent
         private Regulator BrainReg = null;
 
         public SimWoodBrain Brain = null;
-        
-        private WeaponSystem WeaponSys = null;
+
+        public WeaponSystem WeaponSys = null;
 
         public int[] SkillIDs = new int[3];
 
@@ -211,7 +211,20 @@ namespace GameContent.SimAgent
 
             if (!System.Object.ReferenceEquals(null, WeaponSys))
             {
-                WeaponSys.Use(CurTarget, this);
+                WeaponSys.Use(CurTarget);
+            }
+        }
+
+        public void UseWeapon(Vector3 pos)
+        {
+            if (System.Object.ReferenceEquals(null, WeaponPoint))
+            {
+                WeaponPoint = transform;
+            }
+
+            if (!System.Object.ReferenceEquals(null, WeaponSys))
+            {
+                WeaponSys.Use(pos);
             }
         }
     }

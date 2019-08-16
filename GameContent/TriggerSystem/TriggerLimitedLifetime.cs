@@ -5,7 +5,7 @@ using SimpleAI.Game;
 
 namespace GameContent
 {
-    class TriggerLimitedLifetime : Trigger<BaseGameEntity>
+    class TriggerLimitedLifetime<T> : Trigger<T>
     {
         protected float LifeTime;
 

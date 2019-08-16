@@ -9,11 +9,13 @@ using SimpleAI.PoolSystem;
 
 namespace GameContent
 {
-    public class BaseWeapon : MonoBehaviour, IUpdateable
+    public class BaseWeapon
     {
         public int ID = 0;
 
-        public int BulletCfgID = 0;        
+        public int BulletCfgID = 0;
+
+        public int OwnerID = 0;
 
         public float Rate = 10.0f;
 
@@ -30,19 +32,7 @@ namespace GameContent
             //data.Prefab;
             
             UseRate = new Regulator(Rate);
-        }
-
-        // Start is called before the first frame update
-        void Start()
-        {
-            GameLogicSupvisor.Instance.Register(this);
-        }
-
-        // Update is called once per frame
-        public virtual void OnUpdate(float dt)
-        {
-            
-        }
+        }        
 
         public bool IsReady()
         {
@@ -76,31 +66,28 @@ namespace GameContent
 
         public virtual void Use(Vector3 pos, Vector3 dir, BaseGameEntity origin)
         {
-            //if (UseRate.IsReady())
+            var prefab = BulletCfgMgr.Instance.GetPrefabByID(BulletCfgID);
+            if (prefab)
             {
-                var prefab = BulletCfgMgr.Instance.GetPrefabByID(BulletCfgID);
-                if (prefab)
+                var gameObj = PrefabPoolingSystem.Instance.Spawn(prefab);
+                var bulletData = BulletCfgMgr.Instance.GetDataByID(BulletCfgID);
+                if (gameObj &&
+                    !System.Object.ReferenceEquals(null, bulletData))
                 {
-                    var gameObj = PrefabPoolingSystem.Instance.Spawn(prefab);
-                    var bulletData = BulletCfgMgr.Instance.GetDataByID(BulletCfgID);
-                    if (gameObj &&
-                        !System.Object.ReferenceEquals(null, bulletData))
+                    Transform bul = gameObj.transform;
+                    if (bul)
                     {
-                        Transform bul = gameObj.transform;
-                        if (bul)
-                        {
-                            var bullet = bul.GetComponent<SimpleBullet>();
-                            bullet.ID = IDAllocator.Instance.GetID();
-                            bullet.OwnerID = origin.ID;
-                            bullet.Speed = bulletData.Speed;
-                            bullet.LifeTime = bulletData.LifeTime;
+                        var bullet = bul.GetComponent<SimpleBullet>();
+                        bullet.ID = IDAllocator.Instance.GetID();
+                        bullet.OwnerID = origin.ID;
+                        bullet.Speed = bulletData.Speed;
+                        bullet.LifeTime = bulletData.LifeTime;
 
-                            if (bullet)
-                            {
-                                bul.position = origin.WeaponPoint.position;
-                                bullet.Dir = dir;
-                                bullet.Go();
-                            }
+                        if (bullet)
+                        {
+                            bul.position = origin.WeaponPoint.position;
+                            bullet.Dir = dir;
+                            bullet.Go();
                         }
                     }
                 }
@@ -110,7 +97,7 @@ namespace GameContent
         public virtual void Use(BaseGameEntity target, Transform origin)
         {
             if (!System.Object.ReferenceEquals(null, target))
-            {                
+            {
                 Use(target.Body.position, origin);
             }
         }
@@ -124,31 +111,28 @@ namespace GameContent
 
         public virtual void Use(Vector3 pos, Vector3 dir, Transform origin)
         {
-            //if (UseRate.IsReady())
+            var prefab = BulletCfgMgr.Instance.GetPrefabByID(BulletCfgID);
+            if (prefab)
             {
-                var prefab = BulletCfgMgr.Instance.GetPrefabByID(BulletCfgID);
-                if (prefab)
+                var gameObj = PrefabPoolingSystem.Instance.Spawn(prefab);
+                var bulletData = BulletCfgMgr.Instance.GetDataByID(BulletCfgID);
+                if (gameObj &&
+                    !System.Object.ReferenceEquals(null, bulletData))
                 {
-                    var gameObj = PrefabPoolingSystem.Instance.Spawn(prefab);
-                    var bulletData = BulletCfgMgr.Instance.GetDataByID(BulletCfgID);
-                    if (gameObj &&
-                        !System.Object.ReferenceEquals(null, bulletData))
+                    Transform bul = gameObj.transform;
+                    if (bul)
                     {
-                        Transform bul = gameObj.transform;
-                        if (bul)
-                        {
-                            var bullet = bul.GetComponent<SimpleBullet>();
-                            bullet.ID = IDAllocator.Instance.GetID();
-                            //bullet.OwnerID = origin.ID;
-                            bullet.Speed = bulletData.Speed;
-                            bullet.LifeTime = bulletData.LifeTime;
+                        var bullet = bul.GetComponent<SimpleBullet>();
+                        bullet.ID = IDAllocator.Instance.GetID();
+                        //bullet.OwnerID = origin.ID;
+                        bullet.Speed = bulletData.Speed;
+                        bullet.LifeTime = bulletData.LifeTime;
 
-                            if (bullet)
-                            {
-                                bul.position = origin.position;
-                                bullet.Dir = dir;
-                                bullet.Go();
-                            }
+                        if (bullet)
+                        {
+                            bul.position = origin.position;
+                            bullet.Dir = dir;
+                            bullet.Go();
                         }
                     }
                 }
@@ -157,8 +141,6 @@ namespace GameContent
 
         public void Destroy()
         {
-            if (GameLogicSupvisor.IsAlive)
-                GameLogicSupvisor.Instance.Unregister(this);
         }
     }
 }
