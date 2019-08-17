@@ -27,6 +27,11 @@ namespace SimpleAI.Supervisors
 
             WeaponConfigMgr.Instance.LoadConfigs();
 
+            FruitSpawner.Instance.Intialize();
+            FruitSpawner.Instance.RandSpawnApple();
+            FruitSpawner.Instance.RandSpawnApple();
+            FruitSpawner.Instance.RandSpawnApple();
+
             // load from config
             SpatialManager.Instance.Init(0, 0, 0, 100, 100, 100);
         }

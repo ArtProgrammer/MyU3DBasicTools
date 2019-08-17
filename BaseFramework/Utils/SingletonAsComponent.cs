@@ -11,6 +11,7 @@ namespace SimpleAI.Utils
     {
         private static T TheInstance;
 
+        [SerializeField]
         private bool Alive = true;
 
         public static bool IsAlive
