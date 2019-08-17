@@ -7,7 +7,7 @@ namespace GameContent
 {
     class TriggerLimitedLifetime<T> : Trigger<T>
     {
-        protected float LifeTime;
+        public float LifeTime;
 
         public TriggerLimitedLifetime(float lifeTime)
         {

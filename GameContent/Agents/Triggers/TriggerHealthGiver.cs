@@ -8,7 +8,7 @@ namespace GameContent
 {
     public class TriggerHealthGiver : Trigger_Respawning<SimWood>
     {
-        private int HealthGiven;
+        public int HealthGiven;
 
         public TriggerHealthGiver() { }
 

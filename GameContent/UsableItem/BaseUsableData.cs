@@ -14,7 +14,6 @@ namespace GameContent.UsableItem
     {
         public int ID;
         public int Count;
-        //public string Icon;
         public int IconID;
         public UsableCatalog Catalog;
     }
