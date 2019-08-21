@@ -5,19 +5,6 @@ using GameContent.Item;
 
 namespace GameContent
 {
-    public class BaseBagItem
-    {
-        public int GUID;
-
-        public int Index;
-
-        public int ItemID; //BaseItem
-
-        public int ItemCfgID; //ItemData
-
-        public BaseBagItem() { }
-    }
-
     public class BagSystem
     {
         private Dictionary<int, BaseBagItem> BagItems =
@@ -32,11 +19,12 @@ namespace GameContent
 
         }
 
-        /// <summary>
-        /// Add item to bag by it's instance id.
-        /// </summary>
-        /// <param name="id"></param>
         private void AddBagItem(int id)
+        {
+
+        }
+
+        private void RemoveBagItem()
         {
 
         }
@@ -51,14 +39,40 @@ namespace GameContent
 
         }
 
-        public BaseBagItem GetByID(int id)
+        public BaseBagItem GetItemByID(int id)
         {
-            //if (BagItems.ContainsKey(id))
-            //{
-            //    return BagItems[id];
-            //}
+            for (int i = 0; i < Items.Count; i++)
+            {
+                if (Items[i].ItemID == id)
+                {
+                    return Items[i];
+                }
+            }
 
             return null;
+        }
+
+        public BaseBagItem GetItemByIndex(int index)
+        {
+            for (int i = 0; i < Items.Count; i++)
+            {
+                if (Items[i].Index == index)
+                {
+                    return Items[i];
+                }
+            }
+
+            return null;
+        }
+
+        public bool UseItemAtIndex(int index)
+        {
+            return false;
+        }
+
+        public bool UseItemByID(int id)
+        {
+            return false;
         }
 
         public void Save()
