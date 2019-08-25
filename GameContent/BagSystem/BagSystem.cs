@@ -14,14 +14,41 @@ namespace GameContent
 
         public int BagVolume = 16;
 
+        private int InvalidIndex = -1;
+
         public void Load()
         {
 
         }
 
-        private void AddBagItem(int id)
+        private bool IsValidAtIndex(int cfgID, int index)
         {
+            return false;
+        }
 
+        private int GetAvailableIndex(int cfgID)
+        {
+            return InvalidIndex;
+        }
+
+        private bool AddBagItem(int id)
+        {
+            int index = GetAvailableIndex(id);
+
+            if (index == InvalidIndex)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private int AddItemAtIndex(int id, int index)
+        {
+            if (!IsValidAtIndex(id, index))
+                return 0;
+
+            return 0;
         }
 
         private void RemoveBagItem()
