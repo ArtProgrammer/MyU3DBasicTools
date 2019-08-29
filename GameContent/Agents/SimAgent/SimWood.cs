@@ -9,6 +9,7 @@ using SimpleAI.Game;
 using GameContent.Agents;
 using SimpleAI.Timer;
 using GameContent.UI;
+using GameContent.Interaction;
 
 namespace GameContent.SimAgent
 {
@@ -39,9 +40,13 @@ namespace GameContent.SimAgent
 
         private Regulator WeaponSelectionReg = new Regulator(100.0f);
 
+        public GameObject HealthbarPrefab = null;
+
         public GameObject SimHealthBag = null;
 
         public HealthBar Health = null;
+
+        public Transform HeadupTrans = null;
 
         public int FoodNeed = 5;
 
@@ -134,11 +139,18 @@ namespace GameContent.SimAgent
                 WeaponSys.OnWeaponChanged += OnWeaponChanged;
             }
 
-            if (SimHealthBag)
+            if (HealthbarPrefab)
             {
+                SimHealthBag = Instantiate(HealthbarPrefab) as GameObject;
+
+                if (!SimHealthBag) return;
+
+                SimHealthBag.transform.SetParent(UIManager.Instance.HealthBarPanel);
+
                 Health = SimHealthBag.GetComponent<HealthBar>();
                 if (!System.Object.ReferenceEquals(null, Health))
                 {
+                    Health.Target = HeadupTrans;
                     OnXueChanged += OnXueChange;
                 }
             }

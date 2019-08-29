@@ -30,7 +30,7 @@ namespace SimpleAI.Game
         public bool IsPlayerControl = false;
 
         [SerializeField]
-        private int MaxXue = 100;
+        public int MaxXue = 100;
 
         [SerializeField]
         private int XueNum = 100;
@@ -55,7 +55,7 @@ namespace SimpleAI.Game
         {
             get
             {
-                return XueNum <= 0;
+                return XueNum >= 0;
             }
         }
 

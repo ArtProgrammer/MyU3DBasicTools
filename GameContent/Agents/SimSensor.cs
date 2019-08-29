@@ -69,7 +69,7 @@ namespace GameContent.Agents
         
         private Vector3 SelfPos = Vector3.zero;
 
-        private float MemorySpan;
+        private float MemorySpan = 10.0f;
 
         private void UpdateBoundsSize(float range)
         {

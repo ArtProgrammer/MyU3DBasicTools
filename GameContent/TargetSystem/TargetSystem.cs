@@ -41,7 +41,7 @@ namespace GameContent
 
             PotentialOps.Clear();
 
-            CurTarget = null;
+            //CurTarget = null;
 
             PotentialOps = Owner.SimSensorMem.GetRecentlySensedOpponents();
 
