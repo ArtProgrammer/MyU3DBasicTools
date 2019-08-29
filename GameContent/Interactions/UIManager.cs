@@ -26,6 +26,7 @@ namespace GameContent.Interaction
             }
         }
 
+        public RectTransform HealthBarPanel = null;
         List<GameObject> Panels = new List<GameObject>();
 
         // Start is called before the first frame update

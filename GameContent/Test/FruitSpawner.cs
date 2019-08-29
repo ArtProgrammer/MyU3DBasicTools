@@ -36,8 +36,11 @@ namespace GameContent
 
         public void RandSpawnApple()
         {
-            Vector3 pos = new Vector3(Random.Range(3.0f, 10.0f), 5.0f, Random.Range(3.0f, 10.0f));
-            PrefabPoolingSystem.Instance.Spawn(Apple, pos, Quaternion.identity);
+            if (!System.Object.ReferenceEquals(null, Apple))
+            {
+                Vector3 pos = new Vector3(Random.Range(3.0f, 10.0f), 5.0f, Random.Range(3.0f, 10.0f));
+                PrefabPoolingSystem.Instance.Spawn(Apple, pos, Quaternion.identity);
+            }            
         }
     }
 }

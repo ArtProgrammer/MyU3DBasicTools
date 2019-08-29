@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SimpleAI.Game;
+using GameContent.SimAgent;
 
 namespace SimpleAI.Game
 {
@@ -10,6 +11,8 @@ namespace SimpleAI.Game
     {
         //Transform Target;
         BaseGameEntity Target = null;
+
+        SimWood Wood = null;
 
         private Vector3 Offset = Vector3.zero;
 
@@ -21,6 +24,8 @@ namespace SimpleAI.Game
         void Start()
         {
             GameLogicSupvisor.Instance.Register(this);
+
+            Wood = GetComponent<SimWood>();
         }
 
         // Update is called once per frame
@@ -68,6 +73,7 @@ namespace SimpleAI.Game
             if (NeedMove)
             {
                 transform.position += Offset;
+                //Wood.SetDestination(Wood.GetDestination() + Offset);
                 Offset.x = Offset.y = Offset.z = 0.0f;
                 NeedMove = false;
             }

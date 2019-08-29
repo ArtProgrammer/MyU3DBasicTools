@@ -8,6 +8,7 @@ using SimpleAI.Messaging;
 using SimpleAI.Game;
 using GameContent.Agents;
 using SimpleAI.Timer;
+using GameContent.UI;
 
 namespace GameContent.SimAgent
 {
@@ -37,6 +38,10 @@ namespace GameContent.SimAgent
         private Regulator TargetSysReg = null;
 
         private Regulator WeaponSelectionReg = new Regulator(100.0f);
+
+        public GameObject SimHealthBag = null;
+
+        public HealthBar Health = null;
 
         public int FoodNeed = 5;
 
@@ -70,6 +75,16 @@ namespace GameContent.SimAgent
         {
             if (NMAgent)
                 NMAgent.destination = pos;
+        }
+
+        public Vector3 GetDestination()
+        {
+            if (NMAgent)
+            {
+                return NMAgent.destination;
+            }
+
+            return Vector3.zero;
         }
 
         public void StopMove()
@@ -118,6 +133,20 @@ namespace GameContent.SimAgent
             {
                 WeaponSys.OnWeaponChanged += OnWeaponChanged;
             }
+
+            if (SimHealthBag)
+            {
+                Health = SimHealthBag.GetComponent<HealthBar>();
+                if (!System.Object.ReferenceEquals(null, Health))
+                {
+                    OnXueChanged += OnXueChange;
+                }
+            }
+        }
+
+        public void OnXueChange(int val)
+        {
+            Health.ChangePercent(val / MaxXue);
         }
 
         public void OnWeaponChanged(float range)

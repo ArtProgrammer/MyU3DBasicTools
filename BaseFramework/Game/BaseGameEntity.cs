@@ -30,6 +30,9 @@ namespace SimpleAI.Game
         public bool IsPlayerControl = false;
 
         [SerializeField]
+        private int MaxXue = 100;
+
+        [SerializeField]
         private int XueNum = 100;
 
         public int Xue

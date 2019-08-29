@@ -44,7 +44,8 @@ namespace SimpleAI.Inputs
         // Update is called once per frame
         void Update()
         {
-            if (EventSystem.current.IsPointerOverGameObject())
+            if (EventSystem.current &&
+                EventSystem.current.IsPointerOverGameObject())
             {
                 return;
             }
