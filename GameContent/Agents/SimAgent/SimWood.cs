@@ -158,7 +158,7 @@ namespace GameContent.SimAgent
 
         public void OnXueChange(int val)
         {
-            Health.ChangePercent(val / MaxXue);
+            Health.ChangePercent((float)val / MaxXue);
         }
 
         public void OnWeaponChanged(float range)

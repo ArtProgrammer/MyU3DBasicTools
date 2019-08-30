@@ -32,7 +32,7 @@ namespace GameContent.SimAgent
             }
             else if (CombatHolder.Instance.IsInAttackRange(Owner, Owner.Target))
             {
-                Debug.Log("$ try hurt target");
+                //Debug.Log("$ try hurt target");
                 Owner.UseWeapon();
                 Status = GoalStatus.Complete;
             }

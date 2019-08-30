@@ -12,6 +12,8 @@ namespace GameContent
     {
         public int ID = 0;
 
+        private int IDRecorder = 0;
+
         public float Speed = 0;
 
         public float LifeTime = 0;
@@ -32,6 +34,7 @@ namespace GameContent
         // Start is called before the first frame update
         void Start()
         {
+            ID = IDRecorder++;
             GameLogicSupvisor.Instance.Register(this);
         }
 
@@ -82,7 +85,7 @@ namespace GameContent
                 {
                     if (target.ID != OwnerID)
                     {
-                        Debug.Log("$$$ bullet collider");
+                        Debug.Log("$$$ bullet collider" + ID.ToString());
                         //IsActive = false;
                         //gameObject.SetActive(false);
 
@@ -113,9 +116,11 @@ namespace GameContent
                     {
                         if (target.ID != OwnerID)
                         {
-                            //Debug.Log("$$$ bullet collider");
+                            Debug.Log("$$$ bullet collider" + ID.ToString());
                             //IsActive = false;
                             //gameObject.SetActive(false);
+
+                            target.Xue = target.Xue - 1;
 
                             PrefabPoolingSystem.Instance.Despawn(gameObject);
                         }
