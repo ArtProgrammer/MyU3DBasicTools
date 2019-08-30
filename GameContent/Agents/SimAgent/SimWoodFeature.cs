@@ -26,8 +26,9 @@ namespace GameContent.SimAgent
         {
             //float rate = 0.0f;
             float rate = 1.0f - p.FoodCount / p.FoodNeed;
-            //if (p.FoodCount <= 0)
-            //rate = 1.0f;
+
+            if (p.FoodCount <= 0)
+                rate = 1.0f;
 
             return rate;
         }
@@ -42,21 +43,21 @@ namespace GameContent.SimAgent
             return rate;
         }
 
+        private float RateToAttack = 0.0f;
+
         public float Rate2Attack(SimWood p)
         {
-            float rate = 0.0f;
-
-            //if (p.FoodCount <= p.FoodNeed * 0.5)
-            //{
-            //    rate = 0.5f;
-            //}
-
             if (p.FoodCount >= p.FoodNeed)
             {
-                rate = (float)p.FoodCount / p.FoodNeed;
-            }            
+                RateToAttack = 1.0f;
+            }
 
-            return rate;
+            if (p.FoodCount <= 1)
+            {
+                RateToAttack = 0.0f;
+            }
+
+            return RateToAttack;
         }
 
         public float Rate2Hurt(SimWood p)

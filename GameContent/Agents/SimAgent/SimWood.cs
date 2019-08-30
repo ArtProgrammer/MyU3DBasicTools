@@ -121,7 +121,7 @@ namespace GameContent.SimAgent
 
             BrainReg = new Regulator(15.0f);
 
-            FoodCostReg = new Regulator(0.1f);
+            FoodCostReg = new Regulator(0.01f);
 
             Brain = new SimWoodBrain(this, 0);
 

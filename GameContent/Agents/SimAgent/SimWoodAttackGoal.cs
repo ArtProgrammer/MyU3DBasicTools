@@ -18,14 +18,17 @@ namespace GameContent.SimAgent
                 return;
             }
 
-            if (Owner.TargetSys.CanTargetAttack())
-            {
-                AddSubGoal(new SimWoodHurtGoal(p, type, Owner.Target));
-            }
-            else
-            {
-                AddSubGoal(new SimWoodFollowGoal(p, type, Owner.Target, Owner.AttackRadius));
-            }
+            //if (Owner.TargetSys.CanTargetAttack())
+            //{
+            //    AddSubGoal(new SimWoodHurtGoal(p, type, Owner.Target));
+            //}
+            //else
+            //{
+            //    AddSubGoal(new SimWoodFollowGoal(p, type, Owner.Target, Owner.AttackRadius));
+            //}
+
+            AddSubGoal(new SimWoodHurtGoal(p, type, Owner.Target));
+            AddSubGoal(new SimWoodFollowGoal(p, type, Owner.Target, Owner.AttackRadius));
         }
         
         public override void Activate()
@@ -38,6 +41,11 @@ namespace GameContent.SimAgent
             ActiveIfInactive();
 
             GoalStatus subStatus = ProcessSubgoals();
+
+            if (subStatus == GoalStatus.Complete)
+            {
+                Status = GoalStatus.Complete;
+            }
 
             ReactivateIfFailed();
 
