@@ -28,7 +28,7 @@ namespace GameContent.SimAgent
 
             if (Owner.IsTargetLost)
             {
-                Status = GoalStatus.Complete;
+                Status = GoalStatus.Failed;
             }
             else if (CombatHolder.Instance.IsInAttackRange(Owner, Owner.Target))
             {

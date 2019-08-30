@@ -14,7 +14,7 @@ namespace GameContent.SimAgent
         {
             if (!Owner.TargetSys.IsTargetPresent())
             {
-                Status = GoalStatus.Complete;
+                Status = GoalStatus.Failed;
                 return;
             }
 
