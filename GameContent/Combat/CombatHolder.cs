@@ -22,7 +22,9 @@ namespace GameContent
         {
             Vector3 dis = src.Position - dst.Position;
 
-            return dis.sqrMagnitude < src.CollideRadius * src.CollideRadius;
+            float radiuses = src.CollideRadius + dst.CollideRadius;
+
+            return dis.sqrMagnitude < radiuses * radiuses;
         }
 
         public bool IsCloseEnough(BaseGameEntity src, BaseGameEntity dst,
@@ -32,6 +34,12 @@ namespace GameContent
             return dis.sqrMagnitude < distance * distance;
         }
 
+        /// <summary>
+        /// Check weather a point int the close range.
+        /// </summary>
+        /// <param name="src"></param>
+        /// <param name="pos"></param>
+        /// <returns></returns>
         public bool IsCloseEnough(BaseGameEntity src, Vector3 pos)
         {
             Vector3 dis = src.Position - pos;
@@ -43,7 +51,17 @@ namespace GameContent
         {
             Vector3 dis = src.Position - dst.Position;
 
-            return dis.sqrMagnitude < src.AttackRadius * src.AttackRadius;
+            float radiuses = src.AttackRadius + dst.CollideRadius;
+
+            return dis.sqrMagnitude < radiuses * radiuses;
+        }
+
+        public bool IsInAttackRange(BaseGameEntity src, BaseGameEntity dst,
+            float distance)
+        {
+            Vector3 dis = src.Position - dst.Position;
+
+            return dis.sqrMagnitude < distance * distance;
         }
 
         public bool IsInAttackRange(BaseGameEntity src, Vector3 pos)
