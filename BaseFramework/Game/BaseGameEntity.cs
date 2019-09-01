@@ -19,6 +19,8 @@ namespace SimpleAI.Game
 {
     public class BaseGameEntity : SpatialFruitNode, ITelegramReceiver, IUpdateable
     {
+        protected bool IsActive = true;
+
         [SerializeField]
         private int TheID = 0;
 

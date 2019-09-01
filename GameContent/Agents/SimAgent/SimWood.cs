@@ -6,6 +6,7 @@ using UnityEngine.AI;
 using SimpleAI.Logger;
 using SimpleAI.Messaging;
 using SimpleAI.Game;
+using SimpleAI.PoolSystem;
 using GameContent.Agents;
 using SimpleAI.Timer;
 using GameContent.UI;
@@ -13,7 +14,7 @@ using GameContent.Interaction;
 
 namespace GameContent.SimAgent
 {
-    public class SimWood : BaseGameEntity
+    public class SimWood : BaseGameEntity, IPoolableComponent
     {
         //public NavMeshAgent NMAgent = null;
         public bool IsPlayerCtrl = false;
@@ -65,6 +66,7 @@ namespace GameContent.SimAgent
                     if (CurFoodCount <= 0)
                     {
                         MessageDispatcher.Instance.DispatchMsg(0.01f, this.ID, this.ID, 101);
+                        //PrefabPoolingSystem.Instance.Despawn(gameObject);
                     }
                 }
             }
@@ -158,6 +160,11 @@ namespace GameContent.SimAgent
 
         public void OnXueChange(int val)
         {
+            if (val <= 0 && IsActive)
+            {
+                PrefabPoolingSystem.Instance.Despawn(gameObject);
+            }
+
             Health.ChangePercent((float)val / MaxXue);
         }
 
@@ -176,46 +183,49 @@ namespace GameContent.SimAgent
 
         public override void Process(float dt)
         {
-            base.Process(dt);
-
-            if (!IsPlayerCtrl)
+            if (IsActive)
             {
-                Brain.Process();
+                base.Process(dt);
 
-                if (BrainReg.IsReady())
+                if (!IsPlayerCtrl)
                 {
-                    Brain.Arbitrate();
+                    Brain.Process();
+
+                    if (BrainReg.IsReady())
+                    {
+                        Brain.Arbitrate();
+                    }
+
+                    if (WeaponSelectionReg.IsReady())
+                    {
+                        WeaponSys.SelectWeapon();
+                    }
                 }
 
-                if (WeaponSelectionReg.IsReady())
+                if (SensorReg.IsReady())
                 {
-                    WeaponSys.SelectWeapon();
+                    TheSensor.Process(dt);
                 }
-            }
 
-            if (SensorReg.IsReady())
-            {
-                TheSensor.Process(dt);
-            }
-
-            if (TargetSysReg.IsReady())
-            {
-                TargetSys.Process(dt);
-                Target = TargetSys.CurTarget;
-            }
-
-            if (FoodCostReg.IsReady())
-            {
-                if (FoodCount > 0)
-                    FoodCount--;
-            }
-
-            // temp codes.
-            if (IsPlayerCtrl)
-            {
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (TargetSysReg.IsReady())
                 {
-                    UseWeapon();
+                    TargetSys.Process(dt);
+                    Target = TargetSys.CurTarget;
+                }
+
+                if (FoodCostReg.IsReady())
+                {
+                    if (FoodCount > 0)
+                        FoodCount--;
+                }
+
+                // temp codes.
+                if (IsPlayerCtrl)
+                {
+                    if (Input.GetKeyDown(KeyCode.Space))
+                    {
+                        UseWeapon();
+                    }
                 }
             }
         }
@@ -267,6 +277,19 @@ namespace GameContent.SimAgent
             {
                 WeaponSys.Use(pos);
             }
+        }
+
+        public virtual void Spawned()
+        {
+            Xue = 100;
+            IsActive = true;
+            Health.gameObject.SetActive(true);
+        }
+
+        public virtual void Despawned()
+        {
+            IsActive = false;
+            Health.gameObject.SetActive(false);
         }
     }
 }

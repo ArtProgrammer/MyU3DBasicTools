@@ -249,7 +249,9 @@ namespace GameContent.Agents
             {
                 T item = (T)PotentialTargets[i];
                 if (!System.Object.ReferenceEquals(item, null) &&
-                    !System.Object.ReferenceEquals(item, Owner))
+                    !System.Object.ReferenceEquals(item, Owner) &&
+                    DefenceSystem.Instance.IsEnemyRace(Owner.RaceSignal,
+                        item.RaceSignal))
                 {
                     //if (DefenceSystem.Instance.IsEnemyRace(Owner.RaceSignal,
                     //    item.RaceSignal))

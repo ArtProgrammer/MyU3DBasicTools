@@ -120,7 +120,7 @@ namespace GameContent
                             //IsActive = false;
                             //gameObject.SetActive(false);
 
-                            target.Xue = target.Xue - 1;
+                            target.Xue = target.Xue - 10;
 
                             PrefabPoolingSystem.Instance.Despawn(gameObject);
                         }

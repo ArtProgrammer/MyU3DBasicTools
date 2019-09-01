@@ -142,8 +142,11 @@ namespace SimpleAI.TheCamera
                 HasChanged = false;
             }
 
-            transform.position = Target.position + OffsetPos;
-            transform.LookAt(Target);
+            if (IsReady)
+            {
+                transform.position = Target.position + OffsetPos;
+                transform.LookAt(Target);
+            }            
         }
 
         protected void CalOffsetPos()

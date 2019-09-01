@@ -7,8 +7,8 @@ import csv
 
 CURDIR = os.getcwd()
 SRC_DIR  = CURDIR + "/SRC/" #"D:/Nimei/ConsoleApp1/ConsoleApp1/Configs/SRC/"
-DST_CS_DIR = CURDIR + "/DST_CS/" #"D:/Nimei/ConsoleApp1/ConsoleApp1/Configs/DST_CS/"
-DST_CSV_DIR = CURDIR + "/DST_Configs/" #"D:/Nimei/ConsoleApp1/ConsoleApp1/Configs/DST_Configs/"
+DST_CS_DIR = CURDIR + "/../../GameContent/ConfigSystem/" #"D:/Nimei/ConsoleApp1/ConsoleApp1/Configs/DST_CS/"
+DST_CSV_DIR = CURDIR + "/../../../../Resources/TextAssets/" #"D:/Nimei/ConsoleApp1/ConsoleApp1/Configs/DST_Configs/"
 
 RES_DATA_SUFFIX = ".csv"
 TARGET_FILE_SUFFIX = ".cs"

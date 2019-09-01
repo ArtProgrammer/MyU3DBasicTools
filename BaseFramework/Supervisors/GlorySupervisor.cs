@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using SimpleAI.Spatial;
+using SimpleAI.PoolSystem;
 using GameContent;
 using GameContent.Skill;
 using GameContent.Item;
+using GameContent.SimAgent;
 
 using Config;
 
@@ -37,17 +39,54 @@ namespace SimpleAI.Supervisors
             // load from config
             SpatialManager.Instance.Init(0, 0, 0, 100, 100, 100);
 
-            TextAsset ta = Resources.Load("TextAssets/Icons") as TextAsset;
+            ConfigDataMgr.Instance.Initialize();
 
-            IconsLoader iconLoader = new IconsLoader();
-            Dictionary<int, Icons> icons = iconLoader.LoadConfigData(ta.text);
+            Test_SpawnNPC();
+        }
 
-            int count = icons.Count;
+        [SerializeField]
+        private Transform RoleContenter = null;
+
+        public Transform NPC_Home = null;
+
+        public Transform NPC_Food = null;
+
+        public void Test_SpawnNPC()
+        {
+            GameObject npc = Resources.Load<GameObject>("Prefabs/Roles/NPC");
+            if (npc)
+            {
+                GameObject npcInstance = PrefabPoolingSystem.Instance.Spawn(npc);
+
+                npcInstance.transform.SetParent(RoleContenter);
+
+                SimWood sw = npcInstance.GetComponent<SimWood>();
+
+                if (sw)
+                {
+                    sw.Home = NPC_Home;
+                    sw.Food = NPC_Food;
+                }
+            }
         }
 
         void Awake()
         {
             Initialize();
+        }
+
+        private void Start()
+        {
+            StartCoroutine("SpawnNPCs");
+        }
+
+        IEnumerator SpawnNPCs()
+        {
+            for (int i = 0; i < 30; i++)
+            {
+                Test_SpawnNPC();
+                yield return new WaitForSeconds(6.0f);
+            }
         }
     }
 }

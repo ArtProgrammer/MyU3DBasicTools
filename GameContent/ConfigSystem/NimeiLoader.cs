@@ -4,22 +4,23 @@ using System.IO;
 
 namespace Config {
     class NimeiLoader {
-        public List<Nimei> DataList = new List<Nimei> ();
+        public Dictionary<int, Nimei> Datas = new Dictionary<int, Nimei> ();
 
-        public List<Nimei> LoadConfigData(string path) {
-            using (StreamReader reader = new StreamReader(path, System.Text.Encoding.Default, false)) {
-                while (!reader.EndOfStream) {
-                    string str = reader.ReadLine();
-                    string[] split = str.Split(',');
+        public Dictionary<int, Nimei> LoadConfigData(string str) {
+            string[] periods = str.Split('\n');
+            int index = 0;
+            while (index < periods.Length) {
+                string[] split = periods[index].Split(',');
+                if (split.Length == 3) {
                     Nimei data = new Nimei();
                     int.TryParse(split[0], out data.ID);
                     data.Name= split[1];
                     data.Des= split[2];
-                    DataList.Add(data);
+                    Datas.Add(data.ID, data);
                 }
-                reader.Close();
-            }
-            return DataList;
+                index++;
+                }
+            return Datas;
         }
     }
 }
