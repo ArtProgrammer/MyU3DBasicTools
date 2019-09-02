@@ -16,7 +16,7 @@ namespace SimpleAI.Game
 
         private Vector3 Offset = Vector3.zero;
 
-        private Vector3 Rot = Vector3.up;
+        private float RotValue = 0.0f;
 
         private bool NeedMove = false;
 
@@ -61,8 +61,8 @@ namespace SimpleAI.Game
         {
             if (NeedRot)
             {
-                transform.Rotate(Rot);
-                Rot.y = 1.0f;
+                transform.Rotate(Vector3.up, RotValue * Mathf.Rad2Deg); //RotValue
+                RotValue = 0.0f;
 
                 NeedRot = false;
             }
@@ -87,14 +87,14 @@ namespace SimpleAI.Game
             if (Input.GetKey(KeyCode.A))
             {
                 //Offset.x -= dt * MoveSpeed;
-                Rot.y -= dt * RotSpeed;
+                RotValue -= dt * RotSpeed;
                 NeedRot = true;
             }
 
             if (Input.GetKey(KeyCode.D))
             {
                 //Offset.x += dt * MoveSpeed;
-                Rot.y += dt * RotSpeed;
+                RotValue += dt * RotSpeed;
                 NeedRot = true;
             }
 

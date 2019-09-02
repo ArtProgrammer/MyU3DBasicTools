@@ -1,9 +1,9 @@
 ID,Name,Path
 INT,STRING,STRING
 ,,
-1,A,Icons/Icon1
-2,B,Icons/Icon2
-3,C,Icons/Icon3
-4,D,Icons/Icon4
-5,E,Icons/Icon5
+1,火,Icons/Icon1
+2,水,Icons/Icon2
+3,木,Icons/Icon3
+4,金,Icons/Icon4
+5,土,Icons/Icon5
 6,F,Icons/Icon6

@@ -41,11 +41,11 @@ namespace SimpleAI.Supervisors
 
             ConfigDataMgr.Instance.Initialize();
 
-            Test_SpawnNPC();
+            //Test_SpawnNPC();
         }
 
         [SerializeField]
-        private Transform RoleContenter = null;
+        public Transform RoleContenter = null;
 
         public Transform NPC_Home = null;
 
@@ -77,6 +77,8 @@ namespace SimpleAI.Supervisors
 
         private void Start()
         {
+            //Test_SpawnNPC();
+
             StartCoroutine("SpawnNPCs");
         }
 

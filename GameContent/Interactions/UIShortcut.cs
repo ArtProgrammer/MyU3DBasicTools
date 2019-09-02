@@ -116,6 +116,10 @@ namespace GameContent.Interaction
             if (!System.Object.ReferenceEquals(null, sp))
             {
                 BtnList[item.Index].sprite = sp;
+
+                Config.Icons icon = ConfigDataMgr.Instance.IconLoader.Datas[item.ItemID];
+
+                Texts[item.Index].text = icon.Name;
             }
         }
 

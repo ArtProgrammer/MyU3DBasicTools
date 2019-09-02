@@ -287,13 +287,20 @@ namespace GameContent.SimAgent
         {
             Xue = 100;
             IsActive = true;
-            Health.gameObject.SetActive(true);
+            if (Health)
+            {
+                Health.gameObject.SetActive(true);
+            }            
         }
 
         public virtual void Despawned()
         {
             IsActive = false;
-            Health.gameObject.SetActive(false);
+
+            if (Health)
+            {
+                Health.gameObject.SetActive(false);
+            }            
         }
     }
 }
