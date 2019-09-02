@@ -66,6 +66,37 @@ namespace GameContent
             }
         }
 
+        public virtual void OnFixedUpdate(float dt)
+        {
+
+        }
+
+        public SimWood GetAffectTarget(Transform trans)
+        {
+            SimWood target = trans.GetComponent<SimWood>();
+
+            if (!target)
+            {
+                trans = trans.parent;
+                if (trans)
+                {
+                    target = trans.GetComponent<SimWood>();
+                }
+            }
+
+            if (target)
+            {
+                if (target.ID != OwnerID)
+                {
+                    Debug.Log("$$$ bullet collider" + ID.ToString());
+
+                    return target;
+                }
+            }
+
+            return null;
+        }
+
         public void OnCollisionEnter(Collision collision)
         {
             if (collision.transform)

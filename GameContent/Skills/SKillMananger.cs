@@ -290,6 +290,11 @@ namespace GameContent.Skill
             UpdateSkills(dt);
         }
 
+        public virtual void OnFixedUpdate(float dt)
+        {
+
+        }
+
         public void FindCurSkillTargets(ref Vector3 position, float range)
         { 
             SkillBound.center = position;

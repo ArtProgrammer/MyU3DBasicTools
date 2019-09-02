@@ -144,6 +144,11 @@ namespace GameContent.Item
             UpdateItems(dt);
         }
 
+        public virtual void OnFixedUpdate(float dt)
+        {
+
+        }
+
         public ItemData GetItemData(int id)
         { 
             if (ItemDataPool.ContainsKey(id))

@@ -211,5 +211,10 @@ namespace SimpleAI.Messaging
         {
             DispatchDelayedMessages(dt);
         }
+
+        public virtual void OnFixedUpdate(float dt)
+        {
+
+        }
     }
 }

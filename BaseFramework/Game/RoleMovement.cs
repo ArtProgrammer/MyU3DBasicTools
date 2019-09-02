@@ -16,9 +16,15 @@ namespace SimpleAI.Game
 
         private Vector3 Offset = Vector3.zero;
 
+        private Vector3 Rot = Vector3.up;
+
         private bool NeedMove = false;
 
+        private bool NeedRot = false;
+
         public float MoveSpeed = 10.0f;
+
+        public float RotSpeed = 3.0f;
 
         // Start is called before the first frame update
         void Start()
@@ -32,6 +38,34 @@ namespace SimpleAI.Game
         public void OnUpdate(float dt)
         {
             HandleInputs(dt);
+        }
+
+        public virtual void OnFixedUpdate(float dt)
+        {
+            Turning();
+            Move();
+        }
+
+        public void Move()
+        {
+            if (NeedMove)
+            {
+                //transform.position += Offset;
+                transform.Translate(Offset);
+                Offset.x = Offset.y = Offset.z = 0.0f;
+                NeedMove = false;
+            }
+        }
+
+        public void Turning()
+        {
+            if (NeedRot)
+            {
+                transform.Rotate(Rot);
+                Rot.y = 1.0f;
+
+                NeedRot = false;
+            }
         }
 
         public Action OnSpaceClick;
@@ -52,14 +86,16 @@ namespace SimpleAI.Game
 
             if (Input.GetKey(KeyCode.A))
             {
-                Offset.x -= dt * MoveSpeed;
-                NeedMove = true;
+                //Offset.x -= dt * MoveSpeed;
+                Rot.y -= dt * RotSpeed;
+                NeedRot = true;
             }
 
             if (Input.GetKey(KeyCode.D))
             {
-                Offset.x += dt * MoveSpeed;
-                NeedMove = true;
+                //Offset.x += dt * MoveSpeed;
+                Rot.y += dt * RotSpeed;
+                NeedRot = true;
             }
 
             if (Input.GetKey(KeyCode.Space))
@@ -68,15 +104,7 @@ namespace SimpleAI.Game
                 {
                     OnSpaceClick();
                 }
-            }
-
-            if (NeedMove)
-            {
-                transform.position += Offset;
-                //Wood.SetDestination(Wood.GetDestination() + Offset);
-                Offset.x = Offset.y = Offset.z = 0.0f;
-                NeedMove = false;
-            }
+            }            
         }
 
         void OnDestroy()

@@ -125,5 +125,10 @@ namespace GameContent.Skill
         {
             OnProcess(ref dt);
         }
+
+        public void OnFixedUpdate(float dt)
+        {
+
+        }
     }
 }

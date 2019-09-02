@@ -210,7 +210,11 @@ namespace GameContent.SimAgent
                 if (TargetSysReg.IsReady())
                 {
                     TargetSys.Process(dt);
-                    Target = TargetSys.CurTarget;
+
+                    if (!IsPlayerCtrl)
+                    {
+                        Target = TargetSys.CurTarget;
+                    }                    
                 }
 
                 if (FoodCostReg.IsReady())

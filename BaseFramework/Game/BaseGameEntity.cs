@@ -355,6 +355,11 @@ namespace SimpleAI.Game
             Process(dt);
         }
 
+        public virtual void OnFixedUpdate(float dt)
+        {
+
+        }
+
         public virtual bool HandleMessage(Telegram msg) 
         {
             TinyLogger.Instance.DebugLog(string.Format("$ BaseGameEntity handle message {0}", ID));

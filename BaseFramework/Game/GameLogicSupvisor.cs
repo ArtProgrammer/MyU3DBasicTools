@@ -9,6 +9,7 @@ namespace SimpleAI.Game
     public interface IUpdateable
     {
         void OnUpdate(float dt);
+        void OnFixedUpdate(float dt);
     }
 
     public class GameLogicSupvisor : SingletonAsComponent<GameLogicSupvisor>
@@ -86,6 +87,19 @@ namespace SimpleAI.Game
             for (int i = 0; i < Instance.UpdateableObjects.Count; i++)
             {
                 Instance.UpdateableObjects[i].OnUpdate(dt);
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            if (IsGameFreezing)
+                return;
+
+            float dt = TimeWrapper.Instance.deltaTime * TheGameSpeed;
+
+            for (int i = 0; i < Instance.UpdateableObjects.Count; i++)
+            {
+                Instance.UpdateableObjects[i].OnFixedUpdate(dt);
             }
         }
     }

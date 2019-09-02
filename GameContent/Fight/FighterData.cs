@@ -74,5 +74,10 @@ namespace GameContent.Fight
         { 
 
         }
+
+        public virtual void OnFixedUpdate(float dt)
+        {
+
+        }
     }
 }

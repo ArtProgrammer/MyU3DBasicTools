@@ -103,5 +103,10 @@ namespace GameContent.Item
                 Making(dt);
             }
         }
+
+        public virtual void OnFixedUpdate(float dt)
+        {
+
+        }
     }
 }
