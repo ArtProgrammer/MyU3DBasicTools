@@ -117,7 +117,7 @@ namespace GameContent.Interaction
             {
                 BtnList[item.Index].sprite = sp;
 
-                Config.Icons icon = ConfigDataMgr.Instance.IconLoader.Datas[item.ItemID];
+                Config.IconsConfig icon = ConfigDataMgr.Instance.IconCfgLoader.GetDataByID(item.ItemID);
 
                 Texts[item.Index].text = icon.Name;
             }

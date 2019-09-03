@@ -122,6 +122,14 @@ def ConstuctCSLoader(fileName, data):
 	content += TABLE_SPACE * 3 + 'return Datas;\n'
 	
 	content += TABLE_SPACE * 2 + '}\n'
+
+	content += TABLE_SPACE * 2 + 'public ' + classname + ' GetDataByID(int id) {\n'
+	content += TABLE_SPACE * 3 + 'if (Datas.ContainsKey(id)) { \n'
+	content += TABLE_SPACE * 4 + 'return Datas[id];\n'
+	content += TABLE_SPACE * 3 + '}\n'
+	content += TABLE_SPACE * 3 + 'return null;\n'
+	content += TABLE_SPACE * 2 + '}\n'
+
 	content += TABLE_SPACE + '}\n'
 	content += '}\n'
 

@@ -62,6 +62,7 @@ namespace SimpleAI.Utils
             {
                 id = RecycledIDs[0];
                 RecycledIDs.RemoveAt(0);
+                RecycledIDCount--;
             }
 
             return id;

@@ -20,7 +20,7 @@ namespace GameContent
 
         public ItemData CfgData;  // runtime property.
 
-        public string IconPath;   // runtime property.
+        public int IconID;   // runtime property.
 
         public BaseBagItem() { }
     }

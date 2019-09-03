@@ -70,6 +70,31 @@ namespace SimpleAI.Supervisors
             }
         }
 
+        public void Test_SpawnItems(int cfgid)
+        {
+            ItemConfig itemCfg = ConfigDataMgr.Instance.ItemCfgLoader.GetDataByID(cfgid);
+
+            if (!System.Object.ReferenceEquals(null, itemCfg))
+            {
+                GameObject go = PrefabsAssetHolder.Instance.GetPrefabByID(itemCfg.PrefabID);
+
+                if (!System.Object.ReferenceEquals(null, go))
+                {
+                    GameObject inst =
+                        PrefabPoolingSystem.Instance.Spawn(go,
+                            new Vector3(5, 1, 5), Quaternion.identity);
+
+                    inst.transform.SetParent(RoleContenter);
+
+                    ItemGiver ig = inst.GetComponent<ItemGiver>();
+                    if (!System.Object.ReferenceEquals(null, ig))
+                    {
+                        ig.ItemCfgID = cfgid;
+                    }
+                }                
+            }
+        }
+
         void Awake()
         {
             Initialize();
@@ -80,6 +105,8 @@ namespace SimpleAI.Supervisors
             //Test_SpawnNPC();
 
             StartCoroutine("SpawnNPCs");
+
+            Test_SpawnItems(10002);
         }
 
         IEnumerator SpawnNPCs()

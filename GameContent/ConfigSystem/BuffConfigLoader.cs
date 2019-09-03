@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 
 namespace Config {
-    class IconsLoader {
-        public Dictionary<int, Icons> Datas = new Dictionary<int, Icons> ();
+    class BuffConfigLoader {
+        public Dictionary<int, BuffConfig> Datas = new Dictionary<int, BuffConfig> ();
 
-        public Dictionary<int, Icons> LoadConfigData(string str) {
+        public Dictionary<int, BuffConfig> LoadConfigData(string str) {
             string[] periods = str.Split('\n');
             int index = 0;
             while (index < periods.Length) {
                 string[] split = periods[index].Split(',');
                 if (split.Length == 3) {
-                    Icons data = new Icons();
+                    BuffConfig data = new BuffConfig();
                     int.TryParse(split[0], out data.ID);
                     data.Name= split[1];
                     data.Path= split[2];
@@ -21,6 +21,12 @@ namespace Config {
                 index++;
                 }
             return Datas;
+        }
+        public BuffConfig GetDataByID(int id) {
+            if (Datas.ContainsKey(id)) { 
+                return Datas[id];
+            }
+            return null;
         }
     }
 }

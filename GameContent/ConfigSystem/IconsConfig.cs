@@ -1,9 +1,9 @@
 using System;
 
 namespace Config {
-    class Item {
+    class IconsConfig {
         public int ID;
         public string Name;
-        public string Des;
+        public string Path;
     }
 }

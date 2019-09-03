@@ -6,8 +6,12 @@ using SimpleAI.PoolSystem;
 using GameContent.UsableItem;
 using SimpleAI.Game;
 
+
 namespace GameContent.Item
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class BaseItem : IBaseUsableItem, IPoolableComponent, IPrototype<BaseItem>
     {
         private int TheID = 0;

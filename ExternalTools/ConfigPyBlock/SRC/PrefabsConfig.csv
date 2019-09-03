@@ -1,0 +1,9 @@
+ID,Name,Path
+INT,STRING,STRING
+,,
+10001,小傻怪,Prefabs/Roles/NPC
+10002,主角,Prefabs/Roles/Role
+10003,小子弹,Prefabs/SimpleBullet
+10004,血条容器,Prefabs/UI/HealthBarPanel
+10005,简单血条,Prefabs/UI/SimpleHealthBar
+10006,苹果,Prefabs/Items/Apple

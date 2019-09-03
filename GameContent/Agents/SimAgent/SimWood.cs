@@ -49,6 +49,8 @@ namespace GameContent.SimAgent
 
         public Transform HeadupTrans = null;
 
+        public BagSystem Bag = null;
+
         public int FoodNeed = 5;
 
         public int FoodCount
@@ -156,6 +158,8 @@ namespace GameContent.SimAgent
                     OnXueChanged += OnXueChange;
                 }
             }
+
+            Bag = GetComponent<BagSystem>();
         }
 
         public void OnXueChange(int val)
@@ -301,6 +305,21 @@ namespace GameContent.SimAgent
             {
                 Health.gameObject.SetActive(false);
             }            
+        }
+
+        public bool AddItem(int id)
+        {
+            if (!System.Object.ReferenceEquals(null, Bag))
+            {
+                Bag.Add(id);
+                return true;
+            }
+            return false;
+        }
+
+        public bool RemoveItem(int id)
+        {
+            return true;
         }
     }
 }

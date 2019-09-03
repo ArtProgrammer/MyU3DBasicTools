@@ -53,8 +53,12 @@ namespace GameContent
         {
             foreach (var item in Icons)
             {
-                ClearIconByID(item.Key);
+				Resources.UnloadAsset(item.Value);
+
+				ClearIconByID(item.Key);
             }
+
+            Resources.UnloadUnusedAssets();
         }
     }
 }

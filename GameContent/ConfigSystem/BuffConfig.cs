@@ -1,7 +1,7 @@
 using System;
 
 namespace Config {
-    class Buff {
+    class BuffConfig {
         public int ID;
         public string Name;
         public string Path;

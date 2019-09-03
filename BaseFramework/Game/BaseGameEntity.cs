@@ -175,7 +175,7 @@ namespace SimpleAI.Game
             {
                 return System.Object.ReferenceEquals(null, CurTarget);
             }
-        }
+        }      
 
         public void AddBuff(BaseBuff buff)
         {
