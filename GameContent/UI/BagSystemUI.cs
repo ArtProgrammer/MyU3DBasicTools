@@ -34,12 +34,30 @@ namespace GameContent
             }
         }
 
+        public void OnItemRemove(int index)
+        {
+            RemoveItem(index);
+        }
+
         // Start is called before the first frame update
         void Start()
         {            
             InitUIElements();
 
             LoadUIContent();
+        }
+
+        public void SwitchTarget(BagSystem bag)
+        {
+            if (!System.Object.ReferenceEquals(null, bag) &&
+                !System.Object.ReferenceEquals(bag, Bag))
+            {
+                Bag = bag;
+
+                ClearItems();
+
+                LoadBagContent(Bag);
+            }
         }
 
         private void InitUIElements()
@@ -49,7 +67,7 @@ namespace GameContent
                 for (int i = 0; i < ItemsPanel.childCount; i++)
                 {
                     Transform sub = ItemsPanel.GetChild(i);
-                    var btn = sub.GetComponent<Image>();
+                    var btn = sub.GetComponentInChildren<Image>();
                     if (btn)
                     {
                         ItemBtnImages.Add(btn);
@@ -76,17 +94,30 @@ namespace GameContent
             {
                 Bag = sw.Bag;
 
-                Bag.OnAddItem += OnItemAdd;
-
-                List<BaseBagItem> items = Bag.GetAllItems();
-
-                foreach (var item in items)
-                {
-                    AddItem(item);
-                }
+                LoadBagContent(Bag);
             }
         }
 
+        private void LoadBagContent(BagSystem bag)
+        {
+            if (System.Object.ReferenceEquals(null, bag))
+                return;
+
+            Bag.OnAddItem += OnItemAdd;
+            Bag.OnRemoveItem += OnItemRemove;
+
+            List<BaseBagItem> items = Bag.GetAllItems();
+
+            foreach (var item in items)
+            {
+                AddItem(item);
+            }
+        }
+
+        /// <summary>
+        /// Add ui show on bag ui of items.
+        /// </summary>
+        /// <param name="item"></param>
         public void AddItem(BaseBagItem item)
         {
             if (IsUIElementsReady)
@@ -95,21 +126,44 @@ namespace GameContent
                     IconsAssetHolder.Instance.GetIconByID(item.IconID);
 
                 Txts[item.Index].text = item.Count.ToString();
-            }            
+            }
+        }
+
+        /// <summary>
+        /// Remove item showed on ui at given index.
+        /// </summary>
+        /// <param name="index"></param>
+        public void RemoveItem(int index)
+        {
+            if (IsUIElementsReady)
+            {
+                ItemBtnImages[index].sprite = null;
+
+                Txts[index].text = "";
+
+                if (!System.Object.ReferenceEquals(null, Bag))
+                {
+                    Bag.RemoveBagItem(index);
+                }
+            }
+        }
+
+        public void ClearItems()
+        {
+            for (int i = 0; i < ItemBtnImages.Count; i++)
+            {
+                ItemBtnImages[i].sprite = null;
+                Txts[i].text = "";
+            }
         }
 
         public void ClickOnItem(int index)
         {
+            RemoveItem(index);
             if (!System.Object.ReferenceEquals(null, Bag))
             {
                 Bag.UseItemAtIndex(index);
             }
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
         }
 
         public void Close(int index)

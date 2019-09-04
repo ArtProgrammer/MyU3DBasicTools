@@ -4,7 +4,7 @@ using GameContent.Item;
 namespace GameContent
 {
     /// <summary>
-    /// Runtime instances.
+    /// Item in bag, record it's information in the bag.
     /// </summary>
     public class BaseBagItem
     {
@@ -25,7 +25,7 @@ namespace GameContent
         public int IconID;   // runtime property.
 
         public BaseBagItem() {
-            MacCount = 49;
+            MacCount = 3;
         }
     }
 }

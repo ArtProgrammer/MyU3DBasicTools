@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Config;
+using SimpleAI.Supervisors;
 using GameContent.Item;
 using GameContent.SimAgent;
 
@@ -23,6 +24,8 @@ namespace GameContent
         public SimWood Owner = null;
 
         public Action<int> OnAddItem;
+
+        public Action<int> OnRemoveItem;
 
         private void Awake()
         {
@@ -142,14 +145,30 @@ namespace GameContent
 			return 0;
         }
 
-        private void RemoveBagItem(int index)
+        public void RemoveBagItem(int index)
         {
+            if (index < 0 || index >= IndexRecorder.Count)
+                return;
+
             if (IndexRecorder[index] == 1)
 			{
+                for (int i = 0; i < Items.Count; i++)
+                {
+                    if (Items[i].Index == index)
+                    {
+                        Items.RemoveAt(i);
+                        break;
+                    }
+                }
                 //if (!System.Object.ReferenceEquals(null, Items[index]))
-				{
-					IndexRecorder[index] = 0;
-				}				
+                {
+                    IndexRecorder[index] = 0;
+                }
+
+                if (!System.Object.ReferenceEquals(null, OnRemoveItem))
+                {
+                    OnRemoveItem(index);
+                }
 			}
         }
 
@@ -227,6 +246,24 @@ namespace GameContent
         public void Save()
         {
 
+        }
+
+        public void DropItem(int index, Vector3 pos)
+        {
+            if (index < Items.Count)
+            {
+                //var item = Items[index];
+                //for (int i = 0; i < Items.Count; i++)
+                //{
+                //    var item = Items[i];
+                //    if (item.Index == index)
+                //    {
+                //        RemoveBagItem(index);
+                //    }
+                //}
+
+                RemoveBagItem(index);
+            }
         }
     }
 }

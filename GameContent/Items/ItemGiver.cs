@@ -9,11 +9,16 @@ using GameContent.SimAgent;
 
 namespace GameContent
 {
+    /// <summary>
+    /// Attach to items' prefabs in the scene.
+    /// </summary>
     public class ItemGiver : MonoBehaviour, IPoolableComponent, IUpdateable
     {
         public int UID = 0;
 
         public int ItemCfgID = 0;
+
+        public string Name;
 
         public int Count = 1;
 
