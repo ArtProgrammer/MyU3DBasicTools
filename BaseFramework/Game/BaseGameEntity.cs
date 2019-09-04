@@ -17,20 +17,8 @@ using GameContent.Item;
 
 namespace SimpleAI.Game
 {
-    public class BaseGameEntity : SpatialFruitNode, ITelegramReceiver, IUpdateable
+    public class BaseGameEntity : BaseEntity //SpatialFruitNode, ITelegramReceiver, IUpdateable
     {
-        protected bool IsActive = true;
-
-        [SerializeField]
-        private int TheID = 0;
-
-        public int ID
-        {
-            get { return TheID; }
-        }
-
-        public bool IsPlayerControl = false;
-
         [SerializeField]
         public int MaxXue = 100;
 
@@ -205,16 +193,6 @@ namespace SimpleAI.Game
             BuffList.Clear();
         }
 
-        public BaseGameEntity()
-        {
-            //TheID = IDAllocator.Instance.GetID();
-        }
-
-        ~BaseGameEntity()
-        {
-
-        }
-
         public virtual void LoadData()
         {
             //TheRaceType = 0;
@@ -236,11 +214,27 @@ namespace SimpleAI.Game
             val = transform.position;
         }
 
+        public override void PreInitialize()
+        {
+            base.PreInitialize();
+
+            NMAgent = GetComponentInChildren<NavMeshAgent>();
+        }
+
         /// <summary>
         /// Initialize this instance.
         /// </summary>
-        public virtual void Initialize()
+        public override void Initialize()
         {
+            base.Initialize();
+
+            EntityManager.Instance.RegisterEntity(this);
+
+            if (IsPlayerControl)
+            {
+                EntityManager.Instance.PlayerEntity = this;
+            }
+
             TheSensor = new SimSensor<BaseGameEntity>(this);
 
             TheSensor.Initialize();
@@ -249,14 +243,21 @@ namespace SimpleAI.Game
         /// <summary>
         /// Finish this instance.
         /// </summary>
-        public virtual void Finish()
+        public override void Finish()
         {
+            if (EntityManager.IsAlive)
+            {
+                EntityManager.Instance.RemoveEntity(this);
+            }
 
+            base.Finish();
         }
 
-        public virtual void Process(float dt) 
+        public override void Process(float dt) 
         {
+            base.Process(dt);
 
+            ProcessBuffs(ref dt);
         }
 
         public NavMeshAgent NMAgent = null;
@@ -298,29 +299,7 @@ namespace SimpleAI.Game
         public virtual void UseItem(int itemid, BaseGameEntity target)
         {
             ItemManager.Instance.TryUseItem(itemid, target);
-        }
-
-        void Awake()
-        {
-            TheID = IDAllocator.Instance.GetID();
-            //TinyLogger.Instance.DebugLog(string.Format("$ BaseGameEnity got id: {0}", TheID));
-
-            NMAgent = GetComponentInChildren<NavMeshAgent>();
-        }
-
-        void Start()
-        {
-            TheStart();
-            GameLogicSupvisor.Instance.Register(this);
-            EntityManager.Instance.RegisterEntity(this);
-
-            if (IsPlayerControl)
-            {
-                EntityManager.Instance.PlayerEntity = this;
-            }
-
-            Initialize();
-        }
+        }        
 
         void OnDestroy()
         {
@@ -346,21 +325,7 @@ namespace SimpleAI.Game
             HandleDestory();
         }
 
-        public virtual void OnUpdate(float dt)
-        {
-            TheUpdate();
-
-            ProcessBuffs(ref dt);
-
-            Process(dt);
-        }
-
-        public virtual void OnFixedUpdate(float dt)
-        {
-
-        }
-
-        public virtual bool HandleMessage(Telegram msg) 
+        public override bool HandleMessage(Telegram msg) 
         {
             TinyLogger.Instance.DebugLog(string.Format("$ BaseGameEntity handle message {0}", ID));
             return false;

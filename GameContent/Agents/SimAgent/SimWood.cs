@@ -160,6 +160,11 @@ namespace GameContent.SimAgent
             }
 
             Bag = GetComponent<BagSystem>();
+
+            if (!System.Object.ReferenceEquals(null, Bag))
+            {
+                Bag.Owner = this;
+            }
         }
 
         public void OnXueChange(int val)
@@ -307,11 +312,11 @@ namespace GameContent.SimAgent
             }            
         }
 
-        public bool AddItem(int id)
+        public bool AddItem(int id, int count)
         {
             if (!System.Object.ReferenceEquals(null, Bag))
             {
-                Bag.Add(id);
+                Bag.Add(id, count);
                 return true;
             }
             return false;

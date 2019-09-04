@@ -70,7 +70,7 @@ namespace SimpleAI.Supervisors
             }
         }
 
-        public void Test_SpawnItems(int cfgid)
+        public void Test_SpawnItems(int cfgid, Vector3 pos)
         {
             ItemConfig itemCfg = ConfigDataMgr.Instance.ItemCfgLoader.GetDataByID(cfgid);
 
@@ -82,7 +82,7 @@ namespace SimpleAI.Supervisors
                 {
                     GameObject inst =
                         PrefabPoolingSystem.Instance.Spawn(go,
-                            new Vector3(5, 1, 5), Quaternion.identity);
+                            pos, Quaternion.identity);
 
                     inst.transform.SetParent(RoleContenter);
 
@@ -106,7 +106,7 @@ namespace SimpleAI.Supervisors
 
             StartCoroutine("SpawnNPCs");
 
-            Test_SpawnItems(10002);
+            StartCoroutine("SpawnItems");
         }
 
         IEnumerator SpawnNPCs()
@@ -115,6 +115,17 @@ namespace SimpleAI.Supervisors
             {
                 Test_SpawnNPC();
                 yield return new WaitForSeconds(6.0f);
+            }
+        }
+
+        IEnumerator SpawnItems()
+        {
+            for (int i = 0; i < 30; i++)
+            {
+                Vector3 pos = new Vector3(Random.Range(1, 10),
+                    1, Random.Range(1, 10));
+                Test_SpawnItems(10002, pos);
+                yield return new WaitForSeconds(3.0f);
             }
         }
     }

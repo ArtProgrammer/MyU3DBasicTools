@@ -18,6 +18,8 @@ namespace GameContent
 
         private List<Image> ItemBtnImages = new List<Image>();
 
+        private List<Text> Txts = new List<Text>();
+
         public BagSystem Bag = null;
 
         public void OnItemAdd(int index)
@@ -52,6 +54,12 @@ namespace GameContent
                     {
                         ItemBtnImages.Add(btn);
                     }
+
+                    var txt = sub.GetComponentInChildren<Text>();
+                    if (txt)
+                    {
+                        Txts.Add(txt);
+                    }
                 }
 
                 IsUIElementsReady = true;
@@ -83,8 +91,19 @@ namespace GameContent
         {
             if (IsUIElementsReady)
             {
-                ItemBtnImages[item.Index].sprite = IconsAssetHolder.Instance.GetIconByID(item.IconID);
+                ItemBtnImages[item.Index].sprite =
+                    IconsAssetHolder.Instance.GetIconByID(item.IconID);
+
+                Txts[item.Index].text = item.Count.ToString();
             }            
+        }
+
+        public void ClickOnItem(int index)
+        {
+            if (!System.Object.ReferenceEquals(null, Bag))
+            {
+                Bag.UseItemAtIndex(index);
+            }
         }
 
         // Update is called once per frame
@@ -93,9 +112,12 @@ namespace GameContent
 
         }
 
-        public void Close()
+        public void Close(int index)
         {
-
+            if (Root)
+            {
+                Root.gameObject.SetActive(false);
+            }
         }
     }
 }

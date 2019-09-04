@@ -15,6 +15,8 @@ namespace GameContent
 
         public int ItemCfgID = 0;
 
+        public int Count = 1;
+
         public bool IsActive = true;
 
         private void Start()
@@ -52,7 +54,7 @@ namespace GameContent
         {
             if (!System.Object.ReferenceEquals(null, target))
             {
-                if (target.AddItem(ItemCfgID))
+                if (target.AddItem(ItemCfgID, Count))
                 {                    
                     IDAllocator.Instance.RecycleID(UID);
 

@@ -14,6 +14,8 @@ namespace GameContent
 
         public int Count;
 
+        public int MacCount;
+
         public int ItemID; //BaseItem
 
         public int ItemCfgID; //ItemData
@@ -22,6 +24,8 @@ namespace GameContent
 
         public int IconID;   // runtime property.
 
-        public BaseBagItem() { }
+        public BaseBagItem() {
+            MacCount = 49;
+        }
     }
 }
