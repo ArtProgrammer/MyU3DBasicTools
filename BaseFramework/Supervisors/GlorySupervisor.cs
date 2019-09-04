@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using SimpleAI.Utils;
 using SimpleAI.Spatial;
 using SimpleAI.PoolSystem;
 using GameContent;
@@ -13,8 +14,16 @@ using Config;
 
 namespace SimpleAI.Supervisors
 {
-    public class GlorySupervisor : MonoBehaviour
+    public class GlorySupervisor : SingletonAsComponent<GlorySupervisor>
     {
+        public static GlorySupervisor Instance
+        {
+            get
+            {
+                return (GlorySupervisor)InsideInstance;
+            }
+        }
+
         public void Initialize()
         {
             Reload();
@@ -106,7 +115,7 @@ namespace SimpleAI.Supervisors
 
             StartCoroutine("SpawnNPCs");
 
-            StartCoroutine("SpawnItems");
+            //StartCoroutine("SpawnItems");
         }
 
         IEnumerator SpawnNPCs()

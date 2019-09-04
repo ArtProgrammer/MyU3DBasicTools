@@ -55,9 +55,7 @@ namespace GameContent
             if (!System.Object.ReferenceEquals(null, target))
             {
                 if (target.AddItem(ItemCfgID, Count))
-                {                    
-                    IDAllocator.Instance.RecycleID(UID);
-
+                {                                        
                     return true;
                 }                
             }
@@ -67,6 +65,7 @@ namespace GameContent
 
         public virtual void OnAddSuccess(SimWood target)
         {
+            //IDAllocator.Instance.RecycleID(UID);
             PrefabPoolingSystem.Instance.Despawn(gameObject);
         }
 
