@@ -113,7 +113,7 @@ namespace SimpleAI.Supervisors
         {
             //Test_SpawnNPC();
 
-            StartCoroutine("SpawnNPCs");
+            //StartCoroutine("SpawnNPCs");
 
             //StartCoroutine("SpawnItems");
         }
@@ -135,6 +135,77 @@ namespace SimpleAI.Supervisors
                     1, Random.Range(1, 10));
                 Test_SpawnItems(10002, pos);
                 yield return new WaitForSeconds(3.0f);
+            }
+        }
+
+        public void SpawnNpc(int cfgid)
+        {
+            SpawnNpc(cfgid, Vector3.zero);
+        }
+
+        public void SpawnNpc(int cfgid, Vector3 pos)
+        {
+            SpawnNpc(cfgid, pos, Quaternion.identity);
+        }
+
+        public void SpawnNpc(int cfgid, Vector3 pos, Quaternion rot)
+        {
+            PrefabsConfig config = ConfigDataMgr.Instance.PrefabCfgLoader.GetDataByID(cfgid);
+
+            if (!System.Object.ReferenceEquals(null, config))
+            {
+                GameObject go = PrefabsAssetHolder.Instance.GetPrefabByID(config.ID);
+                //GameObject npc = Resources.Load<GameObject>("Prefabs/Roles/NPC");
+                if (go)
+                {
+                    GameObject npcInstance =
+                        PrefabPoolingSystem.Instance.Spawn(go, pos, rot);
+
+                    npcInstance.transform.SetParent(RoleContenter);
+
+                    SimWood sw = npcInstance.GetComponent<SimWood>();
+
+                    if (sw)
+                    {
+                        sw.Home = NPC_Home;
+                        sw.Food = NPC_Food;
+                    }
+                }
+            }            
+        }
+
+        public void SpawnItem(int cfgid)
+        {
+            SpawnItem(cfgid, Vector3.zero);
+        }
+
+        public void SpawnItem(int cfgid, Vector3 pos)
+        {
+            SpawnItem(cfgid, pos, Quaternion.identity);
+        }
+
+        public void SpawnItem(int cfgid, Vector3 pos, Quaternion rot)
+        {
+            ItemConfig itemCfg = ConfigDataMgr.Instance.ItemCfgLoader.GetDataByID(cfgid);
+
+            if (!System.Object.ReferenceEquals(null, itemCfg))
+            {
+                GameObject go = PrefabsAssetHolder.Instance.GetPrefabByID(itemCfg.PrefabID);
+
+                if (!System.Object.ReferenceEquals(null, go))
+                {
+                    GameObject inst =
+                        PrefabPoolingSystem.Instance.Spawn(go,
+                            pos, rot);
+
+                    inst.transform.SetParent(RoleContenter);
+
+                    ItemGiver ig = inst.GetComponent<ItemGiver>();
+                    if (!System.Object.ReferenceEquals(null, ig))
+                    {
+                        ig.ItemCfgID = cfgid;
+                    }
+                }
             }
         }
     }

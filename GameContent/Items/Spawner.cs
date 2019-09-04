@@ -73,27 +73,11 @@ namespace GameContent
         {
             if (TypeToSpawn == SpawnType.Item)
             {
-                ItemConfig itemCfg = ConfigDataMgr.Instance.ItemCfgLoader.GetDataByID(UnitCfgID);
-
-                if (!System.Object.ReferenceEquals(null, itemCfg))
-                {
-                    GameObject go = PrefabsAssetHolder.Instance.GetPrefabByID(itemCfg.PrefabID);
-
-                    if (!System.Object.ReferenceEquals(null, go))
-                    {
-                        GameObject inst =
-                            PrefabPoolingSystem.Instance.Spawn(go,
-                                pos, Quaternion.identity);
-
-                        inst.transform.SetParent(GlorySupervisor.Instance.RoleContenter);
-
-                        ItemGiver ig = inst.GetComponent<ItemGiver>();
-                        if (!System.Object.ReferenceEquals(null, ig))
-                        {
-                            ig.ItemCfgID = UnitCfgID;
-                        }
-                    }
-                }
+                GlorySupervisor.Instance.SpawnItem(UnitCfgID, pos);
+            }
+            else if (TypeToSpawn == SpawnType.NPC)
+            {
+                GlorySupervisor.Instance.SpawnNpc(UnitCfgID, pos);
             }
         }
     }

@@ -63,9 +63,13 @@ namespace GameContent
             return false;
         }
 
+        private void OnDestroy()
+        {
+            IDAllocator.Instance.RecycleID(UID);
+        }
+
         public virtual void OnAddSuccess(SimWood target)
         {
-            //IDAllocator.Instance.RecycleID(UID);
             PrefabPoolingSystem.Instance.Despawn(gameObject);
         }
 
