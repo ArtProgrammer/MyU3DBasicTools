@@ -34,6 +34,18 @@ namespace GameContent
             }
         }
 
+        public void OnItemChange(int index)
+        {
+            if (!System.Object.ReferenceEquals(null, Bag))
+            {
+                BaseBagItem bbi = Bag.GetItemByIndex(index);
+                if (!System.Object.ReferenceEquals(null, bbi))
+                {
+                    Txts[index].text = bbi.Count.ToString();
+                }
+            }
+        }
+
         public void OnItemRemove(int index)
         {
             RemoveItem(index);
@@ -105,6 +117,7 @@ namespace GameContent
 
             Bag.OnAddItem += OnItemAdd;
             Bag.OnRemoveItem += OnItemRemove;
+            Bag.OnItemChange += OnItemChange;
 
             List<BaseBagItem> items = Bag.GetAllItems();
 
@@ -159,7 +172,7 @@ namespace GameContent
 
         public void ClickOnItem(int index)
         {
-            RemoveItem(index);
+            //RemoveItem(index);
             if (!System.Object.ReferenceEquals(null, Bag))
             {
                 Bag.UseItemAtIndex(index);

@@ -25,6 +25,8 @@ namespace GameContent
 
         public Action<int> OnAddItem;
 
+        public Action<int> OnItemChange;
+
         public Action<int> OnRemoveItem;
 
         private void Awake()
@@ -165,6 +167,11 @@ namespace GameContent
                     IndexRecorder[index] = 0;
                 }
 
+                if (!System.Object.ReferenceEquals(null, OnItemChange))
+                {
+                    OnItemChange(index);
+                }
+
                 if (!System.Object.ReferenceEquals(null, OnRemoveItem))
                 {
                     OnRemoveItem(index);
@@ -212,19 +219,32 @@ namespace GameContent
             return null;
         }
 
-        public bool UseItemAtIndex(int index)
+        public bool UseItemAtIndex(int index, int count = 1)
         {
-            if (index > 0 && index < Items.Count)
+            if (index >= 0)
             {
-                BaseBagItem item = Items[index];
-                //
+                BaseBagItem item = GetItemByIndex(index);
 
-                if (!System.Object.ReferenceEquals(null, Owner))
+                if (!System.Object.ReferenceEquals(null, item))
                 {
-                    Owner.UseItem(item.ItemCfgID, Owner);
-                }
+                    if (!System.Object.ReferenceEquals(null, Owner))
+                    {
+                        Owner.UseItem(item.ItemCfgID, Owner);
 
-                return true;
+                        item.Count -= count;
+
+                        if (item.Count > 0)
+                        {
+                            OnItemChange(index);
+                        }
+                        else
+                        {
+                            RemoveBagItem(index);
+                        }                        
+                    }
+
+                    return true;
+                }                
             }
             return false;
         }

@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 using SimpleAI.Game;
 using SimpleAI.Utils;
 using GameContent.UsableItem;
+using GameContent;
+using Config;
 
 namespace GameContent.Item
 {
@@ -119,10 +122,11 @@ namespace GameContent.Item
         { 
             if (!System.Object.ReferenceEquals(null, target))
             {
-                var itemData = GetItemData(id);
+                //var itemData = GetItemData(id);
+                ItemConfig itemData = ConfigDataMgr.Instance.ItemCfgLoader.GetDataByID(id);
                 if (!System.Object.ReferenceEquals(null, itemData))
                 {
-                    var item = SpawnItem(itemData.Kind);
+                    var item = SpawnItem((ItemKind)itemData.Kind);
                     if (!System.Object.ReferenceEquals(null, item))
                     {
                         item.Use(target);
