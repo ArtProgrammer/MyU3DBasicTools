@@ -51,11 +51,11 @@ namespace GameContent
         public void Load()
         {
             AddItemAtIndex(0, 10002, 0, 1);
-            AddItemAtIndex(0, 10002, 1, 1);
-            AddItemAtIndex(0, 10002, 2, 1);
-            AddItemAtIndex(0, 10002, 3, 1);
-            AddItemAtIndex(0, 10002, 4, 1);
-            AddItemAtIndex(0, 10002, 5, 1);
+            AddItemAtIndex(1, 10001, 1, 1);
+            //AddItemAtIndex(0, 10002, 2, 1);
+            //AddItemAtIndex(0, 10002, 3, 1);
+            //AddItemAtIndex(0, 10002, 4, 1);
+            //AddItemAtIndex(0, 10002, 5, 1);
         }
 
         public List<ShortcutItem> GetAllItems()
@@ -129,22 +129,41 @@ namespace GameContent
                     bbi = new ShortcutItem();
                     bbi.ItemCfgID = id;
                     bbi.Index = index;
+                    bbi.Kind = kind;
 
                     ItemConfig ic =
                         ConfigDataMgr.Instance.ItemCfgLoader.GetDataByID(id);
                     bbi.IconID = ic.IconID;
 
                     bbi.Count += count;
-                    bbi.ItemCfgID = id;
 
                     Items.Add(bbi);
                 }
             }
-            else if (kind == 1)
+            else if (kind == 1)  // skill
             {
                 if (!System.Object.ReferenceEquals(null, bbi))
                 {
                     // handle cool down.
+                    bbi.Count = 1;
+                }
+                else
+                {
+                    bbi = new ShortcutItem();
+                    bbi.ItemCfgID = id;
+                    bbi.Index = index;
+                    bbi.Kind = kind;
+
+                    //ItemConfig ic =
+                    //    ConfigDataMgr.Instance.ItemCfgLoader.GetDataByID(id);
+
+                    SkillConfig sc =
+                        ConfigDataMgr.Instance.SkillCfgLoader.GetDataByID(id);
+                    bbi.IconID = sc.IconID;
+
+                    bbi.Count = 1;
+
+                    Items.Add(bbi);
                 }
             }
 

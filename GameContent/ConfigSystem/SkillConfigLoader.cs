@@ -11,7 +11,7 @@ namespace Config {
             int index = 0;
             while (index < periods.Length) {
                 string[] split = periods[index].Split(',');
-                if (split.Length == 12) {
+                if (split.Length == 13) {
                     SkillConfig data = new SkillConfig();
                     int.TryParse(split[0], out data.ID);
                     data.Name= split[1];
@@ -22,6 +22,7 @@ namespace Config {
                     int.TryParse(split[6], out data.Cost);
                     int.TryParse(split[7], out data.CostType);
                     int.TryParse(split[8], out data.EffectID);
+                    int.TryParse(split[12], out data.IconID);
                     Datas.Add(data.ID, data);
                 }
                 index++;

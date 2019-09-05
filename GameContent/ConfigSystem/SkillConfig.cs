@@ -11,5 +11,6 @@ namespace Config {
         public int Cost;
         public int CostType;
         public int EffectID;
+        public int IconID;
     }
 }
