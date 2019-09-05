@@ -24,6 +24,10 @@ namespace GameContent
 
         public BaseBagItem CurBagItem = null;
 
+        public BagSystem CurBag = null;
+
+        public ShortCutSystem CurShortcut = null;
+
         public bool HasItem = false;
 
         public void Init()

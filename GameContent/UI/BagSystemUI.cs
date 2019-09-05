@@ -105,6 +105,7 @@ namespace GameContent
             if (!System.Object.ReferenceEquals(null, sw))
             {
                 Bag = sw.Bag;
+                UILord.Instance.CurBag = Bag;
 
                 LoadBagContent(Bag);
             }

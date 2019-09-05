@@ -12,5 +12,10 @@ namespace GameContent
         public int Count = 0;
         public int MaxCount = 1;
         public int IconID;
+
+        public ShortcutItem()
+        {
+            MaxCount = 3;
+        }
     }
 }

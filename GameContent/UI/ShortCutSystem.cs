@@ -51,8 +51,8 @@ namespace GameContent
 
         public void Load()
         {
-            AddItemAtIndex(0, 10002, 0, 1);
-            AddItemAtIndex(1, 10007, 1, 1);
+            //AddItemAtIndex(0, 10002, 0, 1);
+            //AddItemAtIndex(1, 10007, 1, 1);
             //AddItemAtIndex(0, 10002, 2, 1);
             //AddItemAtIndex(0, 10002, 3, 1);
             //AddItemAtIndex(0, 10002, 4, 1);
@@ -112,18 +112,26 @@ namespace GameContent
             return true;
         }
 
-        private int AddItemAtIndex(int kind, int id, int index, int count)
+        public int AddItemAtIndex(int kind, int id, int index, int count)
         {
             if (!IsValidAtIndex(id, index))
                 return 0;
 
             ShortcutItem bbi = GetItemByIndex(index);
 
+            int left = 0;
+
             if (kind == 0) // item
             {                
                 if (!System.Object.ReferenceEquals(null, bbi))
                 {
                     bbi.Count += count;
+
+                    if (bbi.Count > bbi.MaxCount)
+                    {
+                        left = bbi.Count - bbi.MaxCount;
+                        bbi.Count = bbi.MaxCount;
+                    }
                 }
                 else
                 {
@@ -175,7 +183,7 @@ namespace GameContent
                 OnAddItem(index);
             }
 
-            return 0;
+            return left;
         }
 
         public void RemoveItem(int index)
