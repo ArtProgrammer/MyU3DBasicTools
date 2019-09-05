@@ -218,6 +218,13 @@ namespace SimpleAI.Game
         {
             base.PreInitialize();
 
+            EntityManager.Instance.RegisterEntity(this);
+
+            if (IsPlayerControl)
+            {
+                EntityManager.Instance.PlayerEntity = this;
+            }
+
             NMAgent = GetComponentInChildren<NavMeshAgent>();
         }
 
@@ -226,14 +233,7 @@ namespace SimpleAI.Game
         /// </summary>
         public override void Initialize()
         {
-            base.Initialize();
-
-            EntityManager.Instance.RegisterEntity(this);
-
-            if (IsPlayerControl)
-            {
-                EntityManager.Instance.PlayerEntity = this;
-            }
+            base.Initialize();            
 
             TheSensor = new SimSensor<BaseGameEntity>(this);
 

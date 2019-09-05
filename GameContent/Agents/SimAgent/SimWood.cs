@@ -51,6 +51,8 @@ namespace GameContent.SimAgent
 
         public BagSystem Bag = null;
 
+        public ShortCutSystem Shortcut = null;
+
         public int FoodNeed = 5;
 
         public int FoodCount
@@ -113,13 +115,16 @@ namespace GameContent.SimAgent
         //    val = transform.position;
         //}
 
+        public override void PreInitialize()
+        {
+            base.PreInitialize();
+
+            RecordComponents();
+        }
+
         public override void Initialize()
         {
             base.Initialize();
-            //if (IsPlayerCtrl)
-            //{
-            //    EntityManager.Instance.PlayerEntity = this;
-            //}
 
             SelfTrans = GetComponent<Transform>();
 
@@ -157,13 +162,22 @@ namespace GameContent.SimAgent
                     Health.Target = HeadupTrans;
                     OnXueChanged += OnXueChange;
                 }
-            }
+            }                        
+        }
 
+        public virtual void RecordComponents()
+        {           
             Bag = GetComponent<BagSystem>();
 
             if (!System.Object.ReferenceEquals(null, Bag))
             {
                 Bag.Owner = this;
+            }
+
+            Shortcut = GetComponent<ShortCutSystem>();
+            if (!System.Object.ReferenceEquals(null, Shortcut))
+            {
+                Shortcut.Owner = this;
             }
         }
 

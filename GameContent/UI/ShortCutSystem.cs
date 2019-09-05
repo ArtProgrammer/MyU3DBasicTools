@@ -1,23 +1,21 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using Config;
-using SimpleAI.Supervisors;
-using GameContent.Item;
 using GameContent.SimAgent;
+
+using Config;
 
 namespace GameContent
 {
-    public class BagSystem : MonoBehaviour
+    public class ShortCutSystem : MonoBehaviour
     {
-        private List<BaseBagItem> Items = new List<BaseBagItem>();
+        public List<ShortcutItem> Items = new List<ShortcutItem>();
 
-		private List<int> IndexRecorder = new List<int>();
+        private List<int> IndexRecorder = new List<int>();
 
-        public int Volume = 16;
-
-        public int BagVolume = 16;
+        public int Volume = 6;
 
         private int InvalidIndex = -1;
 
@@ -32,39 +30,40 @@ namespace GameContent
         private void Awake()
         {
             Initialize();
-            
+
         }
 
         void Start()
-		{
-			Load();
-		}
+        {
+            Load();
+        }
 
         private void Initialize()
         {
             Items.Capacity = Volume;
 
             for (int i = 0; i < Volume; i++)
-			{
-				IndexRecorder.Add(0);
-			}
+            {
+                IndexRecorder.Add(0);
+            }
         }
 
         public void Load()
         {
-            AddItemAtIndex(10001, 1, 1);
-            AddItemAtIndex(10002, 2, 1);
-            AddItemAtIndex(10003, 3, 1);
-            AddItemAtIndex(10004, 4, 1);
-            AddItemAtIndex(10005, 5, 1);
+            AddItemAtIndex(0, 10002, 0, 1);
+            AddItemAtIndex(0, 10002, 1, 1);
+            AddItemAtIndex(0, 10002, 2, 1);
+            AddItemAtIndex(0, 10002, 3, 1);
+            AddItemAtIndex(0, 10002, 4, 1);
+            AddItemAtIndex(0, 10002, 5, 1);
         }
 
-        public List<BaseBagItem> GetAllItems()
-		{
-			return Items;
-		}
+        public List<ShortcutItem> GetAllItems()
+        {
+            return Items;
+        }
 
-		private bool IsValidAtIndex(int cfgID, int index)
+        private bool IsValidAtIndex(int cfgID, int index)
         {
             return GetAvailableIndex(cfgID, index) != InvalidIndex;
         }
@@ -82,23 +81,23 @@ namespace GameContent
                 }
             }
 
-			for (int i = 0; i < BagVolume; i++)
-			{
-				if (IndexRecorder[i] == 0)
-				{
-					return i;
-				}
-			}
+            for (int i = 0; i < Volume; i++)
+            {
+                if (IndexRecorder[i] == 0)
+                {
+                    return i;
+                }
+            }
 
             return InvalidIndex;
         }
 
         /// <summary>
-        /// Add item to bag by it's config id.
+        /// Add item by it's config id.
         /// </summary>
         /// <param name="id">the config id of item.</param>
         /// <returns></returns>
-        private bool AddBagItem(int id, int count)
+        private bool AddItem(int kind, int id, int count)
         {
             int index = GetAvailableIndex(id, count);
 
@@ -107,53 +106,65 @@ namespace GameContent
                 return false;
             }
 
-			AddItemAtIndex(id, index, count);
+            AddItemAtIndex(kind, id, index, count);
 
-			return true;
+            return true;
         }
 
-        private int AddItemAtIndex(int id, int index, int count)
+        private int AddItemAtIndex(int kind, int id, int index, int count)
         {
             if (!IsValidAtIndex(id, index))
                 return 0;
 
-            BaseBagItem bbi = GetItemByIndex(index);
-            if (!System.Object.ReferenceEquals(null, bbi))
-            {
-                bbi.Count += count;
+            ShortcutItem bbi = GetItemByIndex(index);
+
+            if (kind == 0) // item
+            {                
+                if (!System.Object.ReferenceEquals(null, bbi))
+                {
+                    bbi.Count += count;
+                }
+                else
+                {
+                    bbi = new ShortcutItem();
+                    bbi.ItemCfgID = id;
+                    bbi.Index = index;
+
+                    ItemConfig ic =
+                        ConfigDataMgr.Instance.ItemCfgLoader.GetDataByID(id);
+                    bbi.IconID = ic.IconID;
+
+                    bbi.Count += count;
+                    bbi.ItemCfgID = id;
+
+                    Items.Add(bbi);
+                }
             }
-            else
+            else if (kind == 1)
             {
-                bbi = new BaseBagItem();
-                bbi.ItemCfgID = id;
-                bbi.Index = index;
+                if (!System.Object.ReferenceEquals(null, bbi))
+                {
+                    // handle cool down.
+                }
+            }
 
-                ItemConfig ic = ConfigDataMgr.Instance.ItemCfgLoader.GetDataByID(id);
-                bbi.IconID = ic.IconID;
-
-                bbi.Count += count;
-                bbi.ItemID = id;
-
-                Items.Add(bbi);
-            }            
-
-			IndexRecorder[index] = 1;
+            IndexRecorder[index] = 1;
 
             if (!System.Object.ReferenceEquals(null, OnAddItem))
             {
                 OnAddItem(index);
             }
 
-			return 0;
+            return 0;
         }
 
-        public void RemoveBagItem(int index)
+        public void RemoveItem(int index)
         {
             if (index < 0 || index >= IndexRecorder.Count)
                 return;
 
             if (IndexRecorder[index] == 1)
-			{
+            {
                 for (int i = 0; i < Items.Count; i++)
                 {
                     if (Items[i].Index == index)
@@ -176,28 +187,28 @@ namespace GameContent
                 {
                     OnRemoveItem(index);
                 }
-			}
+            }
         }
 
         /// <summary>
 		/// 
 		/// </summary>
 		/// <param name="id">now it's the config id of the item.</param>
-        public void Add(int id, int count)
+        public void Add(int kind, int id, int count)
         {
-			AddBagItem(id, count);
-		}
+            AddItem(kind, id, count);
+        }
 
-        public void Add(BaseBagItem item)
+        public void Add(ShortcutItem item)
         {
 
         }
 
-        public BaseBagItem GetItemByID(int id)
+        public ShortcutItem GetItemByID(int id)
         {
             for (int i = 0; i < Items.Count; i++)
             {
-                if (Items[i].ItemID == id)
+                if (Items[i].ItemCfgID == id)
                 {
                     return Items[i];
                 }
@@ -206,7 +217,7 @@ namespace GameContent
             return null;
         }
 
-        public BaseBagItem GetItemByIndex(int index)
+        public ShortcutItem GetItemByIndex(int index)
         {
             for (int i = 0; i < Items.Count; i++)
             {
@@ -223,28 +234,35 @@ namespace GameContent
         {
             if (index >= 0)
             {
-                BaseBagItem item = GetItemByIndex(index);
+                ShortcutItem item = GetItemByIndex(index);
 
                 if (!System.Object.ReferenceEquals(null, item))
                 {
                     if (!System.Object.ReferenceEquals(null, Owner))
                     {
-                        Owner.UseItem(item.ItemCfgID, Owner);
-
-                        item.Count -= count;
-
-                        if (item.Count > 0)
+                        if (item.Kind == 0)
                         {
-                            OnItemChange(index);
+                            Owner.UseItem(item.ItemCfgID, Owner);
+
+                            item.Count -= count;
+
+                            if (item.Count > 0)
+                            {
+                                OnItemChange(index);
+                            }
+                            else
+                            {
+                                RemoveItem(index);
+                            }
                         }
-                        else
+                        else if (item.Kind == 1)
                         {
-                            RemoveBagItem(index);
-                        }                        
+                            Owner.UseSkill(item.ItemCfgID, Owner);
+                        }
                     }
 
                     return true;
-                }                
+                }
             }
             return false;
         }
@@ -253,7 +271,7 @@ namespace GameContent
         {
             for (int i = 0; i < Items.Count; i++)
             {
-                if (Items[i].ItemID == id)
+                if (Items[i].ItemCfgID == id)
                 {
                     // 
                     return true;
@@ -272,17 +290,7 @@ namespace GameContent
         {
             if (index < Items.Count)
             {
-                //var item = Items[index];
-                //for (int i = 0; i < Items.Count; i++)
-                //{
-                //    var item = Items[i];
-                //    if (item.Index == index)
-                //    {
-                //        RemoveBagItem(index);
-                //    }
-                //}
-
-                RemoveBagItem(index);
+                RemoveItem(index);
             }
         }
     }

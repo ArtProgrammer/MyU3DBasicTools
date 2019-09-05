@@ -3,15 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+using GameContent;
+
 namespace GameContent.Interaction
 {
-    public class ShortcutItem
-    {
-        public int Index = 0;
-        public int ItemID = 0;
-        public int Count = 0;
-    }
-
     public class UIShortcut : MonoBehaviour
     {
         public List<ShortcutItem> ItemOnShortcut = new List<ShortcutItem>();
@@ -33,7 +28,7 @@ namespace GameContent.Interaction
             {
                 ShortcutItem scItem = new ShortcutItem();
                 scItem.Index = 0;
-                scItem.ItemID = 1;
+                scItem.ItemCfgID = 1;
                 scItem.Count = 1;
 
                 ItemOnShortcut.Add(scItem);
@@ -42,7 +37,7 @@ namespace GameContent.Interaction
             {
                 ShortcutItem scItem = new ShortcutItem();
                 scItem.Index = 1;
-                scItem.ItemID = 2;
+                scItem.ItemCfgID = 2;
                 scItem.Count = 1;
 
                 ItemOnShortcut.Add(scItem);
@@ -51,7 +46,7 @@ namespace GameContent.Interaction
             {
                 ShortcutItem scItem = new ShortcutItem();
                 scItem.Index = 4;
-                scItem.ItemID = 2;
+                scItem.ItemCfgID = 2;
                 scItem.Count = 1;
 
                 ItemOnShortcut.Add(scItem);
@@ -99,6 +94,11 @@ namespace GameContent.Interaction
             Texts.Clear();
         }
 
+        public void AddItem(int cfgID, int count, int index)
+        {
+
+        }
+
         public void OnAddItem(UISkillItem item)
         {
             Sprite sp = IconsAssetHolder.Instance.GetIconByID(1);
@@ -111,13 +111,13 @@ namespace GameContent.Interaction
 
         public void OnAddItem(ShortcutItem item)
         {
-            Sprite sp = IconsAssetHolder.Instance.GetIconByID(item.ItemID);
+            Sprite sp = IconsAssetHolder.Instance.GetIconByID(item.ItemCfgID);
 
             if (!System.Object.ReferenceEquals(null, sp))
             {
                 BtnList[item.Index].sprite = sp;
 
-                Config.IconsConfig icon = ConfigDataMgr.Instance.IconCfgLoader.GetDataByID(item.ItemID);
+                Config.IconsConfig icon = ConfigDataMgr.Instance.IconCfgLoader.GetDataByID(item.ItemCfgID);
 
                 Texts[item.Index].text = icon.Name;
             }
@@ -129,6 +129,11 @@ namespace GameContent.Interaction
         }
 
         public void OnItemChange(int index)
+        {
+
+        }
+
+        public void TryUseItem(int index)
         {
 
         }
