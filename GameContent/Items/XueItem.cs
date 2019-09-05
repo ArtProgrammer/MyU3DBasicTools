@@ -35,7 +35,7 @@ namespace GameContent.Item
 
         }
 
-        public override void Use(BaseGameEntity target)
+        public override void Use(BaseGameEntity target, BaseGameEntity dst = null)
         {
             if (!System.Object.ReferenceEquals(target, null))
             {

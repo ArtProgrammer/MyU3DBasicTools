@@ -18,6 +18,7 @@ namespace Config {
                     data.Des= split[2];
                     int.TryParse(split[3], out data.IconID);
                     int.TryParse(split[4], out data.PrefabID);
+                    float.TryParse(split[5], out data.Price);
                     int.TryParse(split[6], out data.Kind);
                     int.TryParse(split[7], out data.TargetType);
                     Datas.Add(data.ID, data);

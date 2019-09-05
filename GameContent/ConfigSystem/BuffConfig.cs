@@ -4,6 +4,11 @@ namespace Config {
     class BuffConfig {
         public int ID;
         public string Name;
-        public string Path;
+        public float Delay;
+        public float LifeTime;
+        public float Duration;
+        public int KindType;
+        public float MaxTime;
+        public int EffectID;
     }
 }

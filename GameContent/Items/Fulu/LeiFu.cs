@@ -30,7 +30,7 @@ namespace GameContent.Item
             return new LeiFu();
         }
 
-        public override void Use(BaseGameEntity target)
+        public override void Use(BaseGameEntity target, BaseGameEntity dst = null)
         {
             GameObject gb = MineResource.Instance.LoadObjectFromAB<GameObject>(Application.dataPath + "/AssetBundles/fulu",
                 "PingAnFu");

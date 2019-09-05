@@ -18,7 +18,7 @@ namespace GameContent.UsableItem
 
         void Use(Vector3 pos);
 
-        void Use(BaseGameEntity target);
+        void Use(BaseGameEntity target, BaseGameEntity dst = null);
 
         void Use(List<BaseGameEntity> targets);
 

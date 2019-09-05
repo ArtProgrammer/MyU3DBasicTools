@@ -11,11 +11,16 @@ namespace Config {
             int index = 0;
             while (index < periods.Length) {
                 string[] split = periods[index].Split(',');
-                if (split.Length == 3) {
+                if (split.Length == 8) {
                     BuffConfig data = new BuffConfig();
                     int.TryParse(split[0], out data.ID);
                     data.Name= split[1];
-                    data.Path= split[2];
+                    float.TryParse(split[2], out data.Delay);
+                    float.TryParse(split[3], out data.LifeTime);
+                    float.TryParse(split[4], out data.Duration);
+                    int.TryParse(split[5], out data.KindType);
+                    float.TryParse(split[6], out data.MaxTime);
+                    int.TryParse(split[7], out data.EffectID);
                     Datas.Add(data.ID, data);
                 }
                 index++;

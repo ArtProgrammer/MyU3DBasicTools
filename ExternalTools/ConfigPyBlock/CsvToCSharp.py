@@ -21,7 +21,8 @@ PROPERTY_COMMENT_ROW = 2
 TABLE_SPACE = '    '
 TYPE_INT = 'INT'
 TYPE_STRING = 'STRING'
-TYPE_FLOAT = 'float'
+TYPE_FLOAT = 'FLOAT'
+TYPE_BOOL = 'BOOL'
 
 
 
@@ -66,7 +67,9 @@ def ConvertToCS(fileName, data):
 	content += 'namespace Config {\n'
 	content += TABLE_SPACE + 'class '+ dstname + ' {\n'
 	for index in range(len(data[PROPERTY_NAMES_ROW])):
-		if data[PROPERTY_TYPES_ROW][index] == TYPE_INT:
+		if data[PROPERTY_TYPES_ROW][index] == TYPE_BOOL:
+			content += TABLE_SPACE * 2 + 'public bool ' + data[PROPERTY_NAMES_ROW][index] + ';\n'
+		elif data[PROPERTY_TYPES_ROW][index] == TYPE_INT:
 			content += TABLE_SPACE * 2 + 'public int ' + data[PROPERTY_NAMES_ROW][index] + ';\n'
 		elif data[PROPERTY_TYPES_ROW][index] == TYPE_STRING:
 			content += TABLE_SPACE * 2 + 'public string ' + data[PROPERTY_NAMES_ROW][index] + ';\n'
@@ -109,12 +112,14 @@ def ConstuctCSLoader(fileName, data):
 	content += TABLE_SPACE * 5 + classname + ' data = new ' + classname + '();\n'
 
 	for index in range(propertiesCount):
-		if data[PROPERTY_TYPES_ROW][index] == TYPE_INT:
+		if data[PROPERTY_TYPES_ROW][index] == TYPE_BOOL:
+			content += TABLE_SPACE * 5 + 'bool.TryParse(split['+ str(index) +'], out data.' + data[PROPERTY_NAMES_ROW][index] + ');\n'
+		elif data[PROPERTY_TYPES_ROW][index] == TYPE_INT:
 			content += TABLE_SPACE * 5 + 'int.TryParse(split['+ str(index) +'], out data.' + data[PROPERTY_NAMES_ROW][index] + ');\n'
 		elif data[PROPERTY_TYPES_ROW][index] == TYPE_STRING:
 			content += TABLE_SPACE * 5 + 'data.' + data[PROPERTY_NAMES_ROW][index] + '= split['+ str(index) +'];\n'
 		elif data[PROPERTY_TYPES_ROW][index] == TYPE_FLOAT:
-			content += TABLE_SPACE * 5 + 'float.TryParse(split['+ str(index) +'], out data.;' + data[PROPERTY_NAMES_ROW][index] + ');\n'
+			content += TABLE_SPACE * 5 + 'float.TryParse(split['+ str(index) +'], out data.' + data[PROPERTY_NAMES_ROW][index] + ');\n'
 	content += TABLE_SPACE * 5 + 'Datas.Add(data.ID, data);\n'
 	content += TABLE_SPACE * 4 + '}\n'
 	content += TABLE_SPACE * 4 + 'index++;\n'	

@@ -11,18 +11,22 @@ namespace Config {
             int index = 0;
             while (index < periods.Length) {
                 string[] split = periods[index].Split(',');
-                if (split.Length == 13) {
+                if (split.Length == 14) {
                     SkillConfig data = new SkillConfig();
                     int.TryParse(split[0], out data.ID);
                     data.Name= split[1];
-                    data.Path= split[2];
-                    int.TryParse(split[3], out data.Kind);
-                    int.TryParse(split[4], out data.BuffID);
-                    int.TryParse(split[5], out data.TargetType);
-                    int.TryParse(split[6], out data.Cost);
-                    int.TryParse(split[7], out data.CostType);
-                    int.TryParse(split[8], out data.EffectID);
-                    int.TryParse(split[12], out data.IconID);
+                    int.TryParse(split[2], out data.Kind);
+                    int.TryParse(split[3], out data.BuffID);
+                    int.TryParse(split[4], out data.TargetType);
+                    int.TryParse(split[5], out data.Cost);
+                    int.TryParse(split[6], out data.CostType);
+                    int.TryParse(split[7], out data.EffectID);
+                    float.TryParse(split[8], out data.UseRange);
+                    float.TryParse(split[9], out data.EffectRange);
+                    float.TryParse(split[10], out data.CoolDown);
+                    int.TryParse(split[11], out data.IconID);
+                    float.TryParse(split[12], out data.DelayTime);
+                    float.TryParse(split[13], out data.LastTime);
                     Datas.Add(data.ID, data);
                 }
                 index++;

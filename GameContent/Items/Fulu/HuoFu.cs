@@ -29,7 +29,7 @@ namespace GameContent.Item
             return new HuoFu();
         }
 
-        public override void Use(BaseGameEntity target)
+        public override void Use(BaseGameEntity target, BaseGameEntity dst = null)
         {
             if (SkillID != 0)
             {

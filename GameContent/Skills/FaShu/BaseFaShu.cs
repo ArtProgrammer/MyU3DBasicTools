@@ -48,10 +48,10 @@ namespace GameContent.Skill
 
         public override void Use(Vector3 pos)
         {
-
+             
         }
 
-        public override void Use(BaseGameEntity target)
+        public override void Use(BaseGameEntity target, BaseGameEntity dst = null)
         {
             for (int i = 0; i < BuffIDList.Count; i++)
             {

@@ -49,7 +49,7 @@ namespace GameContent.Skill
             //}
         }
 
-        public override void Use(BaseGameEntity target)
+        public override void Use(BaseGameEntity target, BaseGameEntity dst = null)
         {
             //Bounds bound = new Bounds();
             //bound.center = Pos;

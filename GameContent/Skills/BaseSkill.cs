@@ -160,7 +160,7 @@ namespace GameContent.Skill
 
         }
 
-        public virtual void Use(BaseGameEntity target)
+        public virtual void Use(BaseGameEntity target, BaseGameEntity dst = null)
         {
             for (int i = 0; i < BuffIDList.Count; i++)
             {
@@ -168,6 +168,11 @@ namespace GameContent.Skill
                 if (!System.Object.ReferenceEquals(null, buff))
                 {
                     buff.Attach(target);
+
+                    if (dst)
+                    {
+                        buff.Dst = dst;
+                    }
                 }
             }
         }

@@ -45,7 +45,7 @@ namespace GameContent.Skill
 
         public override void Use(Vector3 pos) { }
 
-        public override void Use(BaseGameEntity target) {}
+        public override void Use(BaseGameEntity target, BaseGameEntity dst = null) {}
 
         public override void Use(List<BaseGameEntity> targets) { }
 

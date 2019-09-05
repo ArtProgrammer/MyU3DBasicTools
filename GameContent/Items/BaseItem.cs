@@ -111,7 +111,7 @@ namespace GameContent.Item
 
         }
 
-        public virtual void Use(BaseGameEntity target)
+        public virtual void Use(BaseGameEntity target, BaseGameEntity dst = null)
         { 
 
         }
