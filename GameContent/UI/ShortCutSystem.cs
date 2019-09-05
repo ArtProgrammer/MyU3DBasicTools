@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using SimpleAI.Game;
 using GameContent.SimAgent;
 
 using Config;
@@ -248,8 +249,8 @@ namespace GameContent
 
             return null;
         }
-
-        public bool UseItemAtIndex(int index, int count = 1)
+        
+        public bool UseItemAtIndex(int index, int count, BaseGameEntity target = null)
         {
             if (index >= 0)
             {
@@ -259,9 +260,14 @@ namespace GameContent
                 {
                     if (!System.Object.ReferenceEquals(null, Owner))
                     {
+                        if (System.Object.ReferenceEquals(null, target))
+                        {
+                            target = Owner;
+                        }
+
                         if (item.Kind == 0)
                         {
-                            Owner.UseItem(item.ItemCfgID, Owner);
+                            Owner.UseItem(item.ItemCfgID, target);
 
                             item.Count -= count;
 
@@ -276,7 +282,7 @@ namespace GameContent
                         }
                         else if (item.Kind == 1)
                         {
-                            Owner.UseSkill(item.ItemCfgID, Owner);
+                            Owner.UseSkill(item.ItemCfgID, target);
                         }
                     }
 

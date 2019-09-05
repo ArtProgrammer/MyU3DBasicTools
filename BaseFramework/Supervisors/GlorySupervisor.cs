@@ -49,6 +49,8 @@ namespace SimpleAI.Supervisors
             SpatialManager.Instance.Init(0, 0, 0, 100, 100, 100);
 
             ConfigDataMgr.Instance.Initialize();
+
+            UILord.Instance.Init();
         }
 
         [SerializeField]

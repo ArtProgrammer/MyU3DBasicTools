@@ -175,7 +175,7 @@ namespace GameContent
             //RemoveItem(index);
             if (!System.Object.ReferenceEquals(null, Bag))
             {
-                Bag.UseItemAtIndex(index);
+                Bag.UseItemAtIndex(index, 1);
             }
         }
 

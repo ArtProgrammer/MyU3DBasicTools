@@ -154,7 +154,12 @@ namespace GameContent
         {
             if (!System.Object.ReferenceEquals(null, Shortcut))
             {
-                Shortcut.UseItemAtIndex(index);
+                //Shortcut.UseItemAtIndex(index, 1);
+                ShortcutItem item = Shortcut.GetItemByIndex(index);
+                if (!System.Object.ReferenceEquals(null, item))
+                {
+                    UILord.Instance.SelectShortcutItem(item);
+                }
             }
         }
 

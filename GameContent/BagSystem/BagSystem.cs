@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Config;
+using SimpleAI.Game;
 using SimpleAI.Supervisors;
 using GameContent.Item;
 using GameContent.SimAgent;
@@ -219,7 +220,7 @@ namespace GameContent
             return null;
         }
 
-        public bool UseItemAtIndex(int index, int count = 1)
+        public bool UseItemAtIndex(int index, int count, BaseGameEntity target = null)
         {
             if (index >= 0)
             {
@@ -229,7 +230,11 @@ namespace GameContent
                 {
                     if (!System.Object.ReferenceEquals(null, Owner))
                     {
-                        Owner.UseItem(item.ItemCfgID, Owner);
+                        if (System.Object.ReferenceEquals(null, target))
+                        {
+                            target = Owner;
+                        }
+                        Owner.UseItem(item.ItemCfgID, target);
 
                         item.Count -= count;
 
