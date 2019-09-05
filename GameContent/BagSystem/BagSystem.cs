@@ -16,9 +16,9 @@ namespace GameContent
 
 		private List<int> IndexRecorder = new List<int>();
 
-        public int Volume = 16;
+        public int Volume = 20;
 
-        public int BagVolume = 16;
+        public int BagVolume = 20;
 
         private int InvalidIndex = -1;
 
@@ -53,9 +53,9 @@ namespace GameContent
 
         public void Load()
         {
-            AddItemAtIndex(10001, 1, 1);
-            AddItemAtIndex(10002, 2, 1);
-            AddItemAtIndex(10003, 3, 1);
+            AddItemAtIndex(10002, 1, 2);
+            AddItemAtIndex(10002, 2, 2);
+            AddItemAtIndex(10002, 3, 1);
             AddItemAtIndex(10004, 4, 1);
             AddItemAtIndex(10005, 5, 1);
         }
@@ -113,15 +113,31 @@ namespace GameContent
 			return true;
         }
 
+        /// <summary>
+        /// Add item to index, check the item must be the same type
+        /// if there are already an item exist there.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="index"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public int AddItemAtIndex(int id, int index, int count)
         {
             if (!IsValidAtIndex(id, index))
                 return 0;
 
+            int countLeft = 0;
+
             BaseBagItem bbi = GetItemByIndex(index);
             if (!System.Object.ReferenceEquals(null, bbi))
             {
                 bbi.Count += count;
+
+                if (bbi.Count > bbi.MaxCount)
+                {
+                    countLeft = bbi.Count - bbi.MaxCount;
+                    bbi.Count = bbi.MaxCount;
+                }
             }
             else
             {
@@ -145,7 +161,36 @@ namespace GameContent
                 OnAddItem(index);
             }
 
-			return 0;
+			return countLeft;
+        }
+
+        public void ChangeBagItem(int index, int count)
+        {
+            if (index < 0 || index >= IndexRecorder.Count)
+                return;
+
+            if (IndexRecorder[index] == 1)
+            {
+                bool hasLeft = false;
+                for (int i = 0; i < Items.Count; i++)
+                {
+                    if (Items[i].Index == index)
+                    {
+                        Items[i].Count = count;
+                        hasLeft = Items[i].Count > 0;
+                        break;
+                    }
+                }
+
+                if (hasLeft &&
+                    !System.Object.ReferenceEquals(null, OnItemChange))
+                {
+                    OnItemChange(index);
+                }else if (!System.Object.ReferenceEquals(null, OnRemoveItem))
+                {
+                    OnRemoveItem(index);
+                }
+            }
         }
 
         public void RemoveBagItem(int index)

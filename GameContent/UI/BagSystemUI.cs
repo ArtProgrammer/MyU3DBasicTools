@@ -179,21 +179,7 @@ namespace GameContent
                 {
                     if (!System.Object.ReferenceEquals(null, UILord.Instance.CurBagItem))
                     {
-                        var itemsrc = UILord.Instance.CurBagItem;
-                        var itemdst = Bag.GetItemByIndex(index);
-
-                        Bag.RemoveBagItem(itemsrc.Index);
-
-                        if (!System.Object.ReferenceEquals(null, itemdst))
-                        {
-                            Bag.RemoveBagItem(itemdst.Index);
-                            Bag.AddItemAtIndex(itemdst.ItemCfgID, itemsrc.Index, itemdst.Count);
-                        }
-
-                        //Bag.Add(itemsrc.ItemCfgID, itemsrc.Count);
-                        Bag.AddItemAtIndex(itemsrc.ItemCfgID, index, itemsrc.Count);
-                        //Bag.Add(UILord.Instance.CurBagItem.Index, UILord.Instance.CurBagItem.Count);
-                        //Bag.RemoveBagItem(UILord.Instance.CurBagItem.Index);
+                        HandleItemIndexChange(UILord.Instance.CurBagItem, index);
 
                         UILord.Instance.ClearSelectItem();
                     }
@@ -207,6 +193,49 @@ namespace GameContent
                     }
                 }                
             }
+        }
+
+        public void HandleItemIndexChange(BaseBagItem srcItem, int dstIndex)
+        {
+            if (srcItem.Index == dstIndex)
+                return;
+
+            var itemsrc = srcItem;
+            var itemdst = Bag.GetItemByIndex(dstIndex);
+
+            if (!System.Object.ReferenceEquals(null, itemdst))
+            {
+                bool isSame = itemsrc.ItemCfgID == itemdst.ItemCfgID;
+
+                if (!isSame)
+                {
+                    Bag.RemoveBagItem(itemsrc.Index);
+                    if (!System.Object.ReferenceEquals(null, itemdst))
+                    {
+                        Bag.RemoveBagItem(itemdst.Index);
+                        Bag.AddItemAtIndex(itemdst.ItemCfgID, itemsrc.Index, itemdst.Count);
+                    }
+
+                    Bag.AddItemAtIndex(itemsrc.ItemCfgID, dstIndex, itemsrc.Count);
+                }
+                else
+                {
+                    int left = Bag.AddItemAtIndex(itemdst.ItemCfgID, itemdst.Index, itemsrc.Count);
+                    if (left <= 0)
+                    {
+                        Bag.RemoveBagItem(itemsrc.Index);
+                    }
+                    else
+                    {
+                        Bag.ChangeBagItem(itemsrc.Index, left);
+                    }
+                }
+            }
+            else
+            {
+                Bag.RemoveBagItem(itemsrc.Index);
+                Bag.AddItemAtIndex(itemsrc.ItemCfgID, dstIndex, itemsrc.Count);
+            }            
         }
 
         public void Close(int index)
