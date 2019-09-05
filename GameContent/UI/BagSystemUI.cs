@@ -175,7 +175,37 @@ namespace GameContent
             //RemoveItem(index);
             if (!System.Object.ReferenceEquals(null, Bag))
             {
-                Bag.UseItemAtIndex(index, 1);
+                if (UILord.Instance.HasItem)
+                {
+                    if (!System.Object.ReferenceEquals(null, UILord.Instance.CurBagItem))
+                    {
+                        var itemsrc = UILord.Instance.CurBagItem;
+                        var itemdst = Bag.GetItemByIndex(index);
+
+                        Bag.RemoveBagItem(itemsrc.Index);
+
+                        if (!System.Object.ReferenceEquals(null, itemdst))
+                        {
+                            Bag.RemoveBagItem(itemdst.Index);
+                            Bag.AddItemAtIndex(itemdst.ItemCfgID, itemsrc.Index, itemdst.Count);
+                        }
+
+                        //Bag.Add(itemsrc.ItemCfgID, itemsrc.Count);
+                        Bag.AddItemAtIndex(itemsrc.ItemCfgID, index, itemsrc.Count);
+                        //Bag.Add(UILord.Instance.CurBagItem.Index, UILord.Instance.CurBagItem.Count);
+                        //Bag.RemoveBagItem(UILord.Instance.CurBagItem.Index);
+
+                        UILord.Instance.ClearSelectItem();
+                    }
+                }
+                else
+                {
+                    BaseBagItem item = Bag.GetItemByIndex(index);
+                    if (!System.Object.ReferenceEquals(null, item))
+                    {
+                        UILord.Instance.SelectBagItem(item);
+                    }
+                }                
             }
         }
 

@@ -113,7 +113,7 @@ namespace GameContent
 			return true;
         }
 
-        private int AddItemAtIndex(int id, int index, int count)
+        public int AddItemAtIndex(int id, int index, int count)
         {
             if (!IsValidAtIndex(id, index))
                 return 0;
