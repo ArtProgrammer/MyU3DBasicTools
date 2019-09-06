@@ -28,6 +28,8 @@ namespace GameContent
 
         public ShortCutSystem CurShortcut = null;
 
+        public BagSystemUI CurBagUI = null;
+
         public bool HasItem = false;
 
         public void Init()

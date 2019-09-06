@@ -51,7 +51,7 @@ namespace GameContent
 
         public void Load()
         {
-            //AddItemAtIndex(0, 10002, 0, 1);
+            AddItemAtIndex(0, 10002, 0, 1);
             //AddItemAtIndex(1, 10007, 1, 1);
             //AddItemAtIndex(0, 10002, 2, 1);
             //AddItemAtIndex(0, 10002, 3, 1);

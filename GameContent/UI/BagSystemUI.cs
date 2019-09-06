@@ -1,14 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 using SimpleAI.Game;
 using GameContent.SimAgent;
-using UnityEngine.UI;
 
 namespace GameContent
 {
-    public class BagSystemUI : MonoBehaviour
+    public class BagSystemUI : MonoBehaviour,
+        IDragHandler, IBeginDragHandler, IEndDragHandler
     {
         public RectTransform Root = null;
 
@@ -21,6 +23,48 @@ namespace GameContent
         private List<Text> Txts = new List<Text>();
 
         public BagSystem Bag = null;
+
+        void IDragHandler.OnDrag(PointerEventData eventData)
+        {
+            //GetComponent<RectTransform>().pivot.Set(0, 0);
+            //transform.position = Input.mousePosition;
+        }
+
+        void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
+        {
+            ////eventData.selectedObject;
+            Debug.Log("$ bag drag begin ");
+
+            if (eventData.selectedObject)
+            {
+                var item = eventData.selectedObject.GetComponent<InteractItemUI>();
+
+                if (item)
+                {
+                    UILord.Instance.CurBagUI.ClickOnItem(item.Index);
+                }
+            }
+
+            //UILord.Instance.CurBagUI.ClickOnItem(Index);
+        }
+
+        void IEndDragHandler.OnEndDrag(PointerEventData eventData)
+        {
+            Debug.Log("$ bad drag end");
+            //UILord.Instance.CurBagUI.ClickOnItem(Index);
+
+            var pointerObject = eventData.pointerCurrentRaycast.gameObject;
+
+            if (pointerObject)
+            {
+                var item = pointerObject.GetComponent<InteractItemUI>();
+                if (item)
+                {
+                    Debug.Log("$ drag end selected object: " + item.Index.ToString());
+                    UILord.Instance.CurBagUI.ClickOnItem(item.Index);
+                }
+            }
+        }
 
         public void OnItemAdd(int index)
         {
@@ -100,6 +144,8 @@ namespace GameContent
         {
             if (!IsUIElementsReady)
                 return;
+
+            UILord.Instance.CurBagUI = this;
 
             SimWood sw = (SimWood)EntityManager.Instance.PlayerEntity;
             if (!System.Object.ReferenceEquals(null, sw))
@@ -195,6 +241,8 @@ namespace GameContent
                 }                
             }
         }
+
+        
 
         public void HandleItemIndexChange(BaseBagItem srcItem, int dstIndex)
         {

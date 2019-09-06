@@ -70,7 +70,8 @@ namespace GameContent
 
         private void OnDestroy()
         {
-            IDAllocator.Instance.RecycleID(UID);
+            if (IDAllocator.IsAlive)
+                IDAllocator.Instance.RecycleID(UID);
         }
 
         public virtual void OnAddSuccess(SimWood target)
