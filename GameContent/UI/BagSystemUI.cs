@@ -9,8 +9,7 @@ using GameContent.SimAgent;
 
 namespace GameContent
 {
-    public class BagSystemUI : MonoBehaviour,
-        IDragHandler, IBeginDragHandler, IEndDragHandler
+    public class BagSystemUI : MonoBehaviour
     {
         public RectTransform Root = null;
 
@@ -24,53 +23,11 @@ namespace GameContent
 
         public BagSystem Bag = null;
 
-        void IDragHandler.OnDrag(PointerEventData eventData)
-        {
-            //GetComponent<RectTransform>().pivot.Set(0, 0);
-            //transform.position = Input.mousePosition;
-        }
-
-        void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
-        {
-            ////eventData.selectedObject;
-            Debug.Log("$ bag drag begin ");
-
-            if (eventData.selectedObject)
-            {
-                var item = eventData.selectedObject.GetComponent<InteractItemUI>();
-
-                if (item)
-                {
-                    UILord.Instance.CurBagUI.ClickOnItem(item.Index);
-                }
-            }
-
-            //UILord.Instance.CurBagUI.ClickOnItem(Index);
-        }
-
-        void IEndDragHandler.OnEndDrag(PointerEventData eventData)
-        {
-            Debug.Log("$ bad drag end");
-            //UILord.Instance.CurBagUI.ClickOnItem(Index);
-
-            var pointerObject = eventData.pointerCurrentRaycast.gameObject;
-
-            if (pointerObject)
-            {
-                var item = pointerObject.GetComponent<InteractItemUI>();
-                if (item)
-                {
-                    Debug.Log("$ drag end selected object: " + item.Index.ToString());
-                    UILord.Instance.CurBagUI.ClickOnItem(item.Index);
-                }
-            }
-        }
-
         public void OnItemAdd(int index)
         {
             if (!System.Object.ReferenceEquals(null, Bag))
             {
-                BaseBagItem bbi = Bag.GetItemByIndex(index);
+                InteractItem bbi = Bag.GetItemByIndex(index);
                 if (!System.Object.ReferenceEquals(null, bbi))
                 {
                     AddItem(bbi);
@@ -82,7 +39,7 @@ namespace GameContent
         {
             if (!System.Object.ReferenceEquals(null, Bag))
             {
-                BaseBagItem bbi = Bag.GetItemByIndex(index);
+                InteractItem bbi = Bag.GetItemByIndex(index);
                 if (!System.Object.ReferenceEquals(null, bbi))
                 {
                     Txts[index].text = bbi.Count.ToString();
@@ -166,7 +123,7 @@ namespace GameContent
             Bag.OnRemoveItem += OnItemRemove;
             Bag.OnItemChange += OnItemChange;
 
-            List<BaseBagItem> items = Bag.GetAllItems();
+            List<InteractItem> items = Bag.GetAllItems();
 
             foreach (var item in items)
             {
@@ -178,7 +135,7 @@ namespace GameContent
         /// Add ui show on bag ui of items.
         /// </summary>
         /// <param name="item"></param>
-        public void AddItem(BaseBagItem item)
+        public void AddItem(InteractItem item)
         {
             if (IsUIElementsReady)
             {
@@ -217,34 +174,109 @@ namespace GameContent
             }
         }
 
-        public void ClickOnItem(int index)
+        public void ClickOnItem(InteractItemUIType itemUIType, int index)
         {
             //RemoveItem(index);
             if (!System.Object.ReferenceEquals(null, Bag))
             {
                 if (UILord.Instance.HasItem)
                 {
-                    if (!System.Object.ReferenceEquals(null, UILord.Instance.CurBagItem))
+                    //if (!System.Object.ReferenceEquals(null, UILord.Instance.CurBagItem))
                     {
-                        HandleItemIndexChange(UILord.Instance.CurBagItem, index);
+                        if (itemUIType == InteractItemUIType.Bag)
+                        {
+                            HandleBagItemJoin(UILord.Instance.CurBagItem, index);
+                        }
+                        else if (itemUIType == InteractItemUIType.Shortcut)
+                        {
+                            HandleShortcutItemJoin(UILord.Instance.CurShortcutItem, index);
+                        }
 
                         UILord.Instance.ClearSelectItem();
                     }
+
+                    //if (!System.Object.ReferenceEquals(null,
+                    //    UILord.Instance.CurBagItem))
+                    //{
+                    //    HandleBagItemJoin(UILord.Instance.CurBagItem,
+                    //        index);
+                    //}
+                    //else if (!System.Object.ReferenceEquals(null,
+                    //       UILord.Instance.CurShortcutItem))
+                    //{
+                    //    HandleShortcutItemJoin(UILord.Instance.CurShortcutItem,
+                    //        index);
+                    //}
+
+                    //if (!System.Object.ReferenceEquals(null,
+                    //    UILord.Instance.CurBagItem))
+                    //{
+                    //    HandleBagItemJoin(UILord.Instance.CurBagItem,
+                    //        index);
+                    //}
+                    //else if (!System.Object.ReferenceEquals(null,
+                    //       UILord.Instance.CurShortcutItem))
+                    //{
+                    //    HandleShortcutItemJoin(UILord.Instance.CurShortcutItem,
+                    //        index);
+                    //}
                 }
                 else
                 {
-                    BaseBagItem item = Bag.GetItemByIndex(index);
+                    InteractItem item = Bag.GetItemByIndex(index);
                     if (!System.Object.ReferenceEquals(null, item))
                     {
                         UILord.Instance.SelectBagItem(item);
+                        UILord.Instance.CurItemUIType = itemUIType;
                     }
                 }                
             }
         }
 
-        
+        public void HandleShortcutItemJoin(InteractItem srcItem, int dstIndex)
+        {
+            var itemsrc = srcItem;
+            var itemdst = Bag.GetItemByIndex(dstIndex);
 
-        public void HandleItemIndexChange(BaseBagItem srcItem, int dstIndex)
+            if (!System.Object.ReferenceEquals(null, itemdst))
+            {
+                bool isSame = itemsrc.CfgID == itemdst.CfgID;
+
+                if (!isSame)
+                {
+                    //Bag.RemoveBagItem(itemsrc.Index);
+                    UILord.Instance.CurShortcutUI.RemoveItem(itemsrc.Index);
+                    if (!System.Object.ReferenceEquals(null, itemdst))
+                    {
+                        Bag.RemoveBagItem(itemdst.Index);
+                        UILord.Instance.CurShortcut.AddItemAtIndex(itemdst.Kind,
+                            itemdst.CfgID, itemsrc.Index, itemdst.Count);
+                    }
+
+                    Bag.AddItemAtIndex(itemsrc.CfgID, dstIndex, itemsrc.Count);
+                }
+                else
+                {
+                    int left = Bag.AddItemAtIndex(itemdst.CfgID, itemdst.Index, itemsrc.Count);
+                    if (left <= 0)
+                    {
+                        UILord.Instance.CurShortcut.RemoveItem(itemsrc.Index);
+                    }
+                    else
+                    {
+                        UILord.Instance.CurShortcut.UpdateItemCount(itemsrc.Index, left);
+                    }
+                }
+            }
+            else
+            {
+                //Bag.RemoveBagItem(itemsrc.Index);
+                UILord.Instance.CurShortcutUI.RemoveItem(itemsrc.Index);
+                Bag.AddItemAtIndex(itemsrc.CfgID, dstIndex, itemsrc.Count);
+            }
+        }
+
+        public void HandleBagItemJoin(InteractItem srcItem, int dstIndex)
         {
             if (srcItem.Index == dstIndex)
                 return;
@@ -254,7 +286,7 @@ namespace GameContent
 
             if (!System.Object.ReferenceEquals(null, itemdst))
             {
-                bool isSame = itemsrc.ItemCfgID == itemdst.ItemCfgID;
+                bool isSame = itemsrc.CfgID == itemdst.CfgID;
 
                 if (!isSame)
                 {
@@ -262,14 +294,14 @@ namespace GameContent
                     if (!System.Object.ReferenceEquals(null, itemdst))
                     {
                         Bag.RemoveBagItem(itemdst.Index);
-                        Bag.AddItemAtIndex(itemdst.ItemCfgID, itemsrc.Index, itemdst.Count);
+                        Bag.AddItemAtIndex(itemdst.CfgID, itemsrc.Index, itemdst.Count);
                     }
 
-                    Bag.AddItemAtIndex(itemsrc.ItemCfgID, dstIndex, itemsrc.Count);
+                    Bag.AddItemAtIndex(itemsrc.CfgID, dstIndex, itemsrc.Count);
                 }
                 else
                 {
-                    int left = Bag.AddItemAtIndex(itemdst.ItemCfgID, itemdst.Index, itemsrc.Count);
+                    int left = Bag.AddItemAtIndex(itemdst.CfgID, itemdst.Index, itemsrc.Count);
                     if (left <= 0)
                     {
                         Bag.RemoveBagItem(itemsrc.Index);
@@ -283,7 +315,7 @@ namespace GameContent
             else
             {
                 Bag.RemoveBagItem(itemsrc.Index);
-                Bag.AddItemAtIndex(itemsrc.ItemCfgID, dstIndex, itemsrc.Count);
+                Bag.AddItemAtIndex(itemsrc.CfgID, dstIndex, itemsrc.Count);
             }            
         }
 

@@ -12,7 +12,7 @@ namespace GameContent
 {
     public class BagSystem : MonoBehaviour
     {
-        private List<BaseBagItem> Items = new List<BaseBagItem>();
+        private List<InteractItem> Items = new List<InteractItem>();
 
 		private List<int> IndexRecorder = new List<int>();
 
@@ -60,7 +60,7 @@ namespace GameContent
             AddItemAtIndex(10005, 5, 1);
         }
 
-        public List<BaseBagItem> GetAllItems()
+        public List<InteractItem> GetAllItems()
 		{
 			return Items;
 		}
@@ -74,7 +74,7 @@ namespace GameContent
         {
             for (int i = 0; i < Items.Count; i++)
             {
-                if (Items[i].ItemCfgID == cfgID)
+                if (Items[i].CfgID == cfgID)
                 {
                     if (Items[i].Count + count <= Items[i].MaxCount)
                     {
@@ -128,7 +128,7 @@ namespace GameContent
 
             int countLeft = 0;
 
-            BaseBagItem bbi = GetItemByIndex(index);
+            InteractItem bbi = GetItemByIndex(index);
             if (!System.Object.ReferenceEquals(null, bbi))
             {
                 bbi.Count += count;
@@ -141,15 +141,15 @@ namespace GameContent
             }
             else
             {
-                bbi = new BaseBagItem();
-                bbi.ItemCfgID = id;
+                bbi = new InteractItem();
+                bbi.CfgID = id;
                 bbi.Index = index;
 
                 ItemConfig ic = ConfigDataMgr.Instance.ItemCfgLoader.GetDataByID(id);
                 bbi.IconID = ic.IconID;
 
                 bbi.Count += count;
-                bbi.ItemID = id;
+                bbi.Kind = InteractItemType.Item;
 
                 Items.Add(bbi);
             }            
@@ -234,16 +234,16 @@ namespace GameContent
 			AddBagItem(id, count);
 		}
 
-        public void Add(BaseBagItem item)
+        public void Add(InteractItem item)
         {
 
         }
 
-        public BaseBagItem GetItemByID(int id)
+        public InteractItem GetItemByID(int id)
         {
             for (int i = 0; i < Items.Count; i++)
             {
-                if (Items[i].ItemID == id)
+                if (Items[i].CfgID == id)
                 {
                     return Items[i];
                 }
@@ -252,7 +252,7 @@ namespace GameContent
             return null;
         }
 
-        public BaseBagItem GetItemByIndex(int index)
+        public InteractItem GetItemByIndex(int index)
         {
             for (int i = 0; i < Items.Count; i++)
             {
@@ -269,7 +269,7 @@ namespace GameContent
         {
             if (index >= 0)
             {
-                BaseBagItem item = GetItemByIndex(index);
+                InteractItem item = GetItemByIndex(index);
 
                 if (!System.Object.ReferenceEquals(null, item))
                 {
@@ -279,7 +279,7 @@ namespace GameContent
                         {
                             target = Owner;
                         }
-                        Owner.UseItem(item.ItemCfgID, target);
+                        Owner.UseItem(item.CfgID, target);
 
                         item.Count -= count;
 
@@ -303,7 +303,7 @@ namespace GameContent
         {
             for (int i = 0; i < Items.Count; i++)
             {
-                if (Items[i].ItemID == id)
+                if (Items[i].CfgID == id)
                 {
                     // 
                     return true;

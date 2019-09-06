@@ -6,10 +6,19 @@ using UnityEngine.EventSystems;
 
 namespace GameContent
 {
-    public class InteractItemUI : MonoBehaviour/*,
-        IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerDownHandler*/
+    public enum InteractItemUIType
+    {
+        Bag,
+        Shortcut,
+        Skill,
+        None
+    }
+
+    public class InteractItemUI : MonoBehaviour
     {
         public int Index = 0;
+
+        public InteractItemUIType Belong = InteractItemUIType.None;
 
         // Start is called before the first frame update
         void Start()
@@ -22,39 +31,5 @@ namespace GameContent
         {
 
         }
-
-        //void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
-        //{
-        //    Debug.Log("$ point down " + Index.ToString());
-        //}
-
-        //void IDragHandler.OnDrag(PointerEventData eventData)
-        //{
-        //    //GetComponent<RectTransform>().pivot.Set(0, 0);
-        //    //transform.position = Input.mousePosition;
-        //}
-
-        //void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
-        //{
-        //    //eventData.selectedObject;
-        //    //Debug.Log("$ drag begin " + Index.ToString());
-
-        //    //UILord.Instance.CurBagUI.ClickOnItem(Index);
-        //}
-
-        //void IEndDragHandler.OnEndDrag(PointerEventData eventData)
-        //{
-        //    //Debug.Log("$ drag end" + Index.ToString());
-        //    //UILord.Instance.CurBagUI.ClickOnItem(Index);
-
-        //    //if (eventData.selectedObject)
-        //    //{
-        //    //    var item = eventData.selectedObject.GetComponent<InteractItemUI>();
-        //    //    if (item)
-        //    //    {
-        //    //        Debug.Log("$ drag end selected object: " + item.Index.ToString());
-        //    //    }
-        //    //}
-        //}
     }
 }

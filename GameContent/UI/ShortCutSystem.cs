@@ -12,7 +12,7 @@ namespace GameContent
 {
     public class ShortCutSystem : MonoBehaviour
     {
-        public List<ShortcutItem> Items = new List<ShortcutItem>();
+        public List<InteractItem> Items = new List<InteractItem>();
 
         private List<int> IndexRecorder = new List<int>();
 
@@ -59,7 +59,7 @@ namespace GameContent
             //AddItemAtIndex(0, 10002, 5, 1);
         }
 
-        public List<ShortcutItem> GetAllItems()
+        public List<InteractItem> GetAllItems()
         {
             return Items;
         }
@@ -73,7 +73,7 @@ namespace GameContent
         {
             for (int i = 0; i < Items.Count; i++)
             {
-                if (Items[i].ItemCfgID == cfgID)
+                if (Items[i].CfgID == cfgID)
                 {
                     if (Items[i].Count + count <= Items[i].MaxCount)
                     {
@@ -98,7 +98,7 @@ namespace GameContent
         /// </summary>
         /// <param name="id">the config id of item.</param>
         /// <returns></returns>
-        private bool AddItem(int kind, int id, int count)
+        private bool AddItem(InteractItemType kind, int id, int count)
         {
             int index = GetAvailableIndex(id, count);
 
@@ -112,16 +112,16 @@ namespace GameContent
             return true;
         }
 
-        public int AddItemAtIndex(int kind, int id, int index, int count)
+        public int AddItemAtIndex(InteractItemType kind, int id, int index, int count)
         {
             if (!IsValidAtIndex(id, index))
                 return 0;
 
-            ShortcutItem bbi = GetItemByIndex(index);
+            InteractItem bbi = GetItemByIndex(index);
 
             int left = 0;
 
-            if (kind == 0) // item
+            if (kind == InteractItemType.Item) // item
             {                
                 if (!System.Object.ReferenceEquals(null, bbi))
                 {
@@ -135,8 +135,8 @@ namespace GameContent
                 }
                 else
                 {
-                    bbi = new ShortcutItem();
-                    bbi.ItemCfgID = id;
+                    bbi = new InteractItem();
+                    bbi.CfgID = id;
                     bbi.Index = index;
                     bbi.Kind = kind;
 
@@ -149,7 +149,7 @@ namespace GameContent
                     Items.Add(bbi);
                 }
             }
-            else if (kind == 1)  // skill
+            else if (kind == InteractItemType.Skill)  // skill
             {
                 if (!System.Object.ReferenceEquals(null, bbi))
                 {
@@ -158,8 +158,8 @@ namespace GameContent
                 }
                 else
                 {
-                    bbi = new ShortcutItem();
-                    bbi.ItemCfgID = id;
+                    bbi = new InteractItem();
+                    bbi.CfgID = id;
                     bbi.Index = index;
                     bbi.Kind = kind;
 
@@ -184,6 +184,20 @@ namespace GameContent
             }
 
             return left;
+        }
+
+        public void UpdateItemCount(int index, int count)
+        {
+            var item = GetItemByIndex(index);
+            if (!System.Object.ReferenceEquals(null, item))
+            {
+                item.Count = count;
+
+                if (!System.Object.ReferenceEquals(null, OnItemChange))
+                {
+                    OnItemChange(index);
+                }
+            }
         }
 
         public void RemoveItem(int index)
@@ -222,21 +236,21 @@ namespace GameContent
 		/// 
 		/// </summary>
 		/// <param name="id">now it's the config id of the item.</param>
-        public void Add(int kind, int id, int count)
+        public void Add(InteractItemType kind, int id, int count)
         {
             AddItem(kind, id, count);
         }
 
-        public void Add(ShortcutItem item)
+        public void Add(InteractItem item)
         {
 
         }
 
-        public ShortcutItem GetItemByID(int id)
+        public InteractItem GetItemByID(int id)
         {
             for (int i = 0; i < Items.Count; i++)
             {
-                if (Items[i].ItemCfgID == id)
+                if (Items[i].CfgID == id)
                 {
                     return Items[i];
                 }
@@ -245,7 +259,7 @@ namespace GameContent
             return null;
         }
 
-        public ShortcutItem GetItemByIndex(int index)
+        public InteractItem GetItemByIndex(int index)
         {
             for (int i = 0; i < Items.Count; i++)
             {
@@ -262,7 +276,7 @@ namespace GameContent
         {
             if (index >= 0)
             {
-                ShortcutItem item = GetItemByIndex(index);
+                InteractItem item = GetItemByIndex(index);
 
                 if (!System.Object.ReferenceEquals(null, item))
                 {
@@ -273,9 +287,9 @@ namespace GameContent
                             target = Owner;
                         }
 
-                        if (item.Kind == 0)
+                        if (item.Kind == InteractItemType.Item)
                         {
-                            Owner.UseItem(item.ItemCfgID, target);
+                            Owner.UseItem(item.CfgID, target);
 
                             item.Count -= count;
 
@@ -288,9 +302,9 @@ namespace GameContent
                                 RemoveItem(index);
                             }
                         }
-                        else if (item.Kind == 1)
+                        else if (item.Kind == InteractItemType.Skill)
                         {
-                            Owner.UseSkill(item.ItemCfgID, target);
+                            Owner.UseSkill(item.CfgID, target);
                         }
                     }
 
@@ -304,7 +318,7 @@ namespace GameContent
         {
             for (int i = 0; i < Items.Count; i++)
             {
-                if (Items[i].ItemCfgID == id)
+                if (Items[i].CfgID == id)
                 {
                     // 
                     return true;

@@ -20,15 +20,21 @@ namespace GameContent
             }
         }
 
-        public ShortcutItem CurShortcutItem = null;
+        public InteractItem CurShortcutItem = null;
 
-        public BaseBagItem CurBagItem = null;
+        public InteractItem CurBagItem = null;
+
+        public InteractItem CurInteractItem = null;
+
+        public InteractItemUIType CurItemUIType = InteractItemUIType.None;
 
         public BagSystem CurBag = null;
 
         public ShortCutSystem CurShortcut = null;
 
         public BagSystemUI CurBagUI = null;
+
+        public ShortcutUI CurShortcutUI = null;
 
         public bool HasItem = false;
 
@@ -51,24 +57,28 @@ namespace GameContent
             }
         }
 
-        public void SelectShortcutItem(ShortcutItem item)
+        public void SelectShortcutItem(InteractItem item)
         {
             ClearSelectItem();
             CurShortcutItem = item;
+            CurInteractItem = item;
             HasItem = true;
         }
 
-        public void SelectBagItem(BaseBagItem item)
+        public void SelectBagItem(InteractItem item)
         {
             ClearSelectItem();
             CurBagItem = item;
+            CurInteractItem = item;
             HasItem = true;
         }
 
         public void ClearSelectItem()
         {
-            CurShortcutItem = null;
             CurBagItem = null;
+            CurShortcutItem = null;
+            CurInteractItem = null;
+            UILord.Instance.CurItemUIType = InteractItemUIType.None;
             HasItem = false;
         }
 
@@ -92,6 +102,18 @@ namespace GameContent
                         role.Bag.UseItemAtIndex(CurBagItem.Index, 1, target);
                         used = true;
                     }
+
+                    //if (!System.Object.ReferenceEquals(null, CurInteractItem))
+                    //{
+                    //    if (CurInteractItem.Kind == InteractItemType.Item)
+                    //    {
+
+                    //    }
+                    //    else if (CurInteractItem.Kind == InteractItemType.Skill)
+                    //    {
+
+                    //    }
+                    //}
                 }
 
                 if (used)

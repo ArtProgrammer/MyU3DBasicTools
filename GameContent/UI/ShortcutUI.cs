@@ -35,7 +35,7 @@ namespace GameContent
         {
             if (!System.Object.ReferenceEquals(null, Shortcut))
             {
-                ShortcutItem bbi = Shortcut.GetItemByIndex(index);
+                InteractItem bbi = Shortcut.GetItemByIndex(index);
                 if (!System.Object.ReferenceEquals(null, bbi))
                 {
                     AddItem(bbi);
@@ -47,7 +47,7 @@ namespace GameContent
         {
             if (!System.Object.ReferenceEquals(null, Shortcut))
             {
-                ShortcutItem bbi = Shortcut.GetItemByIndex(index);
+                InteractItem bbi = Shortcut.GetItemByIndex(index);
                 if (!System.Object.ReferenceEquals(null, bbi))
                 {
                     Txts[index].text = bbi.Count.ToString();
@@ -95,6 +95,7 @@ namespace GameContent
                 Shortcut = sw.Shortcut;
 
                 UILord.Instance.CurShortcut = Shortcut;
+                UILord.Instance.CurShortcutUI = this;
 
                 LoadContent(Shortcut);
             }
@@ -109,7 +110,7 @@ namespace GameContent
             Shortcut.OnRemoveItem += OnItemRemove;
             Shortcut.OnItemChange += OnItemChange;
 
-            List<ShortcutItem> items = Shortcut.GetAllItems();
+            List<InteractItem> items = Shortcut.GetAllItems();
 
             foreach (var item in items)
             {
@@ -117,7 +118,7 @@ namespace GameContent
             }
         }
 
-        public void AddItem(ShortcutItem item)
+        public void AddItem(InteractItem item)
         {
             if (IsUIElementsReady)
             {
@@ -152,7 +153,7 @@ namespace GameContent
             }
         }
 
-        public void ClickOnItem(int index)
+        public void ClickOnItem(InteractItemUIType itemUIType, int index)
         {
             if (!System.Object.ReferenceEquals(null, Shortcut))
             {
@@ -161,68 +162,119 @@ namespace GameContent
                     if (!System.Object.ReferenceEquals(null,
                         UILord.Instance.CurBagItem))
                     {
-                        HandleItemIndexChange(UILord.Instance.CurBagItem,
+                        HandleBagItemJoin(UILord.Instance.CurBagItem,
                             index);
                     }
                     else if (!System.Object.ReferenceEquals(null,
                            UILord.Instance.CurShortcutItem))
                     {
-                        HandleItemIndexChange(UILord.Instance.CurShortcutItem,
+                        HandleShortcutItemJoin(UILord.Instance.CurShortcutItem,
                             index);
                     }
                 }
                 else
                 {
                     //Shortcut.UseItemAtIndex(index, 1);
-                    ShortcutItem item = Shortcut.GetItemByIndex(index);
+                    InteractItem item = Shortcut.GetItemByIndex(index);
                     if (!System.Object.ReferenceEquals(null, item))
                     {
                         UILord.Instance.SelectShortcutItem(item);
+                        UILord.Instance.CurItemUIType = itemUIType;
                     }
                 }                
             }
         }
 
-        public void HandleItemIndexChange(BaseBagItem srcItem, int dstIndex)
+        public void HandleShortcutItemJoin(InteractItem srcItem, int dstIndex)
+        {
+            if (srcItem.Index == dstIndex)
+                return;
+
+            if (Shortcut)
+            {
+                var InteractItem = Shortcut.GetItemByIndex(dstIndex);
+
+                if (!System.Object.ReferenceEquals(null, InteractItem))
+                {
+                    if (InteractItem.CfgID == srcItem.CfgID)
+                    {
+                        int left = Shortcut.AddItemAtIndex(srcItem.Kind,
+                            srcItem.CfgID, dstIndex, srcItem.Count);
+
+                        if (left <= 0)
+                        {
+                            Shortcut.RemoveItem(srcItem.Index);
+                        }
+                        else
+                        {
+                            Shortcut.UpdateItemCount(srcItem.Index, left);
+                        }
+                        //UILord.Instance.CurBag.ChangeBagItem(srcItem.Index,
+                        //    left);
+                    }
+                    else
+                    {
+                        Shortcut.RemoveItem(InteractItem.Index);
+                        Shortcut.AddItemAtIndex(srcItem.Kind,
+                            srcItem.CfgID, dstIndex, srcItem.Count);
+                        Shortcut.RemoveItem(srcItem.Index);
+                        Shortcut.AddItemAtIndex(srcItem.Kind,
+                            InteractItem.CfgID, srcItem.Index,
+                            InteractItem.Count);
+                    }
+                }
+                else
+                {
+                    Shortcut.AddItemAtIndex(0, srcItem.CfgID, dstIndex, srcItem.Count);
+                    // remove the item in bag.
+                    //UILord.Instance.CurBag.RemoveBagItem(srcItem.Index);
+                    Shortcut.RemoveItem(srcItem.Index);
+                }
+
+                UILord.Instance.ClearSelectItem();
+            }
+        }
+
+        public void HandleBagItemJoin(InteractItem srcItem, int dstIndex)
         {
             if (Shortcut)
             {
-                var shortcutItem = Shortcut.GetItemByIndex(dstIndex);
+                var InteractItem = Shortcut.GetItemByIndex(dstIndex);
 
-                if (!System.Object.ReferenceEquals(null, shortcutItem))
+                if (!System.Object.ReferenceEquals(null, InteractItem))
                 {
-                    if (shortcutItem.Kind == 0)
+                    if (InteractItem.Kind == 0)
                     {
-                        if (shortcutItem.ItemCfgID == srcItem.ItemCfgID)
+                        if (InteractItem.CfgID == srcItem.CfgID)
                         {
                             int left = Shortcut.AddItemAtIndex(0,
-                                srcItem.ItemCfgID, dstIndex, srcItem.Count);
+                                srcItem.CfgID, dstIndex, srcItem.Count);
 
                             UILord.Instance.CurBag.ChangeBagItem(srcItem.Index,
                                 left);
                         }
                         else
                         {                           
-                            Shortcut.RemoveItem(shortcutItem.Index);
-                            Shortcut.AddItemAtIndex(0, srcItem.ItemCfgID,
+                            Shortcut.RemoveItem(InteractItem.Index);
+                            Shortcut.AddItemAtIndex(0, srcItem.CfgID,
                                 dstIndex, srcItem.Count);
                             UILord.Instance.CurBag.RemoveBagItem(srcItem.Index);
                             UILord.Instance.CurBag.AddItemAtIndex(
-                                shortcutItem.ItemCfgID, srcItem.Index,
-                                shortcutItem.Count);
+                                InteractItem.CfgID, srcItem.Index,
+                                InteractItem.Count);
                         }
                     }
                     else
                     {
-                        Shortcut.RemoveItem(shortcutItem.Index);
-                        Shortcut.AddItemAtIndex(0, srcItem.ItemCfgID,
+                        Shortcut.RemoveItem(InteractItem.Index);
+                        Shortcut.AddItemAtIndex(0, srcItem.CfgID,
                             dstIndex, srcItem.Count);
                         UILord.Instance.CurBag.RemoveBagItem(srcItem.Index);
                     }
                 }
                 else
                 {
-                    Shortcut.AddItemAtIndex(0, srcItem.ItemCfgID, dstIndex, srcItem.Count);
+                    Shortcut.AddItemAtIndex(0, srcItem.CfgID, dstIndex, srcItem.Count);
                     // remove the item in bag.
                     UILord.Instance.CurBag.RemoveBagItem(srcItem.Index);
                 }
@@ -231,10 +283,10 @@ namespace GameContent
             }
         }
 
-        public void HandleItemIndexChange(ShortcutItem srcItem, int dstIndex)
-        {
-            UILord.Instance.ClearSelectItem();
-        }
+        //public void HandleItemIndexChange(InteractItem srcItem, int dstIndex)
+        //{
+        //    UILord.Instance.ClearSelectItem();
+        //}
 
         public void Close(int index)
         {
