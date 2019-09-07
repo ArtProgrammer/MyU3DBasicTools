@@ -24,6 +24,8 @@ namespace GameContent
 
         public InteractItem CurBagItem = null;
 
+        public InteractItem CurRoleInfoItem = null;
+
         public InteractItem CurInteractItem = null;
 
         public InteractItemUIType CurItemUIType = InteractItemUIType.None;
@@ -31,6 +33,8 @@ namespace GameContent
         public BagSystem CurBag = null;
 
         public ShortCutSystem CurShortcut = null;
+
+        public RoleInfoSystem CurRoleInfo = null;
 
         public BagSystemUI CurBagUI = null;
 
@@ -67,6 +71,14 @@ namespace GameContent
             HasItem = true;
         }
 
+        public void SelectRoleItem(InteractItem item)
+        {
+            ClearSelectItem();
+            CurRoleInfoItem = item;
+            CurInteractItem = item;
+            HasItem = true;
+        }
+
         public void SelectBagItem(InteractItem item)
         {
             ClearSelectItem();
@@ -79,6 +91,7 @@ namespace GameContent
         {
             CurBagItem = null;
             CurShortcutItem = null;
+            CurRoleInfoItem = null;
             CurInteractItem = null;
             UILord.Instance.CurItemUIType = InteractItemUIType.None;
             HasItem = false;

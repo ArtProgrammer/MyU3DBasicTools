@@ -12,7 +12,7 @@ namespace GameContent.Interaction
         Bag,
         Skill,
         ItemUse,
-        PlayerInfo,
+        RoleInfo,
         None
     }
 

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 using SimpleAI.Game;
 using GameContent.SimAgent;
@@ -10,13 +11,13 @@ using Config;
 
 namespace GameContent
 {
-    public class ShortCutSystem : MonoBehaviour
+    public class RoleInfoSystem : MonoBehaviour
     {
-        public List<InteractItem> Items = new List<InteractItem>();
+        private List<InteractItem> Items = new List<InteractItem>();
 
         private List<int> IndexRecorder = new List<int>();
 
-        public int Volume = 6;
+        public int Volume = 7;
 
         private int InvalidIndex = -1;
 
@@ -31,7 +32,6 @@ namespace GameContent
         private void Awake()
         {
             Initialize();
-
         }
 
         void Start()
@@ -51,12 +51,11 @@ namespace GameContent
 
         public void Load()
         {
-            AddItemAtIndex(InteractItemType.Shortcut, 10002, 0, 1);
-            //AddItemAtIndex(1, 10007, 1, 1);
-            //AddItemAtIndex(0, 10002, 2, 1);
-            //AddItemAtIndex(0, 10002, 3, 1);
-            //AddItemAtIndex(0, 10002, 4, 1);
-            //AddItemAtIndex(0, 10002, 5, 1);
+            AddItemAtIndex(InteractItemType.RoleInfo, 10002, 1, 2);
+            AddItemAtIndex(InteractItemType.RoleInfo, 10002, 2, 2);
+            AddItemAtIndex(InteractItemType.RoleInfo, 10002, 3, 1);
+            AddItemAtIndex(InteractItemType.RoleInfo, 10004, 4, 1);
+            AddItemAtIndex(InteractItemType.RoleInfo, 10005, 5, 1);
         }
 
         public List<InteractItem> GetAllItems()
@@ -93,11 +92,6 @@ namespace GameContent
             return InvalidIndex;
         }
 
-        /// <summary>
-        /// Add item by it's config id.
-        /// </summary>
-        /// <param name="id">the config id of item.</param>
-        /// <returns></returns>
         private bool AddItem(InteractItemType kind, int id, int count)
         {
             int index = GetAvailableIndex(id, count);
@@ -112,69 +106,45 @@ namespace GameContent
             return true;
         }
 
+        /// <summary>
+        /// Add item to index, check the item must be the same type
+        /// if there are already an item exist there.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="index"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public int AddItemAtIndex(InteractItemType kind, int id, int index, int count)
         {
             if (!IsValidAtIndex(id, index))
                 return 0;
 
+            int countLeft = 0;
+
             InteractItem bbi = GetItemByIndex(index);
+            if (!System.Object.ReferenceEquals(null, bbi))
+            {
+                bbi.Count += count;
 
-            int left = 0;
-
-            if (kind == InteractItemType.Item ||
-                kind == InteractItemType.Shortcut) // item
-            {                
-                if (!System.Object.ReferenceEquals(null, bbi))
+                if (bbi.Count > bbi.MaxCount)
                 {
-                    bbi.Count += count;
-
-                    if (bbi.Count > bbi.MaxCount)
-                    {
-                        left = bbi.Count - bbi.MaxCount;
-                        bbi.Count = bbi.MaxCount;
-                    }
-                }
-                else
-                {
-                    bbi = new InteractItem();
-                    bbi.CfgID = id;
-                    bbi.Index = index;
-                    bbi.Kind = kind;
-
-                    ItemConfig ic =
-                        ConfigDataMgr.Instance.ItemCfgLoader.GetDataByID(id);
-                    bbi.IconID = ic.IconID;
-
-                    bbi.Count += count;
-
-                    Items.Add(bbi);
+                    countLeft = bbi.Count - bbi.MaxCount;
+                    bbi.Count = bbi.MaxCount;
                 }
             }
-            else if (kind == InteractItemType.Skill)  // skill
+            else
             {
-                if (!System.Object.ReferenceEquals(null, bbi))
-                {
-                    // handle cool down.
-                    bbi.Count = 1;
-                }
-                else
-                {
-                    bbi = new InteractItem();
-                    bbi.CfgID = id;
-                    bbi.Index = index;
-                    bbi.Kind = kind;
+                bbi = new InteractItem();
+                bbi.CfgID = id;
+                bbi.Index = index;
 
-                    //ItemConfig ic =
-                    //    ConfigDataMgr.Instance.ItemCfgLoader.GetDataByID(id);
+                ItemConfig ic = ConfigDataMgr.Instance.ItemCfgLoader.GetDataByID(id);
+                bbi.IconID = ic.IconID;
 
-                    SkillConfig sc =
-                        ConfigDataMgr.Instance.SkillCfgLoader.GetDataByID(id);
-                    bbi.IconID = sc.IconID;
+                bbi.Count += count;
+                bbi.Kind = InteractItemType.Item;
 
-                    bbi.Count = 1;
-
-                    Items.Add(bbi);
-                }
+                Items.Add(bbi);
             }
 
             IndexRecorder[index] = 1;
@@ -184,19 +154,35 @@ namespace GameContent
                 OnAddItem(index);
             }
 
-            return left;
+            return countLeft;
         }
 
-        public void UpdateItemCount(int index, int count)
+        public void ChangeItem(int index, int count)
         {
-            var item = GetItemByIndex(index);
-            if (!System.Object.ReferenceEquals(null, item))
-            {
-                item.Count = count;
+            if (index < 0 || index >= IndexRecorder.Count)
+                return;
 
-                if (!System.Object.ReferenceEquals(null, OnItemChange))
+            if (IndexRecorder[index] == 1)
+            {
+                bool hasLeft = false;
+                for (int i = 0; i < Items.Count; i++)
+                {
+                    if (Items[i].Index == index)
+                    {
+                        Items[i].Count = count;
+                        hasLeft = Items[i].Count > 0;
+                        break;
+                    }
+                }
+
+                if (hasLeft &&
+                    !System.Object.ReferenceEquals(null, OnItemChange))
                 {
                     OnItemChange(index);
+                }
+                else if (!System.Object.ReferenceEquals(null, OnRemoveItem))
+                {
+                    OnRemoveItem(index);
                 }
             }
         }
@@ -229,6 +215,20 @@ namespace GameContent
                 if (!System.Object.ReferenceEquals(null, OnRemoveItem))
                 {
                     OnRemoveItem(index);
+                }
+            }
+        }
+
+        public void UpdateItemCount(int index, int count)
+        {
+            var item = GetItemByIndex(index);
+            if (!System.Object.ReferenceEquals(null, item))
+            {
+                item.Count = count;
+
+                if (!System.Object.ReferenceEquals(null, OnItemChange))
+                {
+                    OnItemChange(index);
                 }
             }
         }
@@ -272,7 +272,7 @@ namespace GameContent
 
             return null;
         }
-        
+
         public bool UseItemAtIndex(int index, int count, BaseGameEntity target = null)
         {
             if (index >= 0)
@@ -287,25 +287,17 @@ namespace GameContent
                         {
                             target = Owner;
                         }
+                        Owner.UseItem(item.CfgID, target);
 
-                        if (item.Kind == InteractItemType.Item)
+                        item.Count -= count;
+
+                        if (item.Count > 0)
                         {
-                            Owner.UseItem(item.CfgID, target);
-
-                            item.Count -= count;
-
-                            if (item.Count > 0)
-                            {
-                                OnItemChange(index);
-                            }
-                            else
-                            {
-                                RemoveItem(index);
-                            }
+                            OnItemChange(index);
                         }
-                        else if (item.Kind == InteractItemType.Skill)
+                        else
                         {
-                            Owner.UseSkill(item.CfgID, target);
+                            RemoveItem(index);
                         }
                     }
 
@@ -338,6 +330,16 @@ namespace GameContent
         {
             if (index < Items.Count)
             {
+                //var item = Items[index];
+                //for (int i = 0; i < Items.Count; i++)
+                //{
+                //    var item = Items[i];
+                //    if (item.Index == index)
+                //    {
+                //        RemoveItem(index);
+                //    }
+                //}
+
                 RemoveItem(index);
             }
         }

@@ -48,6 +48,10 @@ namespace GameContent
             {
                 UILord.Instance.CurShortcutUI.ClickOnItem(Index);
             }
+            else if (Belong == InteractItemUIType.RoleInfo)
+            {
+                UILord.Instance.CurRoleInfoUI.ClickOnItem(Index);
+            }
         }
     }
 }

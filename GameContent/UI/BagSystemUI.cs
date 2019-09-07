@@ -191,35 +191,13 @@ namespace GameContent
                         {
                             HandleShortcutItemJoin(UILord.Instance.CurShortcutItem, index);
                         }
+                        else if (UILord.Instance.CurItemUIType == InteractItemUIType.RoleInfo)
+                        {
+                            HandleRoleInfoItemJoin(UILord.Instance.CurRoleInfoItem, index);
+                        }
 
                         UILord.Instance.ClearSelectItem();
                     }
-
-                    //if (!System.Object.ReferenceEquals(null,
-                    //    UILord.Instance.CurBagItem))
-                    //{
-                    //    HandleBagItemJoin(UILord.Instance.CurBagItem,
-                    //        index);
-                    //}
-                    //else if (!System.Object.ReferenceEquals(null,
-                    //       UILord.Instance.CurShortcutItem))
-                    //{
-                    //    HandleShortcutItemJoin(UILord.Instance.CurShortcutItem,
-                    //        index);
-                    //}
-
-                    //if (!System.Object.ReferenceEquals(null,
-                    //    UILord.Instance.CurBagItem))
-                    //{
-                    //    HandleBagItemJoin(UILord.Instance.CurBagItem,
-                    //        index);
-                    //}
-                    //else if (!System.Object.ReferenceEquals(null,
-                    //       UILord.Instance.CurShortcutItem))
-                    //{
-                    //    HandleShortcutItemJoin(UILord.Instance.CurShortcutItem,
-                    //        index);
-                    //}
                 }
                 else
                 {
@@ -230,6 +208,49 @@ namespace GameContent
                         UILord.Instance.CurItemUIType = InteractItemUIType.Bag;
                     }
                 }                
+            }
+        }
+
+        public void HandleRoleInfoItemJoin(InteractItem srcItem, int dstIndex)
+        {
+            var itemsrc = srcItem;
+            var itemdst = Bag.GetItemByIndex(dstIndex);
+
+            if (!System.Object.ReferenceEquals(null, itemdst))
+            {
+                bool isSame = itemsrc.CfgID == itemdst.CfgID;
+
+                if (!isSame)
+                {
+                    //Bag.RemoveBagItem(itemsrc.Index);
+                    UILord.Instance.CurRoleInfoUI.RemoveItem(itemsrc.Index);
+                    if (!System.Object.ReferenceEquals(null, itemdst))
+                    {
+                        Bag.RemoveBagItem(itemdst.Index);
+                        UILord.Instance.CurRoleInfo.AddItemAtIndex(itemdst.Kind,
+                            itemdst.CfgID, itemsrc.Index, itemdst.Count);
+                    }
+
+                    Bag.AddItemAtIndex(itemsrc.CfgID, dstIndex, itemsrc.Count);
+                }
+                else
+                {
+                    int left = Bag.AddItemAtIndex(itemdst.CfgID, itemdst.Index, itemsrc.Count);
+                    if (left <= 0)
+                    {
+                        UILord.Instance.CurRoleInfoUI.RemoveItem(itemsrc.Index);
+                    }
+                    else
+                    {
+                        UILord.Instance.CurRoleInfo.UpdateItemCount(itemsrc.Index, left);
+                    }
+                }
+            }
+            else
+            {
+                //Bag.RemoveBagItem(itemsrc.Index);
+                UILord.Instance.CurRoleInfoUI.RemoveItem(itemsrc.Index);
+                Bag.AddItemAtIndex(itemsrc.CfgID, dstIndex, itemsrc.Count);
             }
         }
 

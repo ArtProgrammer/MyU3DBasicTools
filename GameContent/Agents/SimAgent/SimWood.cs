@@ -53,6 +53,8 @@ namespace GameContent.SimAgent
 
         public ShortCutSystem Shortcut = null;
 
+        public RoleInfoSystem RoleInfo = null;
+
         public int FoodNeed = 5;
 
         public int FoodCount
@@ -178,6 +180,12 @@ namespace GameContent.SimAgent
             if (!System.Object.ReferenceEquals(null, Shortcut))
             {
                 Shortcut.Owner = this;
+            }
+
+            RoleInfo = GetComponent<RoleInfoSystem>();
+            if (RoleInfo)
+            {
+                RoleInfo.Owner = this;
             }
         }
 

@@ -9,13 +9,15 @@ namespace GameContent
         Bag,
         Shortcut,
         Skill,
-        PlayerInfo,
+        RoleInfo,
     }
 
     public enum InteractItemType
     {
         Item,
         Skill,
+        RoleInfo,
+        Shortcut,
         None
     }
 
