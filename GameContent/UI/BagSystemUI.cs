@@ -174,7 +174,7 @@ namespace GameContent
             }
         }
 
-        public void ClickOnItem(InteractItemUIType itemUIType, int index)
+        public void ClickOnItem(int index, int count = 0)
         {
             //RemoveItem(index);
             if (!System.Object.ReferenceEquals(null, Bag))
@@ -183,11 +183,11 @@ namespace GameContent
                 {
                     //if (!System.Object.ReferenceEquals(null, UILord.Instance.CurBagItem))
                     {
-                        if (itemUIType == InteractItemUIType.Bag)
+                        if (UILord.Instance.CurItemUIType == InteractItemUIType.Bag)
                         {
                             HandleBagItemJoin(UILord.Instance.CurBagItem, index);
                         }
-                        else if (itemUIType == InteractItemUIType.Shortcut)
+                        else if (UILord.Instance.CurItemUIType == InteractItemUIType.Shortcut)
                         {
                             HandleShortcutItemJoin(UILord.Instance.CurShortcutItem, index);
                         }
@@ -227,7 +227,7 @@ namespace GameContent
                     if (!System.Object.ReferenceEquals(null, item))
                     {
                         UILord.Instance.SelectBagItem(item);
-                        UILord.Instance.CurItemUIType = itemUIType;
+                        UILord.Instance.CurItemUIType = InteractItemUIType.Bag;
                     }
                 }                
             }

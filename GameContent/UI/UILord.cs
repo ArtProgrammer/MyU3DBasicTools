@@ -36,6 +36,8 @@ namespace GameContent
 
         public ShortcutUI CurShortcutUI = null;
 
+        public RoleInfoUI CurRoleInfoUI = null;
+
         public bool HasItem = false;
 
         public void Init()

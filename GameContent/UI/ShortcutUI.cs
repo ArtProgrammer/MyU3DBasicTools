@@ -153,7 +153,7 @@ namespace GameContent
             }
         }
 
-        public void ClickOnItem(InteractItemUIType itemUIType, int index)
+        public void ClickOnItem(int index, int count = 0)
         {
             if (!System.Object.ReferenceEquals(null, Shortcut))
             {
@@ -179,7 +179,7 @@ namespace GameContent
                     if (!System.Object.ReferenceEquals(null, item))
                     {
                         UILord.Instance.SelectShortcutItem(item);
-                        UILord.Instance.CurItemUIType = itemUIType;
+                        UILord.Instance.CurItemUIType = InteractItemUIType.Shortcut;
                     }
                 }                
             }

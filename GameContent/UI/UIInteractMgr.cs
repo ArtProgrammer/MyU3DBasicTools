@@ -28,11 +28,11 @@ namespace GameContent
                 {
                     if (item.Belong == InteractItemUIType.Bag)
                     {
-                        UILord.Instance.CurBagUI.ClickOnItem(item.Belong, item.Index);
+                        UILord.Instance.CurBagUI.ClickOnItem(item.Index);
                     }
                     else
                     {
-                        UILord.Instance.CurShortcutUI.ClickOnItem(item.Belong, item.Index);
+                        UILord.Instance.CurShortcutUI.ClickOnItem(item.Index);
                     }
                     
                 }
@@ -56,13 +56,11 @@ namespace GameContent
                     if (item.Belong == InteractItemUIType.Bag)
                     {
                         Debug.Log("$ drag end selected object: " + item.Index.ToString());
-                        UILord.Instance.CurBagUI.ClickOnItem(
-                            UILord.Instance.CurItemUIType, item.Index);
+                        UILord.Instance.CurBagUI.ClickOnItem(item.Index);
                     }
                     else if (item.Belong == InteractItemUIType.Shortcut)
                     {
-                        UILord.Instance.CurShortcutUI.ClickOnItem(
-                            UILord.Instance.CurItemUIType, item.Index);
+                        UILord.Instance.CurShortcutUI.ClickOnItem(item.Index);
                     }
                 }
             }

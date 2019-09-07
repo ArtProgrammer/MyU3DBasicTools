@@ -9,11 +9,21 @@ namespace GameContent
     {
         public GameObject BagPanel = null;
 
+        public GameObject RoleInfoPanel = null;
+
         public void SwitchBag()
         {
             if (BagPanel)
             {
                 BagPanel.SetActive(!BagPanel.activeSelf);
+            }
+        }
+
+        public void SwitchRoleInfo()
+        {
+            if (RoleInfoPanel)
+            {
+                RoleInfoPanel.SetActive(!RoleInfoPanel.activeSelf);
             }
         }
     }
