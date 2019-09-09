@@ -64,9 +64,21 @@ namespace GameContent
             return Items;
         }
 
-        private bool IsValidAtIndex(int cfgID, int index)
+        private bool IsValidAtIndex(int cfgID, int index, int count)
         {
-            return GetAvailableIndex(cfgID, index) != InvalidIndex;
+            if (IndexRecorder[index] == 0)
+            {
+                return true;
+            }
+
+            var gotIndex = GetAvailableIndex(cfgID, count);
+
+            if (gotIndex != InvalidIndex)
+            {
+                return Items[gotIndex].Count + count <= Items[gotIndex].MaxCount;
+            }
+
+            return false;
         }
 
         private int GetAvailableIndex(int cfgID, int count)
@@ -114,7 +126,7 @@ namespace GameContent
 
         public int AddItemAtIndex(InteractItemType kind, int id, int index, int count)
         {
-            if (!IsValidAtIndex(id, index))
+            if (!IsValidAtIndex(id, index, count))
                 return 0;
 
             InteractItem bbi = GetItemByIndex(index);
