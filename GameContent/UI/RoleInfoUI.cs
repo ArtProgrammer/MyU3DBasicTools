@@ -166,23 +166,32 @@ namespace GameContent
             {
                 if (UILord.Instance.HasItem)
                 {
-                    if (!System.Object.ReferenceEquals(null,
-                        UILord.Instance.CurBagItem))
-                    {
-                        HandleBagItemJoin(UILord.Instance.CurBagItem,
-                            index);
-                    }                    
+                    HandleItemJoin(index, count);
                 }
                 else
                 {
-                    //RoleInfo.UseItemAtIndex(index, 1);
-                    InteractItem item = RoleInfo.GetItemByIndex(index);
-                    if (!System.Object.ReferenceEquals(null, item))
-                    {
-                        UILord.Instance.SelectRoleItem(item);
-                        UILord.Instance.CurItemUIType = InteractItemUIType.RoleInfo;
-                    }
+                    HandleSelfItem(index, count);
                 }
+            }
+        }
+
+        protected void HandleItemJoin(int index, int count = 0)
+        {
+            if (!System.Object.ReferenceEquals(null,
+                        UILord.Instance.CurBagItem))
+            {
+                HandleBagItemJoin(UILord.Instance.CurBagItem,
+                    index);
+            }
+        }
+
+        protected void HandleSelfItem(int index, int count = 0)
+        {
+            InteractItem item = RoleInfo.GetItemByIndex(index);
+            if (!System.Object.ReferenceEquals(null, item))
+            {
+                UILord.Instance.SelectRoleItem(item);
+                UILord.Instance.CurItemUIType = InteractItemUIType.RoleInfo;
             }
         }
 

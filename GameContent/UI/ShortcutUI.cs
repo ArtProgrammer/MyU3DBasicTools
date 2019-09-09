@@ -159,29 +159,38 @@ namespace GameContent
             {
                 if (UILord.Instance.HasItem)
                 {
-                    if (!System.Object.ReferenceEquals(null,
-                        UILord.Instance.CurBagItem))
-                    {
-                        HandleBagItemJoin(UILord.Instance.CurBagItem,
-                            index);
-                    }
-                    else if (!System.Object.ReferenceEquals(null,
-                           UILord.Instance.CurShortcutItem))
-                    {
-                        HandleShortcutItemJoin(UILord.Instance.CurShortcutItem,
-                            index);
-                    }
+                    HandleItemJoin(index, count);
                 }
                 else
                 {
-                    //Shortcut.UseItemAtIndex(index, 1);
-                    InteractItem item = Shortcut.GetItemByIndex(index);
-                    if (!System.Object.ReferenceEquals(null, item))
-                    {
-                        UILord.Instance.SelectShortcutItem(item);
-                        UILord.Instance.CurItemUIType = InteractItemUIType.Shortcut;
-                    }
+                    HandleSelfItem(index, count);
                 }                
+            }
+        }
+
+        protected void HandleItemJoin(int index, int count = 0)
+        {
+            if (!System.Object.ReferenceEquals(null,
+                        UILord.Instance.CurBagItem))
+            {
+                HandleBagItemJoin(UILord.Instance.CurBagItem,
+                    index);
+            }
+            else if (!System.Object.ReferenceEquals(null,
+                   UILord.Instance.CurShortcutItem))
+            {
+                HandleShortcutItemJoin(UILord.Instance.CurShortcutItem,
+                    index);
+            }
+        }
+
+        protected void HandleSelfItem(int index, int count = 0)
+        {
+            InteractItem item = Shortcut.GetItemByIndex(index);
+            if (!System.Object.ReferenceEquals(null, item))
+            {
+                UILord.Instance.SelectShortcutItem(item);
+                UILord.Instance.CurItemUIType = InteractItemUIType.Shortcut;
             }
         }
 

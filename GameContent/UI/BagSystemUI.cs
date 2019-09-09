@@ -181,33 +181,40 @@ namespace GameContent
             {
                 if (UILord.Instance.HasItem)
                 {
-                    //if (!System.Object.ReferenceEquals(null, UILord.Instance.CurBagItem))
-                    {
-                        if (UILord.Instance.CurItemUIType == InteractItemUIType.Bag)
-                        {
-                            HandleBagItemJoin(UILord.Instance.CurBagItem, index);
-                        }
-                        else if (UILord.Instance.CurItemUIType == InteractItemUIType.Shortcut)
-                        {
-                            HandleShortcutItemJoin(UILord.Instance.CurShortcutItem, index);
-                        }
-                        else if (UILord.Instance.CurItemUIType == InteractItemUIType.RoleInfo)
-                        {
-                            HandleRoleInfoItemJoin(UILord.Instance.CurRoleInfoItem, index);
-                        }
-
-                        UILord.Instance.ClearSelectItem();
-                    }
+                    HandleItemJoin(index, count);
                 }
                 else
                 {
-                    InteractItem item = Bag.GetItemByIndex(index);
-                    if (!System.Object.ReferenceEquals(null, item))
-                    {
-                        UILord.Instance.SelectBagItem(item);
-                        UILord.Instance.CurItemUIType = InteractItemUIType.Bag;
-                    }
+                    HandleSelfItem(index, count);
                 }                
+            }
+        }
+
+        protected void HandleItemJoin(int index, int count = 0)
+        {
+            if (UILord.Instance.CurItemUIType == InteractItemUIType.Bag)
+            {
+                HandleBagItemJoin(UILord.Instance.CurBagItem, index);
+            }
+            else if (UILord.Instance.CurItemUIType == InteractItemUIType.Shortcut)
+            {
+                HandleShortcutItemJoin(UILord.Instance.CurShortcutItem, index);
+            }
+            else if (UILord.Instance.CurItemUIType == InteractItemUIType.RoleInfo)
+            {
+                HandleRoleInfoItemJoin(UILord.Instance.CurRoleInfoItem, index);
+            }
+
+            UILord.Instance.ClearSelectItem();
+        }
+
+        protected void HandleSelfItem(int index, int count = 0)
+        {
+            InteractItem item = Bag.GetItemByIndex(index);
+            if (!System.Object.ReferenceEquals(null, item))
+            {
+                UILord.Instance.SelectBagItem(item);
+                UILord.Instance.CurItemUIType = InteractItemUIType.Bag;
             }
         }
 
