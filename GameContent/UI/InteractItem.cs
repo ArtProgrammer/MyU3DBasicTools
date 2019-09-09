@@ -16,8 +16,8 @@ namespace GameContent
     {
         Item,
         Skill,
-        RoleInfo,
-        Shortcut,
+        //RoleInfo,
+        //Shortcut,
         None
     }
 

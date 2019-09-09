@@ -336,6 +336,14 @@ namespace GameContent.SimAgent
 
         public bool AddItem(int id, int count)
         {
+            if (!System.Object.ReferenceEquals(null, Shortcut))
+            {
+                if (Shortcut.Add(InteractItemType.Item, id, count))
+                {
+                    return true;
+                }
+            }
+
             if (!System.Object.ReferenceEquals(null, Bag))
             {
                 Bag.Add(id, count);

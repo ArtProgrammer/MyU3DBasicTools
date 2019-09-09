@@ -51,11 +51,11 @@ namespace GameContent
 
         public void Load()
         {
-            AddItemAtIndex(InteractItemType.RoleInfo, 10002, 1, 2);
-            AddItemAtIndex(InteractItemType.RoleInfo, 10002, 2, 2);
-            AddItemAtIndex(InteractItemType.RoleInfo, 10002, 3, 1);
-            AddItemAtIndex(InteractItemType.RoleInfo, 10004, 4, 1);
-            AddItemAtIndex(InteractItemType.RoleInfo, 10005, 5, 1);
+            AddItemAtIndex(InteractItemType.Item, 10002, 1, 2);
+            AddItemAtIndex(InteractItemType.Item, 10002, 2, 2);
+            AddItemAtIndex(InteractItemType.Item, 10002, 3, 1);
+            AddItemAtIndex(InteractItemType.Item, 10004, 4, 1);
+            AddItemAtIndex(InteractItemType.Item, 10005, 5, 1);
         }
 
         public List<InteractItem> GetAllItems()

@@ -30,9 +30,13 @@ namespace GameContent
                     {
                         UILord.Instance.CurBagUI.ClickOnItem(item.Index);
                     }
-                    else
+                    else if (item.Belong == InteractItemUIType.Shortcut)
                     {
                         UILord.Instance.CurShortcutUI.ClickOnItem(item.Index);
+                    }
+                    else if (item.Belong == InteractItemUIType.RoleInfo)
+                    {
+                        UILord.Instance.CurRoleInfoUI.ClickOnItem(item.Index);
                     }
                     
                 }
@@ -61,6 +65,10 @@ namespace GameContent
                     else if (item.Belong == InteractItemUIType.Shortcut)
                     {
                         UILord.Instance.CurShortcutUI.ClickOnItem(item.Index);
+                    }
+                    else if (item.Belong == InteractItemUIType.RoleInfo)
+                    {
+                        UILord.Instance.CurRoleInfoUI.ClickOnItem(item.Index);
                     }
                 }
             }

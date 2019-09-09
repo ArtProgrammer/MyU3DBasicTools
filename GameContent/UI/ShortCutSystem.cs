@@ -51,7 +51,7 @@ namespace GameContent
 
         public void Load()
         {
-            AddItemAtIndex(InteractItemType.Shortcut, 10002, 0, 1);
+            AddItemAtIndex(InteractItemType.Item, 10002, 0, 1);
             //AddItemAtIndex(1, 10007, 1, 1);
             //AddItemAtIndex(0, 10002, 2, 1);
             //AddItemAtIndex(0, 10002, 3, 1);
@@ -121,8 +121,7 @@ namespace GameContent
 
             int left = 0;
 
-            if (kind == InteractItemType.Item ||
-                kind == InteractItemType.Shortcut) // item
+            if (kind == InteractItemType.Item) // item
             {                
                 if (!System.Object.ReferenceEquals(null, bbi))
                 {
@@ -237,9 +236,9 @@ namespace GameContent
 		/// 
 		/// </summary>
 		/// <param name="id">now it's the config id of the item.</param>
-        public void Add(InteractItemType kind, int id, int count)
+        public bool Add(InteractItemType kind, int id, int count)
         {
-            AddItem(kind, id, count);
+            return AddItem(kind, id, count);
         }
 
         public void Add(InteractItem item)
