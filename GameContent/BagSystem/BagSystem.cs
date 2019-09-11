@@ -265,6 +265,36 @@ namespace GameContent
             return null;
         }
 
+        public bool UseItemAtIndex(int index, int count, Vector3 pos)
+        {
+            if (index >= 0)
+            {
+                InteractItem item = GetItemByIndex(index);
+
+                if (!System.Object.ReferenceEquals(null, item))
+                {
+                    if (!System.Object.ReferenceEquals(null, Owner))
+                    {
+                        Owner.UseItem(item.CfgID, pos);
+
+                        item.Count -= count;
+
+                        if (item.Count > 0)
+                        {
+                            OnItemChange(index);
+                        }
+                        else
+                        {
+                            RemoveBagItem(index);
+                        }
+                    }
+
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public bool UseItemAtIndex(int index, int count, BaseGameEntity target = null)
         {
             if (index >= 0)

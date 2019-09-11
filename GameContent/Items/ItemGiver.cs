@@ -81,7 +81,7 @@ namespace GameContent
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other && other.transform)
+            if (other && other.transform && other.transform.parent)
             {
                 SimWood sw = other.transform.parent.GetComponent<SimWood>();
                 if (!System.Object.ReferenceEquals(null, sw))

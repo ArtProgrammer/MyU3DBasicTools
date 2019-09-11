@@ -34,6 +34,11 @@ namespace SimpleAI.Game
             set
             {
                 XueNum = value;
+                if (XueNum <= 0)
+                {
+                    XueNum = 0;
+                }
+
                 if (!System.Object.ReferenceEquals(null, OnXueChanged))
                 {
                     OnXueChanged(XueNum);
@@ -274,6 +279,12 @@ namespace SimpleAI.Game
         //    SKillMananger.Instance.TryUseSkill(skill, target);
         //}
 
+        public virtual void UseSkill(int skillid, Vector3 pos)
+        {
+            //skill.SetOwner(this);
+            SKillMananger.Instance.TryUseSkill(skillid, pos, this);
+        }
+
         public virtual void UseSkill(int skillid, ref Vector3 pos)
         {
             //skill.SetOwner(this);
@@ -299,7 +310,12 @@ namespace SimpleAI.Game
         public virtual void UseItem(int itemid, BaseGameEntity target)
         {
             ItemManager.Instance.TryUseItem(itemid, target);
-        }        
+        }
+
+        public virtual void UseItem(int itemid, Vector3 pos)
+        {
+            ItemManager.Instance.TryUseItem(itemid, pos);
+        }
 
         void OnDestroy()
         {

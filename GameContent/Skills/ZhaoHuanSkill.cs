@@ -2,17 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ZhaoHuanSkill : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+using SimpleAI.Game;
+using SimpleAI.Supervisors;
 
-    // Update is called once per frame
-    void Update()
+namespace GameContent.Skill
+{
+    public class ZhaoHuanSkill : BaseSkill
     {
-        
+        public int NPCID = 10001;
+
+        public ZhaoHuanSkill()
+        {
+            KindType = SkillKindType.ZhaoHuan;
+            Range = 20.0f;
+        }
+
+        public override BaseSkill Clone()
+        {
+            return new ZhaoHuanSkill();
+        }
+
+        public override void Use(int id, Vector3 pos)
+        {
+            GlorySupervisor.Instance.SpawnNpc(NPCID, pos);
+        }
     }
 }

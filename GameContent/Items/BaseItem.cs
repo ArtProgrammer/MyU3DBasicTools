@@ -130,5 +130,10 @@ namespace GameContent.Item
         { 
 
         }
+
+        public virtual void Use(int id, Vector3 pos)
+        {
+                       
+        }
     }
 }

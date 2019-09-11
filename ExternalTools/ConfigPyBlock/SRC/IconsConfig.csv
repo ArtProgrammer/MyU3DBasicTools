@@ -8,3 +8,5 @@ INT,STRING,STRING
 5,土,Icons/Icon5
 6,F,Icons/Icon6
 10001,火,Icons/Fire
+10002,小爆雷,Icons/Thunder_1
+10003,招魂,Icons/Summon_1

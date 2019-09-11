@@ -23,6 +23,7 @@ namespace GameContent.Skill
         JuFu,
         TianLei,
         JingGuang,
+        ZhaoHuan,
         None
     }
 
@@ -148,6 +149,7 @@ namespace GameContent.Skill
             SkillMaker.AddPrototype(new RiseupSkill());
             SkillMaker.AddPrototype(new TianLeiSkill());
             SkillMaker.AddPrototype(new JinGuangShenZhou());
+            SkillMaker.AddPrototype(new ZhaoHuanSkill());
 
             // 
             SKMgr.Prespawn(SkillKindType.SuckXue, 3);
@@ -291,6 +293,22 @@ namespace GameContent.Skill
             }
 
             return false;
+        }
+
+        public bool TryUseSkill(int id, Vector3 position, BaseGameEntity src)
+        {
+            var data = ConfigDataMgr.Instance.SkillCfgLoader.GetDataByID(id);
+            var skill = SpawnSkill(data.Kind);
+
+            skill.AddBufID(data.BuffID);
+            skill.Range = data.EffectRange;
+            skill.Delay = data.DelayTime;
+            skill.Life = data.LastTime;
+
+            skill.SetOwner(src);
+            skill.Use(0, position);
+
+            return true;
         }
 
         public bool TryUseSkill(int id, ref Vector3 position, BaseGameEntity src)

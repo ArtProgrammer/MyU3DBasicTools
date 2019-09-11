@@ -52,6 +52,8 @@ namespace GameContent
         public void Load()
         {
             AddItemAtIndex(InteractItemType.Item, 10002, 0, 1);
+            AddItemAtIndex(InteractItemType.Item, 10007, 1, 3);
+            AddItemAtIndex(InteractItemType.Skill, 10008, 2, 1);
             //AddItemAtIndex(1, 10007, 1, 1);
             //AddItemAtIndex(0, 10002, 2, 1);
             //AddItemAtIndex(0, 10002, 3, 1);
@@ -283,7 +285,44 @@ namespace GameContent
 
             return null;
         }
-        
+
+        public bool UseItemAtIndex(int index, int count, Vector3 pos)
+        {
+            if (index >= 0)
+            {
+                InteractItem item = GetItemByIndex(index);
+
+                if (!System.Object.ReferenceEquals(null, item))
+                {
+                    if (!System.Object.ReferenceEquals(null, Owner))
+                    {
+                        if (item.Kind == InteractItemType.Item)
+                        {
+                            Owner.UseItem(item.CfgID, pos);
+
+                            item.Count -= count;
+
+                            if (item.Count > 0)
+                            {
+                                OnItemChange(index);
+                            }
+                            else
+                            {
+                                RemoveItem(index);
+                            }
+                        }
+                        else if (item.Kind == InteractItemType.Skill)
+                        {
+                            Owner.UseSkill(item.CfgID, pos);
+                        }
+                    }
+
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public bool UseItemAtIndex(int index, int count, BaseGameEntity target = null)
         {
             if (index >= 0)

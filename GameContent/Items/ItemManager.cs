@@ -15,7 +15,8 @@ namespace GameContent.Item
         Qi,
         Xue,
         LeiFu,
-        HuoFu
+        HuoFu,
+        SmallLei
     }
 
     public enum ItemTargetType
@@ -59,63 +60,82 @@ namespace GameContent.Item
 
         public void LoadDatas()
         {
-            {
-                ItemData idata = new ItemData();
-                idata.ID = 1000001;
-                idata.Count = 1;
-                idata.TargetType = ItemTargetType.PlayerSelf;
-                idata.Kind = ItemKind.Qi;
-                //idata.Icon = "red_cross.png";
-                idata.IconID = 1;
+            //{
+            //    ItemData idata = new ItemData();
+            //    idata.ID = 1000001;
+            //    idata.Count = 1;
+            //    idata.TargetType = ItemTargetType.PlayerSelf;
+            //    idata.Kind = ItemKind.Qi;
+            //    //idata.Icon = "red_cross.png";
+            //    idata.IconID = 1;
 
-                ItemDataPool.Add(idata.ID, idata);
-            }
+            //    ItemDataPool.Add(idata.ID, idata);
+            //}
 
-            {
-                ItemData idata = new ItemData();
-                idata.ID = 1000002;
-                idata.Count = 1;
-                idata.TargetType = ItemTargetType.PlayerSelf;
-                idata.Kind = ItemKind.Xue;
-                //idata.Icon = "red_cross.png";
-                idata.IconID = 1;
+            //{
+            //    ItemData idata = new ItemData();
+            //    idata.ID = 1000002;
+            //    idata.Count = 1;
+            //    idata.TargetType = ItemTargetType.PlayerSelf;
+            //    idata.Kind = ItemKind.Xue;
+            //    //idata.Icon = "red_cross.png";
+            //    idata.IconID = 1;
 
-                ItemDataPool.Add(idata.ID, idata);
-            }
+            //    ItemDataPool.Add(idata.ID, idata);
+            //}
 
-            {
-                ItemData idata = new ItemData();
-                idata.ID = 1000003;
-                idata.Count = 1;
-                idata.TargetType = ItemTargetType.TargetBody;
-                idata.Kind = ItemKind.LeiFu;
-                //idata.Icon = "red_cross.png";
-                idata.IconID = 1;
+            //{
+            //    ItemData idata = new ItemData();
+            //    idata.ID = 1000003;
+            //    idata.Count = 1;
+            //    idata.TargetType = ItemTargetType.TargetBody;
+            //    idata.Kind = ItemKind.LeiFu;
+            //    //idata.Icon = "red_cross.png";
+            //    idata.IconID = 1;
 
-                ItemDataPool.Add(idata.ID, idata);
-            }
+            //    ItemDataPool.Add(idata.ID, idata);
+            //}
 
-            {
-                ItemData idata = new ItemData();
-                idata.ID = 1000004;
-                idata.Count = 1;
-                idata.TargetType = ItemTargetType.TargetBody;
-                idata.Kind = ItemKind.HuoFu;
-                //idata.Icon = "Board-Games.png";
-                idata.IconID = 1;
+            //{
+            //    ItemData idata = new ItemData();
+            //    idata.ID = 1000004;
+            //    idata.Count = 1;
+            //    idata.TargetType = ItemTargetType.TargetBody;
+            //    idata.Kind = ItemKind.HuoFu;
+            //    //idata.Icon = "Board-Games.png";
+            //    idata.IconID = 1;
 
-                ItemDataPool.Add(idata.ID, idata);
-            }
+            //    ItemDataPool.Add(idata.ID, idata);
+            //}
 
             ItemMaker.AddPrototype(new QiItem());
             ItemMaker.AddPrototype(new XueItem());
             ItemMaker.AddPrototype(new LeiFu());
             ItemMaker.AddPrototype(new HuoFu());
+            ItemMaker.AddPrototype(new SmallLei());
         }
 
         public BaseItem SpawnItem(ItemKind kind)
         {
             return ItemMaker.FindAndClone(kind);
+        }
+
+        public bool TryUseItem(int id, Vector3 pos)
+        {
+            //var itemData = GetItemData(id);
+            ItemConfig itemData = ConfigDataMgr.Instance.ItemCfgLoader.GetDataByID(id);
+            if (!System.Object.ReferenceEquals(null, itemData))
+            {
+                var item = SpawnItem((ItemKind)itemData.Kind);
+                if (!System.Object.ReferenceEquals(null, item))
+                {
+                    //item.Use(pos);
+                    item.Use(itemData.ID, pos);
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public bool TryUseItem(int id, BaseGameEntity target)

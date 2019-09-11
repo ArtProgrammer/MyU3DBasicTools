@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using DG.Tweening;
+
 using SimpleAI.Utils;
 using SimpleAI.Spatial;
 using SimpleAI.PoolSystem;
@@ -28,6 +30,7 @@ namespace SimpleAI.Supervisors
         {
             Reload();
             DontDestroyOnLoad(gameObject);
+            InitThirdPart();
         }
 
         public void Reload()
@@ -51,6 +54,11 @@ namespace SimpleAI.Supervisors
             ConfigDataMgr.Instance.Initialize();
 
             UILord.Instance.Init();
+        }
+
+        protected void InitThirdPart()
+        {
+            DOTween.Init(true, true, null);
         }
 
         [SerializeField]

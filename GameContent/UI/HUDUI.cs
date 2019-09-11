@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+using DG.Tweening;
+
 namespace GameContent
 {
     public class HUDUI : MonoBehaviour
@@ -15,7 +17,7 @@ namespace GameContent
         {
             if (BagPanel)
             {
-                BagPanel.SetActive(!BagPanel.activeSelf);
+                BagPanel.SetActive(!BagPanel.activeSelf);                
             }
         }
 

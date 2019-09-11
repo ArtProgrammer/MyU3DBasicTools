@@ -155,6 +155,11 @@ namespace GameContent.Skill
 
         }
 
+        public virtual void Use(int id, Vector3 pos)
+        {
+
+        }
+
         public virtual void Use(Vector3 pos)
         {
 

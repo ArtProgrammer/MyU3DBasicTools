@@ -6,13 +6,15 @@ using SimpleAI.Game;
 using SimpleAI.PoolSystem;
 using GameContent.SimAgent;
 
+using DG.Tweening;
+
 namespace GameContent
 {
     public class SimpleBullet : MonoBehaviour, IUpdateable, IPoolableComponent
     {
         public int ID = 0;
 
-        private int IDRecorder = 0;
+        private static int IDRecorder = 0;
 
         public float Speed = 0;
 
@@ -26,16 +28,36 @@ namespace GameContent
 
         public int OwnerID = 0;
 
-        public void Go()
+        public virtual void Go()
         {
             IsActive = true;
+
+            //transform.do
         }
 
         // Start is called before the first frame update
         void Start()
         {
-            ID = IDRecorder++;
-            GameLogicSupvisor.Instance.Register(this);
+			Initialize();
+		}
+
+        public virtual void Initialize()
+		{
+			ID = IDRecorder++;
+			GameLogicSupvisor.Instance.Register(this);
+		}
+
+        public virtual void Process(float dt)
+        {
+            transform.position += Dir * Speed * dt;
+
+            CurTime += dt;
+
+            if (CurTime >= LifeTime)
+            {
+                IsActive = false;
+                PrefabPoolingSystem.Instance.Despawn(gameObject);
+            }            
         }
 
         public virtual void Spawned()
@@ -50,19 +72,11 @@ namespace GameContent
             CurTime = 0.0f;
         }
 
-        public void OnUpdate(float dt)
+        public virtual void OnUpdate(float dt)
         {
             if (IsActive)
             {
-                transform.position += Dir * Speed * dt;
-
-                CurTime += dt;
-
-                if (CurTime >= LifeTime)
-                {
-                    IsActive = false;
-                    PrefabPoolingSystem.Instance.Despawn(gameObject);                    
-                }
+                Process(dt);
             }
         }
 
@@ -71,7 +85,7 @@ namespace GameContent
 
         }
 
-        public SimWood GetAffectTarget(Transform trans)
+        public virtual SimWood GetAffectTarget(Transform trans)
         {
             SimWood target = trans.GetComponent<SimWood>();
 
@@ -97,34 +111,60 @@ namespace GameContent
             return null;
         }
 
-        public void OnCollisionEnter(Collision collision)
+        public virtual void HandleTargetEnter(SimWood target)
+		{
+			TakeEffect(target);
+			AfterEffect(target);
+		}
+
+        public virtual void HandleTargetStay(SimWood target)
         {
-            if (collision.transform)
-            {
-                var trans = collision.transform;
-                var target = trans.GetComponent<SimWood>();
-                if (!target)
-                {
-                    trans = trans.parent;
-                    if (trans)
-                    {
-                        target = trans.GetComponent<SimWood>();
-                    }
-                }
 
-                if (target)
-                {
-                    if (target.ID != OwnerID)
-                    {
-                        Debug.Log("$$$ bullet collider" + ID.ToString());
-                        //IsActive = false;
-                        //gameObject.SetActive(false);
-
-                        PrefabPoolingSystem.Instance.Despawn(gameObject);
-                    }
-                }
-            }
         }
+
+        public virtual void HandleTargetExit(SimWood target)
+        {
+
+        }
+
+        public virtual void TakeEffect(SimWood target)
+		{
+			target.Xue = target.Xue - 10;
+		}
+
+        public virtual void AfterEffect(SimWood target)
+		{
+
+		}
+
+        //public void OnCollisionEnter(Collision collision)
+        //{
+        //    if (collision.transform)
+        //    {
+        //        var trans = collision.transform;
+        //        var target = trans.GetComponent<SimWood>();
+        //        if (!target)
+        //        {
+        //            trans = trans.parent;
+        //            if (trans)
+        //            {
+        //                target = trans.GetComponent<SimWood>();
+        //            }
+        //        }
+
+        //        if (target)
+        //        {
+        //            if (target.ID != OwnerID)
+        //            {
+        //                Debug.Log("$$$ OnCollisionEnter bullet collider" + ID.ToString());
+        //                //IsActive = false;
+        //                //gameObject.SetActive(false);
+
+        //                //PrefabPoolingSystem.Instance.Despawn(gameObject);
+        //            }
+        //        }
+        //    }
+        //}
 
         private void OnTriggerEnter(Collider other)
         {
@@ -147,13 +187,75 @@ namespace GameContent
                     {
                         if (target.ID != OwnerID)
                         {
-                            Debug.Log("$$$ bullet collider" + ID.ToString());
-                            //IsActive = false;
-                            //gameObject.SetActive(false);
+                            Debug.Log("$$$ OnTriggerEnter bullet collider" + ID.ToString());
 
-                            target.Xue = target.Xue - 10;
+                            HandleTargetEnter(target);
 
-                            PrefabPoolingSystem.Instance.Despawn(gameObject);
+							//PrefabPoolingSystem.Instance.Despawn(gameObject);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void OnTriggerStay(Collider other)
+        {
+            if (other)
+            {
+                if (other.transform)
+                {
+                    var trans = other.transform;
+                    var target = trans.GetComponent<SimWood>();
+                    if (!target)
+                    {
+                        trans = trans.parent;
+                        if (trans)
+                        {
+                            target = trans.GetComponent<SimWood>();
+                        }
+                    }
+
+                    if (target)
+                    {
+                        if (target.ID != OwnerID)
+                        {
+                            Debug.Log("$$$ OnTriggerEnter bullet collider" + ID.ToString());
+
+                            HandleTargetStay(target);
+
+                            //PrefabPoolingSystem.Instance.Despawn(gameObject);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other)
+            {
+                if (other.transform)
+                {
+                    var trans = other.transform;
+                    var target = trans.GetComponent<SimWood>();
+                    if (!target)
+                    {
+                        trans = trans.parent;
+                        if (trans)
+                        {
+                            target = trans.GetComponent<SimWood>();
+                        }
+                    }
+
+                    if (target)
+                    {
+                        if (target.ID != OwnerID)
+                        {
+                            Debug.Log("$$$ OnTriggerEnter bullet collider" + ID.ToString());
+
+                            HandleTargetExit(target);
+
+                            //PrefabPoolingSystem.Instance.Despawn(gameObject);
                         }
                     }
                 }
