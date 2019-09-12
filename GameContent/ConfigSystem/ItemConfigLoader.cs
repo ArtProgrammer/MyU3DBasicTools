@@ -11,7 +11,7 @@ namespace Config {
             int index = 0;
             while (index < periods.Length) {
                 string[] split = periods[index].Split(',');
-                if (split.Length == 8) {
+                if (split.Length == 11) {
                     ItemConfig data = new ItemConfig();
                     int.TryParse(split[0], out data.ID);
                     data.Name= split[1];
@@ -21,6 +21,9 @@ namespace Config {
                     float.TryParse(split[5], out data.Price);
                     int.TryParse(split[6], out data.Kind);
                     int.TryParse(split[7], out data.TargetType);
+                    int.TryParse(split[8], out data.Value);
+                    int.TryParse(split[9], out data.Life);
+                    int.TryParse(split[10], out data.HP);
                     Datas.Add(data.ID, data);
                 }
                 index++;

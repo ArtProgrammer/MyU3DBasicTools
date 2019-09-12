@@ -8,3 +8,4 @@ INT,STRING,STRING
 10005,简单血条,Prefabs/UI/SimpleHealthBar
 10006,苹果,Prefabs/Items/Apple
 10007,小爆雷,Prefabs/Items/ThunderBomb
+10008,围城,Prefabs/Items/WeiCheng

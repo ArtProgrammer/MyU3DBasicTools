@@ -1,0 +1,5 @@
+ID,Name,IconID,PrefabID,Kind,Xue,Qi,Speed,Defence,Attack,YinYang,WuXing
+INT,STRING,INT,INT,INT,INT,INT,FLOAT,INT,INT,INT,INT
+,,,,,,,,,,,
+10001,小傻怪,10001,10001,1,100,0,3,10,10,-1,0
+10002,主角,10002,10002,1,100,100,5,10,50,1,0

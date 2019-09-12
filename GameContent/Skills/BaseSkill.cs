@@ -12,6 +12,11 @@ namespace GameContent.Skill
 {
     public class BaseSkill : IBaseUsableItem, IPoolableComponent, IPrototype<BaseSkill>
     {
+        /// <summary>
+        /// id to summon, etc.
+        /// </summary>
+        public int SummonID = 10001;
+
         private int TheUniqueID = 0;
 
         public int UniqueID

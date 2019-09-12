@@ -16,7 +16,10 @@ namespace GameContent.Item
         Xue,
         LeiFu,
         HuoFu,
-        SmallLei
+        SmallLei,
+        Def,
+        ATT,
+
     }
 
     public enum ItemTargetType

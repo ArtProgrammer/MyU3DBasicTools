@@ -10,3 +10,6 @@ INT,STRING,STRING
 10001,火,Icons/Fire
 10002,小爆雷,Icons/Thunder_1
 10003,招魂,Icons/Summon_1
+10004,小怪,Icons/HeadIcons/orc-head
+10005,中怪,Icons/HeadIcons/wolf-head
+10006,围城,Icons/WeiCheng

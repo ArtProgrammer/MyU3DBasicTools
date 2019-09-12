@@ -10,5 +10,8 @@ namespace Config {
         public float Price;
         public int Kind;
         public int TargetType;
+        public int Value;
+        public int Life;
+        public int HP;
     }
 }

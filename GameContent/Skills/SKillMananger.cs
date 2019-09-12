@@ -23,7 +23,8 @@ namespace GameContent.Skill
         JuFu,
         TianLei,
         JingGuang,
-        ZhaoHuan,
+        ZhaoHuanNPC,
+        ZhaoHuanItem,        
         None
     }
 
@@ -150,6 +151,7 @@ namespace GameContent.Skill
             SkillMaker.AddPrototype(new TianLeiSkill());
             SkillMaker.AddPrototype(new JinGuangShenZhou());
             SkillMaker.AddPrototype(new ZhaoHuanSkill());
+            SkillMaker.AddPrototype(new ZhaoHuanItemSkill());
 
             // 
             SKMgr.Prespawn(SkillKindType.SuckXue, 3);
@@ -229,6 +231,16 @@ namespace GameContent.Skill
             }
         }
 
+        public List<SpatialFruitNode> GetTargets()
+        {
+            return Targets;
+        }
+
+        public void ClearTargets()
+        {
+            Targets.Clear();
+        }
+
         // 
         public bool TryUseSkill(int uniqueID)
         {
@@ -304,6 +316,8 @@ namespace GameContent.Skill
             skill.Range = data.EffectRange;
             skill.Delay = data.DelayTime;
             skill.Life = data.LastTime;
+
+            skill.SummonID = data.SummonID;
 
             skill.SetOwner(src);
             skill.Use(0, position);
