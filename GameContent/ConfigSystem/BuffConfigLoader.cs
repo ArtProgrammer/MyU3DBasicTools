@@ -11,7 +11,7 @@ namespace Config {
             int index = 0;
             while (index < periods.Length) {
                 string[] split = periods[index].Split(',');
-                if (split.Length == 8) {
+                if (split.Length == 9) {
                     BuffConfig data = new BuffConfig();
                     int.TryParse(split[0], out data.ID);
                     data.Name= split[1];
@@ -21,6 +21,7 @@ namespace Config {
                     int.TryParse(split[5], out data.KindType);
                     float.TryParse(split[6], out data.MaxTime);
                     int.TryParse(split[7], out data.EffectID);
+                    int.TryParse(split[8], out data.Value);
                     Datas.Add(data.ID, data);
                 }
                 index++;

@@ -17,6 +17,5 @@ namespace Config {
         public float DelayTime;
         public float LastTime;
         public int SummonID;
-        public int SummonType;
     }
 }

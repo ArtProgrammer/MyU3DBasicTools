@@ -10,5 +10,6 @@ namespace Config {
         public int KindType;
         public float MaxTime;
         public int EffectID;
+        public int Value;
     }
 }

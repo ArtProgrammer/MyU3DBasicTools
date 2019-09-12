@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 using SimpleAI.Game;
 using SimpleAI.Utils;
 using SimpleAI.PoolSystem;
 using GameContent.Item;
 using GameContent.UsableItem;
-
+using SimpleAI.Supervisors;
 
 namespace GameContent.Skill
 {
@@ -145,8 +146,13 @@ namespace GameContent.Skill
             if (CurTime > LifeTime)
             {
                 IsAlive = false;
-                Despawned();
+                OnExit();
             }
+        }
+
+        public virtual void OnExit()
+        {
+            SKillMananger.Instance.DespawnSkill(this);
         }
 
         public virtual void Finish()
@@ -174,7 +180,18 @@ namespace GameContent.Skill
         {
             for (int i = 0; i < BuffIDList.Count; i++)
             {
+                var data = ConfigDataMgr.Instance.BuffCfgLoader.GetDataByID(BuffIDList[i]);
                 var buff = SKillMananger.Instance.SpawnBuff(BuffIDList[i]);
+
+                if (!System.Object.ReferenceEquals(null, data))
+                {
+                    buff.TheValue = data.Value;
+                    buff.LifeTime = data.LifeTime;
+                    buff.DelayTime = data.Delay;
+                    //buff.SenderID
+                    //buff.ReceiverID
+                }
+
                 if (!System.Object.ReferenceEquals(null, buff))
                 {
                     buff.Attach(target);

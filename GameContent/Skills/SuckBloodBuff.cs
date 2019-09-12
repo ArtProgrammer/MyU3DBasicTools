@@ -39,7 +39,7 @@ namespace GameContent.Skill
 
         public override void LoadData()
         {
-            LastTime = DelayTime + MaxCount * Iter;
+            LifeTime = DelayTime + MaxCount * Iter;
         }
 
         public override void OnExit()

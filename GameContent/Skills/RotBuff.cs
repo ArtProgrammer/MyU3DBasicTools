@@ -35,7 +35,7 @@ namespace GameContent.Skill
 
         public override void LoadData()
         {
-            LastTime = 6.0f;
+            LifeTime = 6.0f;
 
             Rotdir.y = RotSpeed;
 

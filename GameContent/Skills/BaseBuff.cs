@@ -12,7 +12,7 @@ namespace GameContent.Skill
     {
         public float DelayTime = 0.0f;
 
-        public float LastTime = 0.0f;
+        public float LifeTime = 0.0f;
 
         public float CurTime = 0.0f;
 
@@ -29,6 +29,8 @@ namespace GameContent.Skill
         private int TheUniqueID = 0;
 
         public string EffectName = null;
+
+        public int TheValue = 0;
 
         public int UniqueID
         {
@@ -73,6 +75,12 @@ namespace GameContent.Skill
 
         public virtual void Despawned()
         {
+            CurTime = 0.0f;
+            SenderID = 0;
+            ReceiverID = 0;
+            Target = null;
+            Dst = null;
+
             IsActive = false;
         }
 
@@ -97,6 +105,8 @@ namespace GameContent.Skill
         {
             //GameLogicSupvisor.Instance.Unregister(this);
             // respawn
+
+            SKillMananger.Instance.DespawnBuff(this);
         }
 
         public virtual void OnProcess(ref float dt)
@@ -110,7 +120,7 @@ namespace GameContent.Skill
                 TakeEffect(ref dt);
             }
 
-            if (!(CurTime < LastTime))
+            if (!(CurTime < LifeTime))
             {
                 OnExit();
             }

@@ -24,7 +24,9 @@ namespace SimpleAI.PoolSystem
             if (CurCount > 0)
             {
                 CurCount--;
-                return Buffs.Pop();
+                var buff = Buffs.Pop();
+                buff.Spawned();
+                return buff;
             }
             else
             {
@@ -36,6 +38,7 @@ namespace SimpleAI.PoolSystem
         {
             if (buff.KindType == BuffKind)
             {
+                buff.Despawned();
                 Buffs.Push(buff);
                 CurCount++;
             }

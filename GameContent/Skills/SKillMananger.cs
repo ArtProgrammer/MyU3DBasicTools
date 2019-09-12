@@ -24,7 +24,8 @@ namespace GameContent.Skill
         TianLei,
         JingGuang,
         ZhaoHuanNPC,
-        ZhaoHuanItem,        
+        ZhaoHuanItem,
+        ChangeSpeed,
         None
     }
 
@@ -43,6 +44,7 @@ namespace GameContent.Skill
         JuHun,
         JuYin,
         JuYang,
+        ChangeSpeed,
         None
     }
 
@@ -152,6 +154,7 @@ namespace GameContent.Skill
             SkillMaker.AddPrototype(new JinGuangShenZhou());
             SkillMaker.AddPrototype(new ZhaoHuanSkill());
             SkillMaker.AddPrototype(new ZhaoHuanItemSkill());
+            SkillMaker.AddPrototype(new ChangeSpeedSkill());
 
             // 
             SKMgr.Prespawn(SkillKindType.SuckXue, 3);
@@ -164,6 +167,7 @@ namespace GameContent.Skill
             SkillMaker.AddPrototype(new SuckBloodBuff());
             SkillMaker.AddPrototype(new TianLeiBuff());
             SkillMaker.AddPrototype(new JinGuangShenZhou_Buff());
+            SkillMaker.AddPrototype(new ChangeSpeedBuff());
 
             BPMgr.Prespawn(BuffKindType.SuckXue, 3);
             BPMgr.Prespawn(BuffKindType.ZhenYa, 3);
@@ -272,6 +276,14 @@ namespace GameContent.Skill
             return SKMgr.Spawn((SkillKindType)kindid);
         }
 
+        public void DespawnSkill(BaseSkill skill)
+        {
+            if (!System.Object.ReferenceEquals(null, skill))
+            {
+                SKMgr.Respawn(skill);
+            }
+        }
+
         public BaseBuff SpawnBuff(int cfgid)
         {
             var data = ConfigDataMgr.Instance.BuffCfgLoader.GetDataByID(cfgid);
@@ -281,6 +293,14 @@ namespace GameContent.Skill
             }
 
             return NullBuff.Instance;
+        }
+
+        public void DespawnBuff(BaseBuff buff)
+        {
+            if (!System.Object.ReferenceEquals(null, buff))
+            {
+                BPMgr.Respawn(buff);
+            }
         }
 
         public bool TryUseSkill(int id, BaseGameEntity target, BaseGameEntity src)

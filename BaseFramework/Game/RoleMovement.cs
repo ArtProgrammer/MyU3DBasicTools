@@ -86,16 +86,18 @@ namespace SimpleAI.Game
 
             if (Input.GetKey(KeyCode.A))
             {
-                //Offset.x -= dt * MoveSpeed;
-                RotValue -= dt * RotSpeed;
-                NeedRot = true;
+                Offset.x -= dt * MoveSpeed;
+                NeedMove = true;
+                //RotValue -= dt * RotSpeed;
+                //NeedRot = true;
             }
 
             if (Input.GetKey(KeyCode.D))
             {
-                //Offset.x += dt * MoveSpeed;
-                RotValue += dt * RotSpeed;
-                NeedRot = true;
+                Offset.x += dt * MoveSpeed;
+                NeedMove = true;
+                //RotValue += dt * RotSpeed;
+                //NeedRot = true;
             }
 
             if (Input.GetKey(KeyCode.Space))

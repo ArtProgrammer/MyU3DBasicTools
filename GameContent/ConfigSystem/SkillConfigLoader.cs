@@ -11,7 +11,7 @@ namespace Config {
             int index = 0;
             while (index < periods.Length) {
                 string[] split = periods[index].Split(',');
-                if (split.Length == 16) {
+                if (split.Length == 15) {
                     SkillConfig data = new SkillConfig();
                     int.TryParse(split[0], out data.ID);
                     data.Name= split[1];
@@ -28,7 +28,6 @@ namespace Config {
                     float.TryParse(split[12], out data.DelayTime);
                     float.TryParse(split[13], out data.LastTime);
                     int.TryParse(split[14], out data.SummonID);
-                    int.TryParse(split[15], out data.SummonType);
                     Datas.Add(data.ID, data);
                 }
                 index++;

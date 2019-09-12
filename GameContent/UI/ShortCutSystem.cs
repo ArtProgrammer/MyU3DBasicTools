@@ -55,6 +55,7 @@ namespace GameContent
             AddItemAtIndex(InteractItemType.Item, 10007, 1, 3);
             AddItemAtIndex(InteractItemType.Skill, 10008, 2, 1);
             AddItemAtIndex(InteractItemType.Skill, 10009, 3, 1);
+            AddItemAtIndex(InteractItemType.Skill, 10010, 4, 1);
             //AddItemAtIndex(1, 10007, 1, 1);
             //AddItemAtIndex(0, 10002, 2, 1);
             //AddItemAtIndex(0, 10002, 3, 1);

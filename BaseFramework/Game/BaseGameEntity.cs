@@ -26,7 +26,7 @@ namespace SimpleAI.Game
         private int XueNum = 100;
 
         public int Xue
-        { 
+        {
             get
             {
                 return XueNum;
@@ -55,6 +55,24 @@ namespace SimpleAI.Game
         }
 
         protected Action<int> OnXueChanged;
+
+        public float TheMoveSpeed = 3.0f;
+
+        public float MoveSpeed
+        {
+            set
+            {
+                if (!TheMoveSpeed.Equals(value))
+                {
+                    TheMoveSpeed = value;
+                    NMAgent.speed = TheMoveSpeed;
+                }                
+            }
+            get
+            {
+                return TheMoveSpeed;
+            }
+        }
 
         [SerializeField]
         private int QiNum = 100;
