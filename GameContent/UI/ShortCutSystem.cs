@@ -78,7 +78,8 @@ namespace GameContent
 
             if (gotIndex != InvalidIndex)
             {
-                return Items[gotIndex].Count + count <= Items[gotIndex].MaxCount;
+                var item = GetItemByIndex(gotIndex);
+                return item.Count + count <= item.MaxCount;
             }
 
             return false;
