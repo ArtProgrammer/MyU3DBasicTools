@@ -11,7 +11,7 @@ namespace Config {
             int index = 0;
             while (index < periods.Length) {
                 string[] split = periods[index].Split(',');
-                if (split.Length == 11) {
+                if (split.Length == 12) {
                     ItemConfig data = new ItemConfig();
                     int.TryParse(split[0], out data.ID);
                     data.Name= split[1];
@@ -24,6 +24,7 @@ namespace Config {
                     int.TryParse(split[8], out data.Value);
                     int.TryParse(split[9], out data.Life);
                     int.TryParse(split[10], out data.HP);
+                    bool.TryParse(split[11], out data.Recyclable);
                     Datas.Add(data.ID, data);
                 }
                 index++;

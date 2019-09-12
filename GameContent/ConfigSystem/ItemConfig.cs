@@ -13,5 +13,6 @@ namespace Config {
         public int Value;
         public int Life;
         public int HP;
+        public bool Recyclable;
     }
 }
